@@ -1,19 +1,22 @@
 {
-  "title": "tencent video",
-  "home_tle": "home",
-  "doki_tle": "doki",
-  "vip_tle": "VIP",
-  "message_tle": "message",
-  "person_tle": "person",
+  "title": "Mileage Wash",
+  "bottom_navigation_home_title": "home",
+  "bottom_navigation_me_title": "me",
 
-  "sub_txt": "subscribe",
-  "cho_txt": "choiceness",
-  "dis_txt": "discover",
-  "nba_txt": "NBA",
-  "tel_txt": "teleplay",
-  "mov_txt": "movie",
-  "var_txt": "variety",
-  "chi_txt": "children",
-  "car_txt": "cartoon",
-  "doc_txt": "documentary"
+  "home_title": "Mileage Wash",
+  "home_tab_waiting": "waiting",
+  "home_tab_washing": "washing",
+  "home_tab_done": "done",
+  "home_tab_cancelled": "cancelled",
+
+  "login_title": "Login",
+  "login_phone_text": "phone",
+  "login_phone_hint_text": "Please input phone",
+  "login_phone_error": "Illegal phone number ",
+  "login_password_text": "password",
+  "login_password_hint_text": "Please input password",
+  "login_password_length_error": "The password must contain at least six characters",
+  "login_submit_text": "Login",
+
+  "me_logout_text": "Logout"
 }

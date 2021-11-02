@@ -1,19 +1,22 @@
 {
-  "title": "腾讯视频",
-  "home_tle": "首页",
-  "doki_tle": "doki",
-  "vip_tle": "VIP会员",
-  "message_tle": "消息",
-  "person_tle": "个人中心",
+  "title": "里程洗车",
+  "bottom_navigation_home_title": "首页",
+  "bottom_navigation_me_title": "我的",
 
-  "sub_txt": "订阅",
-  "cho_txt": "精选",
-  "dis_txt": "发现",
-  "nba_txt": "NBA",
-  "tel_txt": "电视剧",
-  "mov_txt": "电影",
-  "var_txt": "综艺",
-  "chi_txt": "少儿",
-  "car_txt": "动漫",
-  "doc_txt": "纪录片"
+  "home_title": "里程洗车",
+  "home_tab_waiting": "待清洗",
+  "home_tab_washing": "清洗中",
+  "home_tab_done": "已完成",
+  "home_tab_cancelled": "已取消",
+
+  "login_title": "登陆",
+  "login_phone_text": "手机号",
+  "login_phone_hint_text": "请输入手机号",
+  "login_phone_error": "手机号非法",
+  "login_password_text": "密码",
+  "login_password_hint_text": "请输入密码",
+  "login_password_length_error": "密码长度不能小于6位",
+  "login_submit_text": "登陆",
+
+  "me_logout_text": "退出登录"
 }

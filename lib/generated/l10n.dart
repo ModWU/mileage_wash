@@ -10,7 +10,7 @@ import 'intl/messages_all.dart';
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 // ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
-// ignore_for_file: avoid_redundant_argument_values
+// ignore_for_file: avoid_redundant_argument_values, avoid_escaping_inner_quotes
 
 class S {
   S();
@@ -18,28 +18,31 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null, 'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(_current != null,
+        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
     return _current!;
   }
 
-  static const AppLocalizationDelegate delegate =
-    AppLocalizationDelegate();
+  static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false) ? locale.languageCode : locale.toString();
-    final localeName = Intl.canonicalizedLocale(name); 
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       final instance = S();
       S._current = instance;
- 
+
       return instance;
     });
-  } 
+  }
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null, 'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(instance != null,
+        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -47,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `tencent video`
+  /// `Mileage Wash`
   String get title {
     return Intl.message(
-      'tencent video',
+      'Mileage Wash',
       name: 'title',
       desc: '',
       args: [],
@@ -58,150 +61,160 @@ class S {
   }
 
   /// `home`
-  String get home_tle {
+  String get bottom_navigation_home_title {
     return Intl.message(
       'home',
-      name: 'home_tle',
+      name: 'bottom_navigation_home_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `doki`
-  String get doki_tle {
+  /// `me`
+  String get bottom_navigation_me_title {
     return Intl.message(
-      'doki',
-      name: 'doki_tle',
+      'me',
+      name: 'bottom_navigation_me_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `VIP`
-  String get vip_tle {
+  /// `Mileage Wash`
+  String get home_title {
     return Intl.message(
-      'VIP',
-      name: 'vip_tle',
+      'Mileage Wash',
+      name: 'home_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `message`
-  String get message_tle {
+  /// `waiting`
+  String get home_tab_waiting {
     return Intl.message(
-      'message',
-      name: 'message_tle',
+      'waiting',
+      name: 'home_tab_waiting',
       desc: '',
       args: [],
     );
   }
 
-  /// `person`
-  String get person_tle {
+  /// `washing`
+  String get home_tab_washing {
     return Intl.message(
-      'person',
-      name: 'person_tle',
+      'washing',
+      name: 'home_tab_washing',
       desc: '',
       args: [],
     );
   }
 
-  /// `subscribe`
-  String get sub_txt {
+  /// `done`
+  String get home_tab_done {
     return Intl.message(
-      'subscribe',
-      name: 'sub_txt',
+      'done',
+      name: 'home_tab_done',
       desc: '',
       args: [],
     );
   }
 
-  /// `choiceness`
-  String get cho_txt {
+  /// `cancelled`
+  String get home_tab_cancelled {
     return Intl.message(
-      'choiceness',
-      name: 'cho_txt',
+      'cancelled',
+      name: 'home_tab_cancelled',
       desc: '',
       args: [],
     );
   }
 
-  /// `discover`
-  String get dis_txt {
+  /// `Login`
+  String get login_title {
     return Intl.message(
-      'discover',
-      name: 'dis_txt',
+      'Login',
+      name: 'login_title',
       desc: '',
       args: [],
     );
   }
 
-  /// `NBA`
-  String get nba_txt {
+  /// `phone`
+  String get login_phone_text {
     return Intl.message(
-      'NBA',
-      name: 'nba_txt',
+      'phone',
+      name: 'login_phone_text',
       desc: '',
       args: [],
     );
   }
 
-  /// `teleplay`
-  String get tel_txt {
+  /// `Please input phone`
+  String get login_phone_hint_text {
     return Intl.message(
-      'teleplay',
-      name: 'tel_txt',
+      'Please input phone',
+      name: 'login_phone_hint_text',
       desc: '',
       args: [],
     );
   }
 
-  /// `movie`
-  String get mov_txt {
+  /// `Illegal phone number `
+  String get login_phone_error {
     return Intl.message(
-      'movie',
-      name: 'mov_txt',
+      'Illegal phone number ',
+      name: 'login_phone_error',
       desc: '',
       args: [],
     );
   }
 
-  /// `variety`
-  String get var_txt {
+  /// `password`
+  String get login_password_text {
     return Intl.message(
-      'variety',
-      name: 'var_txt',
+      'password',
+      name: 'login_password_text',
       desc: '',
       args: [],
     );
   }
 
-  /// `children`
-  String get chi_txt {
+  /// `Please input password`
+  String get login_password_hint_text {
     return Intl.message(
-      'children',
-      name: 'chi_txt',
+      'Please input password',
+      name: 'login_password_hint_text',
       desc: '',
       args: [],
     );
   }
 
-  /// `cartoon`
-  String get car_txt {
+  /// `The password must contain at least six characters`
+  String get login_password_length_error {
     return Intl.message(
-      'cartoon',
-      name: 'car_txt',
+      'The password must contain at least six characters',
+      name: 'login_password_length_error',
       desc: '',
       args: [],
     );
   }
 
-  /// `documentary`
-  String get doc_txt {
+  /// `Login`
+  String get login_submit_text {
     return Intl.message(
-      'documentary',
-      name: 'doc_txt',
+      'Login',
+      name: 'login_submit_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout`
+  String get me_logout_text {
+    return Intl.message(
+      'Logout',
+      name: 'me_logout_text',
       desc: '',
       args: [],
     );

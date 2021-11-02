@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tencent_video/common/util/time_utils.dart';
+import 'package:mileage_wash/common/util/time_utils.dart';
 import 'color_log.dart';
 
 class Logger {
@@ -49,6 +49,12 @@ class Logger {
   static void log(Object object) {
     if (kDebugMode) {
       _print(_colorNowTime().build(object));
+    } else {}
+  }
+
+  static void logHttp(Object object) {
+    if (kDebugMode) {
+      _print(_colorNowTime().build(object, foreColor: ColorType.darkYellow));
     } else {}
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:tencent_video/resource/styles.dart';
+import 'package:mileage_wash/resource/styles.dart';
 import 'app_state.dart';
-import 'boot.dart';
+import 'boot_page.dart';
 
 abstract class BootContext {
   factory BootContext.get() => _BootContextRefManager.bootContextInstance!;
@@ -23,7 +23,7 @@ abstract class BootContext {
   Locale? get locale;
 }
 
-mixin BootManager on State<Boot> implements BootContext {
+mixin BootManager on State<BootPage> implements BootContext {
   @override
   AppState<PageCategory> get page => AppState.page;
 

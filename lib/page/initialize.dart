@@ -1,15 +1,31 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:tencent_video/common/log/app_log.dart';
-import 'package:tencent_video/page/app_state.dart';
+import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
+import 'package:mileage_wash/page/app_state.dart';
+import 'package:mileage_wash/server/app_server.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 void bootApp(Widget app) {
   _runOnLogger(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await AppServer.initialize();
     await AppState.initialize();
-    runApp(app);
+    runApp(MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<HomeWaitingNotifier>(
+            create: (_) => HomeWaitingNotifier()),
+        ChangeNotifierProvider<HomeWashingNotifier>(
+            create: (_) => HomeWashingNotifier()),
+        ChangeNotifierProvider<HomeDoneNotifier>(
+            create: (_) => HomeDoneNotifier()),
+        ChangeNotifierProvider<HomeCancelledNotifier>(
+            create: (_) => HomeCancelledNotifier())
+      ],
+      child: app,
+    ));
   });
 }
 

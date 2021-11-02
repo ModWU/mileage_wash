@@ -7,35 +7,42 @@
 // ignore_for_file:unnecessary_brace_in_string_interps, unnecessary_new
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
 // ignore_for_file:annotate_overrides,prefer_generic_function_type_aliases
-// ignore_for_file:unused_import, file_names
+// ignore_for_file:unused_import, file_names, avoid_escaping_inner_quotes
 
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
-final MessageLookup messages = new MessageLookup();
+final messages = new MessageLookup();
 
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  final Map<String, Function> messages = _notInlinedMessages();
-  static Map<String, Function> _notInlinedMessages() => <String, Function> {
-    "car_txt" : MessageLookupByLibrary.simpleMessage("cartoon"),
-    "chi_txt" : MessageLookupByLibrary.simpleMessage("children"),
-    "cho_txt" : MessageLookupByLibrary.simpleMessage("choiceness"),
-    "dis_txt" : MessageLookupByLibrary.simpleMessage("discover"),
-    "doc_txt" : MessageLookupByLibrary.simpleMessage("documentary"),
-    "doki_tle" : MessageLookupByLibrary.simpleMessage("doki"),
-    "home_tle" : MessageLookupByLibrary.simpleMessage("home"),
-    "message_tle" : MessageLookupByLibrary.simpleMessage("message"),
-    "mov_txt" : MessageLookupByLibrary.simpleMessage("movie"),
-    "nba_txt" : MessageLookupByLibrary.simpleMessage("NBA"),
-    "person_tle" : MessageLookupByLibrary.simpleMessage("person"),
-    "sub_txt" : MessageLookupByLibrary.simpleMessage("subscribe"),
-    "tel_txt" : MessageLookupByLibrary.simpleMessage("teleplay"),
-    "title" : MessageLookupByLibrary.simpleMessage("tencent video"),
-    "var_txt" : MessageLookupByLibrary.simpleMessage("variety"),
-    "vip_tle" : MessageLookupByLibrary.simpleMessage("VIP")
-  };
+  final messages = _notInlinedMessages(_notInlinedMessages);
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "bottom_navigation_home_title":
+            MessageLookupByLibrary.simpleMessage("home"),
+        "bottom_navigation_me_title":
+            MessageLookupByLibrary.simpleMessage("me"),
+        "home_tab_cancelled": MessageLookupByLibrary.simpleMessage("cancelled"),
+        "home_tab_done": MessageLookupByLibrary.simpleMessage("done"),
+        "home_tab_waiting": MessageLookupByLibrary.simpleMessage("waiting"),
+        "home_tab_washing": MessageLookupByLibrary.simpleMessage("washing"),
+        "home_title": MessageLookupByLibrary.simpleMessage("Mileage Wash"),
+        "login_password_hint_text":
+            MessageLookupByLibrary.simpleMessage("Please input password"),
+        "login_password_length_error": MessageLookupByLibrary.simpleMessage(
+            "The password must contain at least six characters"),
+        "login_password_text": MessageLookupByLibrary.simpleMessage("password"),
+        "login_phone_error":
+            MessageLookupByLibrary.simpleMessage("Illegal phone number "),
+        "login_phone_hint_text":
+            MessageLookupByLibrary.simpleMessage("Please input phone"),
+        "login_phone_text": MessageLookupByLibrary.simpleMessage("phone"),
+        "login_submit_text": MessageLookupByLibrary.simpleMessage("Login"),
+        "login_title": MessageLookupByLibrary.simpleMessage("Login"),
+        "me_logout_text": MessageLookupByLibrary.simpleMessage("Logout"),
+        "title": MessageLookupByLibrary.simpleMessage("Mileage Wash")
+      };
 }

@@ -1,17 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tencent_video/common/listener/ob.dart';
-import 'package:tencent_video/common/util/app_utils.dart';
-import 'package:tencent_video/resource/strings.dart';
-import 'package:tencent_video/resource/styles.dart';
+import 'package:mileage_wash/common/listener/ob.dart';
+import 'package:mileage_wash/resource/strings.dart';
+import 'package:mileage_wash/resource/styles.dart';
 
 enum PageCategory {
   home,
-  doki,
-  vip,
-  message,
-  person,
+  me,
 }
 
 class AppState<T> extends Observer<T> {
@@ -73,13 +69,7 @@ class AppState<T> extends Observer<T> {
     assert(!initialized);
     _initialized = true;
     _appZone = Zone.current;
-    AppUtils.setAppSystemUIOverlayStyle();
-    print('模拟十秒初始化');
-    await Future<void>.delayed(const Duration(milliseconds: 10000));
-    page.value = PageCategory.doki;
     language.value = LanguageCodes.system;
-    print(
-        '模拟十秒初始化 root: ${Zone.root.hashCode} current: ${Zone.current.hashCode} zone.name: ${Zone.current['name']}');
   }
 
   static void doDispose() {

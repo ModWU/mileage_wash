@@ -1,4 +1,4 @@
-package com.example.tencent_video
+package com.example.mileage_wash
 
 import io.flutter.embedding.android.FlutterActivity
 import android.graphics.Color
