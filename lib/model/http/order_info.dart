@@ -1,8 +1,6 @@
-import 'dart:convert' as json;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:mileage_wash/server/state/http_request_state.dart';
 
 @immutable
 class OrderInfo {
@@ -17,7 +15,9 @@ class OrderInfo {
       required this.latitude,
       required this.longitude,
       required this.carNumber,
-      required this.state});
+      required this.state,
+      this.endDate,
+      this.cancelDate});
 
   factory OrderInfo.fromJson(Map<String, dynamic> data) {
     assert(data.containsKey('id'));
@@ -44,6 +44,9 @@ class OrderInfo {
     final String carNumber = data['car_number']! as String;
     final int state = data['state']! as int;
 
+    final String? endDate = data['end_date'] as String?;
+    final String? cancelDate = data['cancel_date'] as String?;
+
     return OrderInfo(
       id: id,
       shortName: shortName,
@@ -56,6 +59,8 @@ class OrderInfo {
       longitude: longitude,
       carNumber: carNumber,
       state: state,
+      endDate: endDate,
+      cancelDate: cancelDate,
     );
   }
 
@@ -70,11 +75,13 @@ class OrderInfo {
   final String longitude;
   final String carNumber;
   final int state;
+  final String? endDate;
+  final String? cancelDate;
 
   @override
   int get hashCode {
     return hashValues(id, shortName, adsName, adsDetail, washId, washName,
-        washDate, latitude, longitude, carNumber, state);
+        washDate, latitude, longitude, carNumber, state, endDate, cancelDate);
   }
 
   @override
@@ -92,10 +99,12 @@ class OrderInfo {
         other.latitude == latitude &&
         other.longitude == longitude &&
         other.carNumber == carNumber &&
-        other.state == state;
+        other.state == state &&
+        other.endDate == endDate &&
+        other.cancelDate == cancelDate;
   }
 
   @override
   String toString() =>
-      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, carNumber: $carNumber, state: $state)';
+      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, carNumber: $carNumber, state: $state, endDate: $endDate, cancelDate: $cancelDate)';
 }

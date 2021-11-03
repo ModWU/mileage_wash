@@ -130,6 +130,46 @@ class S {
     );
   }
 
+  /// `arrived`
+  String get home_order_item_waiting_btn {
+    return Intl.message(
+      'arrived',
+      name: 'home_order_item_waiting_btn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `washed`
+  String get home_order_item_washing_btn {
+    return Intl.message(
+      'washed',
+      name: 'home_order_item_washing_btn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `done`
+  String get home_order_item_done_btn {
+    return Intl.message(
+      'done',
+      name: 'home_order_item_done_btn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cancelled`
+  String get home_order_item_cancelled_btn {
+    return Intl.message(
+      'cancelled',
+      name: 'home_order_item_cancelled_btn',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get login_title {
     return Intl.message(

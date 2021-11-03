@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/server/controller/home_controller.dart';
@@ -52,24 +52,22 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final T homeNotifier = context.read<T>();
-    if (homeNotifier.orderData == null) {
-      final double screenHeight = MediaQuery.of(context).size.height;
-      HomeController.queryOrderList(context,
-              orderState: homeNotifier.state,
-              curPage: 0,
-              pageSize:
-                  (screenHeight / _itemHeight).ceil() * _cacheScreenLength,
-              allowThrowError: true)
-          .then((List<OrderInfo>? orderInfoList) {
-        if (mounted && orderInfoList != null) {
-          homeNotifier.addData(orderInfoList);
-        }
-      }).catchError((Object error) {
-        if (mounted) {
-          homeNotifier.notifyError(error);
-        }
-      });
-    }
+    final double screenHeight = MediaQuery.of(context).size.height;
+    HomeController.queryOrderList(context,
+        orderState: homeNotifier.state,
+        curPage: 0,
+        pageSize:
+        (screenHeight / _itemHeight).ceil() * _cacheScreenLength,
+        allowThrowError: true)
+        .then((List<OrderInfo>? orderInfoList) {
+      if (mounted && orderInfoList != null) {
+        homeNotifier.refreshData(orderInfoList);
+      }
+    }).catchError((Object error) {
+      if (mounted) {
+        homeNotifier.notifyError(error);
+      }
+    });
   }
 
   @override
@@ -95,25 +93,21 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     final T homeNotifier = context.read<T>();
     _refreshController!.resetNoData();
 
-    if (!_isAllowPullUp(homeNotifier, _viewportDimension)) {
-      _loadData(homeNotifier, onCompleted: () {
-        _refreshController!.refreshCompleted();
-      }, onNoData: () {
-        _refreshController!.loadNoData();
-        _refreshController!.refreshCompleted();
-      }, onFailed: () {
-        _refreshController!.refreshFailed();
-      });
-    } else {
+    _refreshData(homeNotifier, onCompleted: () {
       _refreshController!.refreshCompleted();
-    }
+    }, onNoData: () {
+      _refreshController!.loadNoData();
+      _refreshController!.refreshCompleted();
+    }, onFailed: () {
+      _refreshController!.refreshFailed();
+    });
   }
 
   Future<void> _onLoading() async {
     final T homeNotifier = context.read<T>();
 
     if (_isAllowPullUp(homeNotifier, _viewportDimension)) {
-      _loadData(homeNotifier, onCompleted: () {
+      _loadMoreData(homeNotifier, onCompleted: () {
         _refreshController!.loadComplete();
       }, onNoData: () {
         _refreshController!.loadNoData();
@@ -125,7 +119,32 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     }
   }
 
-  void _loadData(T homeNotifier,
+  void _refreshData(T homeNotifier,
+      {VoidCallback? onCompleted,
+      VoidCallback? onNoData,
+      VoidCallback? onFailed}) {
+    HomeController.queryOrderList(context,
+            orderState: homeNotifier.state,
+            curPage: 0,
+            pageSize: _taskCacheSize,
+            allowThrowError: true)
+        .then((List<OrderInfo>? orderInfoList) {
+      if (mounted && orderInfoList != null) {
+        homeNotifier.refreshData(orderInfoList);
+        if (orderInfoList.length >= _taskCacheSize) {
+          onCompleted?.call();
+        } else {
+          onNoData?.call();
+        }
+      }
+    }).catchError((Object error) {
+      if (mounted) {
+        onFailed?.call();
+      }
+    });
+  }
+
+  void _loadMoreData(T homeNotifier,
       {VoidCallback? onCompleted,
       VoidCallback? onNoData,
       VoidCallback? onFailed}) {
@@ -170,9 +189,24 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     return numPerScreen * _cacheScreenLength;
   }
 
-  Widget _buildOrderItemView(
-      BuildContext context, int index, List<OrderInfo> orderData) {
-    final OrderInfo orderInfo = orderData[index];
+  String _getButtonText(T homeNotifier) {
+    switch (homeNotifier.runtimeType) {
+      case HomeWaitingNotifier:
+        return S.of(context).home_order_item_waiting_btn;
+      case HomeWashingNotifier:
+        return S.of(context).home_order_item_washing_btn;
+      case HomeDoneNotifier:
+        return S.of(context).home_order_item_done_btn;
+      case HomeCancelledNotifier:
+        return S.of(context).home_order_item_cancelled_btn;
+    }
+
+    throw 'Wrong type $T';
+  }
+
+  Widget _buildOrderItemView(BuildContext context, int index, T homeNotifier,
+      BoxConstraints constraints) {
+    final OrderInfo orderInfo = homeNotifier.orderData![index];
     return Card(
       margin: const EdgeInsets.only(top: 8),
       child: Padding(
@@ -220,33 +254,82 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(
-                    Icons.assistant_navigation,
-                    size: 34,
-                    color: Colors.blueAccent,
-                  ),
-                  const SizedBox(width: 64),
+                  if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
+                    const Icon(
+                      Icons.assistant_navigation,
+                      size: 34,
+                      color: Colors.blueAccent,
+                    ),
+                    const SizedBox(width: 32),
+                  ]
                 ],
               ),
             ),
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(Radius.circular(3.2)),
-              ),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              child: const Text(
-                '已到达',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
+            TextButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(3.2)))),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(horizontal: 12))),
+                child: Align(
+                  heightFactor: 5,
+                  child: Text(
+                    _getButtonText(homeNotifier),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9.6,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )),
+            /* if (homeNotifier is HomeWaitingNotifier ||
+                homeNotifier is HomeWashingNotifier)
+              TextButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3.2)))),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(horizontal: 8))),
+                  child: Text(
+                    _getButtonText(homeNotifier),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+            else
+              Container(
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(3.2)),
                 ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                child: const Text(
+                  '已到达',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),*/
           ],
         ),
       ),
@@ -256,18 +339,14 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final T homeNotifier = context.watch<T>();
+    return LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final T homeNotifier = context.watch<T>();
 
-    final List<OrderInfo>? orderData = homeNotifier.orderData;
+      final List<OrderInfo>? orderData = homeNotifier.orderData;
 
-    return homeNotifier.hasError || orderData != null
-        ? LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-            final double maxHeight = constraints.maxHeight;
-
-            print("=========maxHeight: $maxHeight");
-
-            return SmartRefresher(
+      return homeNotifier.hasError || orderData != null
+          ? SmartRefresher(
               key: ValueKey<String>('smart_refresher_$T'),
               enablePullDown: true,
               enablePullUp: _isAllowPullUp(homeNotifier, constraints.maxHeight),
@@ -278,7 +357,8 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                   ? ListView.builder(
                       controller: _scrollController!,
                       itemBuilder: (BuildContext context, int index) =>
-                          _buildOrderItemView(context, index, orderData!),
+                          _buildOrderItemView(
+                              context, index, homeNotifier, constraints),
                       itemExtent: _itemHeight,
                       itemCount: homeNotifier.size,
                     )
@@ -289,11 +369,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                             fontSize: 18, fontStyle: FontStyle.italic),
                       ),
                     ),
-            );
-          })
-        : const LoadingWidget();
+            )
+          : const LoadingWidget();
+    });
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
 }

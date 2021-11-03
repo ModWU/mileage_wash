@@ -25,6 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("首页"),
         "bottom_navigation_me_title":
             MessageLookupByLibrary.simpleMessage("我的"),
+        "home_order_item_cancelled_btn":
+            MessageLookupByLibrary.simpleMessage("已取消"),
+        "home_order_item_done_btn": MessageLookupByLibrary.simpleMessage("已完成"),
+        "home_order_item_waiting_btn":
+            MessageLookupByLibrary.simpleMessage("已到达"),
+        "home_order_item_washing_btn":
+            MessageLookupByLibrary.simpleMessage("清洗完成"),
         "home_tab_cancelled": MessageLookupByLibrary.simpleMessage("已取消"),
         "home_tab_done": MessageLookupByLibrary.simpleMessage("已完成"),
         "home_tab_waiting": MessageLookupByLibrary.simpleMessage("待清洗"),

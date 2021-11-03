@@ -9,6 +9,11 @@
   "home_tab_done": "done",
   "home_tab_cancelled": "cancelled",
 
+  "home_order_item_waiting_btn": "arrived",
+  "home_order_item_washing_btn": "washed",
+  "home_order_item_done_btn": "done",
+  "home_order_item_cancelled_btn": "cancelled",
+
   "login_title": "Login",
   "login_phone_text": "phone",
   "login_phone_hint_text": "Please input phone",

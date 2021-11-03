@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
-import 'package:mileage_wash/server/state/http_request_state.dart';
+import 'package:mileage_wash/state/order_state.dart';
 
 abstract class HomeNotifier with ChangeNotifier {
   HomeNotifier(this.state);
@@ -28,6 +28,25 @@ abstract class HomeNotifier with ChangeNotifier {
 
   List<OrderInfo>? _orderData;
   List<OrderInfo>? get orderData => _orderData;
+
+  void refreshData(List<OrderInfo> data) {
+    if (data.isEmpty) {
+      return;
+    }
+
+    _error = null;
+
+    List<OrderInfo>? orderData = _orderData;
+    if (orderData != null) {
+      orderData.clear();
+    }
+    _curPage = 0;
+
+    orderData ??= _orderData = <OrderInfo>[];
+
+    orderData.addAll(data);
+    notifyListeners();
+  }
 
   void addData(List<OrderInfo> data, {int? curPage}) {
     if (data.isEmpty) {

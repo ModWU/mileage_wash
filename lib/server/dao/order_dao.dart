@@ -3,7 +3,7 @@ import 'package:mileage_wash/common/http/http_result.dart';
 import 'package:mileage_wash/common/http/http_utils.dart';
 import 'package:mileage_wash/constant/http_apis.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
-import 'package:mileage_wash/server/state/http_request_state.dart';
+import 'package:mileage_wash/state/order_state.dart';
 
 class OrderDao {
   OrderDao._();
@@ -15,7 +15,7 @@ class OrderDao {
     final Response<HttpResult> response = await HttpUtil.post<HttpResult>(
         HTTPApis.orderList,
         data: <String, dynamic>{
-          'state': orderState.value,
+          'state': orderState.httpRequestCode,
           'curPage': curPage,
           'pageSize': pageSize
         });

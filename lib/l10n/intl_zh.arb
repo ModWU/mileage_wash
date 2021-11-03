@@ -9,6 +9,11 @@
   "home_tab_done": "已完成",
   "home_tab_cancelled": "已取消",
 
+  "home_order_item_waiting_btn": "已到达",
+  "home_order_item_washing_btn": "清洗完成",
+  "home_order_item_done_btn": "已完成",
+  "home_order_item_cancelled_btn": "已取消",
+
   "login_title": "登陆",
   "login_phone_text": "手机号",
   "login_phone_hint_text": "请输入手机号",
