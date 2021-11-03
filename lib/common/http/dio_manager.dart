@@ -2,15 +2,12 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mileage_wash/constant/http_apis.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 
-import 'dio_Interceptors.dart';
-
 class DioManager {
   DioManager._() {
-    _init(successCode: successCode);
+    _init();
   }
 
   static late final DioManager instance = DioManager._();
@@ -23,14 +20,12 @@ class DioManager {
 
   final AppData appData = AppData.instance;
 
-  static int successCode = 0;
-
   DefaultHttpClientAdapter get _defaultHttpClientAdapter =>
       _rootDio.httpClientAdapter as DefaultHttpClientAdapter;
 
   static Dio get dio => instance._rootDio;
 
-  void _init({int successCode = 0, List<Interceptor>? interceptors}) {
+  void _init() {
     final BaseOptions options = BaseOptions(
       baseUrl: HTTPApis.beta,
       connectTimeout: connectTimeout,
@@ -42,13 +37,6 @@ class DioManager {
     _rootDio = dio;
 
     _setHttpClientCreate(appData.httpProxy);
-
-    dio.interceptors.addAll(<Interceptor>[
-      HeaderInterceptor(),
-      if (kDebugMode) MyLogInterceptor(requestBody: true, responseBody: true),
-      ResponseInterceptor(successCode),
-      if (interceptors != null) ...interceptors,
-    ]);
   }
 
   void _setHttpClientCreate(String? proxy) {

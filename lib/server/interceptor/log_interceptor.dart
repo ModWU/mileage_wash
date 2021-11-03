@@ -1,50 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
-import 'package:mileage_wash/model/global/app_data.dart';
-import 'package:mileage_wash/ui/utils/toast_utils.dart';
-
-import 'http_result.dart';
-
-class HeaderInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers.addAll(_createHeaders());
-    super.onRequest(options, handler);
-  }
-
-  static Map<String, dynamic> _createHeaders() {
-    final Map<String, dynamic> headers = <String, dynamic>{};
-
-    final String? token = AppData.instance.loginInfo?.token;
-    if (token != null) {
-      headers['token'] = token;
-    }
-
-    return headers;
-  }
-}
-
-class ResponseInterceptor extends Interceptor {
-  ResponseInterceptor(this.successCode);
-
-  final int successCode;
-
-  @override
-  void onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) {
-    if (response.data is Map) {
-      final HttpResult result =
-          HttpResult.fromJson(response.data as Map<String, dynamic>);
-
-      if (result.code != successCode) {
-        throw result.exception!;
-      }
-
-      response.data = result;
-    }
-    return super.onResponse(response, handler);
-  }
-}
 
 class MyLogInterceptor extends Interceptor {
   MyLogInterceptor({
@@ -150,7 +105,7 @@ class MyLogInterceptor extends Interceptor {
 
       Logger.logHttp('headers:');
       response.headers.forEach(
-          (String key, dynamic v) => _printKV(' $key', v.join('\r\n\t')));
+              (String key, dynamic v) => _printKV(' $key', v.join('\r\n\t')));
     }
     if (responseBody) {
       Logger.logHttp('Response Text:');
