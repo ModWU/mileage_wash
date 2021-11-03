@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mileage_wash/common/listener/ob.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
@@ -24,11 +25,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   RefreshController? _refreshController;
   ScrollController? _scrollController;
 
-  int? _cacheSize;
-
   final double _itemHeight = 106;
 
   final int _cacheScreenLength = 2;
+
+  final Observer<bool> _isLoading = true.ob;
 
   @override
   void initState() {
@@ -54,18 +55,18 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     final T homeNotifier = context.read<T>();
     final double screenHeight = MediaQuery.of(context).size.height;
     HomeController.queryOrderList(context,
-        orderState: homeNotifier.state,
-        curPage: 0,
-        pageSize:
-        (screenHeight / _itemHeight).ceil() * _cacheScreenLength,
-        allowThrowError: true)
+            orderState: homeNotifier.state,
+            curPage: 0,
+            pageSize: (screenHeight / _itemHeight).ceil() * _cacheScreenLength,
+            allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {
-      if (mounted && orderInfoList != null) {
-        homeNotifier.refreshData(orderInfoList);
+      if (mounted) {
+        homeNotifier.refreshData(orderInfoList!);
       }
+      _isLoading.value = false;
     }).catchError((Object error) {
       if (mounted) {
-        homeNotifier.notifyError(error);
+        _isLoading.value = false;
       }
     });
   }
@@ -122,24 +123,28 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   void _refreshData(T homeNotifier,
       {VoidCallback? onCompleted,
       VoidCallback? onNoData,
-      VoidCallback? onFailed}) {
+      VoidCallback? onFailed,
+      VoidCallback? onFinished}) {
+    final int cacheSize = _cacheSize;
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: 0,
-            pageSize: _taskCacheSize,
+            pageSize: cacheSize,
             allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {
-      if (mounted && orderInfoList != null) {
-        homeNotifier.refreshData(orderInfoList);
-        if (orderInfoList.length >= _taskCacheSize) {
+      if (mounted) {
+        homeNotifier.refreshData(orderInfoList!);
+        if (orderInfoList.length >= cacheSize) {
           onCompleted?.call();
         } else {
           onNoData?.call();
         }
+        onFinished?.call();
       }
     }).catchError((Object error) {
       if (mounted) {
         onFailed?.call();
+        onFinished?.call();
       }
     });
   }
@@ -148,15 +153,16 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
       {VoidCallback? onCompleted,
       VoidCallback? onNoData,
       VoidCallback? onFailed}) {
+    final int cacheSize = _cacheSize;
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: homeNotifier.curPage! + 1,
-            pageSize: _taskCacheSize,
+            pageSize: cacheSize,
             allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {
-      if (mounted && orderInfoList != null) {
-        homeNotifier.addData(orderInfoList);
-        if (orderInfoList.length >= _taskCacheSize) {
+      if (mounted) {
+        homeNotifier.addData(orderInfoList!);
+        if (orderInfoList.length >= cacheSize) {
           onCompleted?.call();
         } else {
           onNoData?.call();
@@ -169,7 +175,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     });
   }
 
-  int get _taskCacheSize => _cacheSize ??= _computerCacheSize();
+  int get _cacheSize => _computerCacheSize();
 
   double get _viewportDimension {
     final ScrollController scrollController = _scrollController!;
@@ -223,10 +229,16 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          '${orderInfo.adsName} ${orderInfo.adsDetail}',
-                          style: const TextStyle(
-                              overflow: TextOverflow.ellipsis, fontSize: 14),
+                        Tooltip(
+                          message:
+                              '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                            style: const TextStyle(
+                                overflow: TextOverflow.ellipsis, fontSize: 14),
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -265,31 +277,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                 ],
               ),
             ),
-            TextButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(3.2)))),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(horizontal: 12))),
-                child: Align(
-                  heightFactor: 5,
-                  child: Text(
-                    _getButtonText(homeNotifier),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9.6,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )),
-            /* if (homeNotifier is HomeWaitingNotifier ||
+            if (homeNotifier is HomeWaitingNotifier ||
                 homeNotifier is HomeWashingNotifier)
               TextButton(
                   onPressed: () {},
@@ -300,40 +288,62 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                                   BorderRadius.all(Radius.circular(3.2)))),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.blue),
+                      minimumSize: MaterialStateProperty.all<Size>(Size.zero),
+                      maximumSize: MaterialStateProperty.all<Size>(
+                          const Size.fromWidth(58)),
                       padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(horizontal: 8))),
-                  child: Text(
-                    _getButtonText(homeNotifier),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
+                  child: Align(
+                    heightFactor: 5,
+                    child: Text(
+                      _getButtonText(homeNotifier),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9.6,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   )),
-            else
+            if (homeNotifier is HomeCancelledNotifier ||
+                homeNotifier is HomeDoneNotifier)
               Container(
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(3.2)),
-                ),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                child: const Text(
-                  '已到达',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      _getButtonText(homeNotifier),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      _splitDate(homeNotifier is HomeDoneNotifier
+                          ? orderInfo.endDate!
+                          : orderInfo.cancelDate!),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 8.6,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-              ),*/
+              )
           ],
         ),
       ),
     );
+  }
+
+  String _splitDate(String date) {
+    final String dateStr = date.trim();
+    return dateStr.splitMapJoin(RegExp(r'\s+'), onMatch: (Match match) => '\n');
   }
 
   @override
@@ -343,34 +353,46 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
         builder: (BuildContext context, BoxConstraints constraints) {
       final T homeNotifier = context.watch<T>();
 
-      final List<OrderInfo>? orderData = homeNotifier.orderData;
-
-      return homeNotifier.hasError || orderData != null
-          ? SmartRefresher(
-              key: ValueKey<String>('smart_refresher_$T'),
-              enablePullDown: true,
-              enablePullUp: _isAllowPullUp(homeNotifier, constraints.maxHeight),
-              controller: _refreshController!,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              child: homeNotifier.hasData
-                  ? ListView.builder(
-                      controller: _scrollController!,
-                      itemBuilder: (BuildContext context, int index) =>
-                          _buildOrderItemView(
-                              context, index, homeNotifier, constraints),
-                      itemExtent: _itemHeight,
-                      itemCount: homeNotifier.size,
-                    )
-                  : const Center(
-                      child: Text(
-                        'Empty Data',
-                        style: TextStyle(
-                            fontSize: 18, fontStyle: FontStyle.italic),
+      return Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          SmartRefresher(
+            key: ValueKey<String>('smart_refresher_$T'),
+            enablePullDown: true,
+            enablePullUp: _isAllowPullUp(homeNotifier, constraints.maxHeight),
+            controller: _refreshController!,
+            onRefresh: _onRefresh,
+            onLoading: _onLoading,
+            child: homeNotifier.hasData
+                ? ListView.builder(
+                    controller: _scrollController!,
+                    itemBuilder: (BuildContext context, int index) =>
+                        _buildOrderItemView(
+                            context, index, homeNotifier, constraints),
+                    itemExtent: _itemHeight,
+                    itemCount: homeNotifier.size,
+                  )
+                : (_isLoading.value ?? false)
+                    ? const SizedBox()
+                    : const Center(
+                        child: Text(
+                          'Empty Data',
+                          style: TextStyle(
+                              fontSize: 18, fontStyle: FontStyle.italic),
+                        ),
                       ),
-                    ),
-            )
-          : const LoadingWidget();
+          ),
+          ObWidget<bool>(
+              initialValue: _isLoading,
+              builder: (Observer<bool>? observer) {
+                final bool isLoading = observer?.value ?? false;
+                return Offstage(
+                  offstage: !isLoading,
+                  child: const LoadingWidget(),
+                );
+              })
+        ],
+      );
     });
   }
 

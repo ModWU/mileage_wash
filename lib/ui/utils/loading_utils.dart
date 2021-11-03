@@ -22,8 +22,8 @@ class LoadingUtils {
     if (_overlay != null) return;
 
     _overlay = OverlayEntry(
-      builder: (BuildContext context) =>
-          LoadingWidget(loadingType: type, targetKey: targetKey),
+      builder: (BuildContext context) => LoadingWidget(
+          loadingType: type, targetContext: context, targetKey: targetKey),
     );
     Overlay.of(context)!.insert(_overlay!);
   }
@@ -37,10 +37,14 @@ class LoadingUtils {
 }
 
 class LoadingWidget extends StatefulWidget {
-  const LoadingWidget({this.loadingType = LoadingType.normal, this.targetKey});
+  const LoadingWidget(
+      {this.loadingType = LoadingType.normal,
+      this.targetContext,
+      this.targetKey});
 
   final LoadingType loadingType;
   final GlobalKey? targetKey;
+  final BuildContext? targetContext;
 
   @override
   State<StatefulWidget> createState() => _LoadingWidgetState();
@@ -62,6 +66,8 @@ class _LoadingWidgetState extends State<LoadingWidget> {
     if (widget.targetKey != null) {
       _targetRenderBox =
           widget.targetKey!.currentContext!.findRenderObject() as RenderBox;
+    } else {
+      _targetRenderBox = widget.targetContext?.findRenderObject() as RenderBox?;
     }
   }
 

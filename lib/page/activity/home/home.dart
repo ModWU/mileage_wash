@@ -20,7 +20,9 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: _previousIndex, length: 4, vsync: this);
+    _tabController =
+        TabController(initialIndex: _previousIndex, length: 4, vsync: this);
+    _tabController!.addListener(_onTabChange);
   }
 
   void _onTabClick(int index) {
@@ -28,8 +30,16 @@ class _HomePageState extends State<HomePage>
     _previousIndex = index;
   }
 
+  void _onTabChange() {
+    final int currentIndex = _tabController!.index;
+    if (currentIndex == _tabController!.animation?.value) {
+      notifyListeners(HomeState.tabChange, currentIndex);
+    }
+  }
+
   @override
   void dispose() {
+    _tabController!.removeListener(_onTabChange);
     HomeState.values.forEach(removeAllListenerByKey);
 
     _tabController!.dispose();
@@ -89,13 +99,15 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-enum HomeState {
-  tabClick,
-}
+enum HomeState { tabClick, tabChange }
 
 mixin HomeStateListener on DataNotifier {
   void addTabClickListener(
       void Function(int clickIndex, int previousIndex) listener) {
     addListener(HomeState.tabClick, listener);
+  }
+
+  void addTabChangeListener(void Function(int index) listener) {
+    addListener(HomeState.tabChange, listener);
   }
 }

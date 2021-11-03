@@ -7,21 +7,9 @@ abstract class HomeNotifier with ChangeNotifier {
 
   final OrderState state;
 
-  Object? _error;
-  bool get hasError => _error != null;
-
   bool get hasData => _orderData?.isNotEmpty ?? false;
 
   int get size => _orderData?.length ?? 0;
-
-  void notifyError(Object? error) {
-    if (_error == error) {
-      return;
-    }
-
-    _error = error;
-    notifyListeners();
-  }
 
   int? _curPage;
   int? get curPage => _curPage;
@@ -29,12 +17,19 @@ abstract class HomeNotifier with ChangeNotifier {
   List<OrderInfo>? _orderData;
   List<OrderInfo>? get orderData => _orderData;
 
+  void resetData() {
+    if (_orderData == null) {
+      return;
+    }
+
+    _orderData = null;
+    notifyListeners();
+  }
+
   void refreshData(List<OrderInfo> data) {
     if (data.isEmpty) {
       return;
     }
-
-    _error = null;
 
     List<OrderInfo>? orderData = _orderData;
     if (orderData != null) {
@@ -52,8 +47,6 @@ abstract class HomeNotifier with ChangeNotifier {
     if (data.isEmpty) {
       return;
     }
-
-    _error = null;
 
     curPage ??= (_curPage ?? -1) + 1;
     _curPage = curPage;
