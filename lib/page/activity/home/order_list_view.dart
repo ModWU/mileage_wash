@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
+import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
@@ -9,7 +10,7 @@ import 'package:mileage_wash/ui/utils/loading_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'home.dart';
+import 'home_page.dart';
 
 class OrderListView<T extends HomeNotifier> extends StatefulWidget {
   const OrderListView(this.homeStateListener);
@@ -62,11 +63,15 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
         .then((List<OrderInfo>? orderInfoList) {
       if (mounted) {
         homeNotifier.refreshData(orderInfoList!);
-      }
-      _isLoading.value = false;
-    }).catchError((Object error) {
-      if (mounted) {
         _isLoading.value = false;
+      }
+    }).catchError((Object error) {
+      print(
+          "didChangeDependenciesdidChangeDependencies123: ${homeNotifier.orderData}");
+      if (mounted) {
+        setState(() {
+          _isLoading.value = false;
+        });
       }
     });
   }
@@ -280,7 +285,10 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
             if (homeNotifier is HomeWaitingNotifier ||
                 homeNotifier is HomeWashingNotifier)
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteIds.washingReview,
+                        arguments: orderInfo);
+                  },
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           const RoundedRectangleBorder(
@@ -356,6 +364,15 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
       return Stack(
         fit: StackFit.expand,
         children: <Widget>[
+          Offstage(
+            offstage: homeNotifier.hasData || (_isLoading.value ?? false),
+            child: const Center(
+              child: Text(
+                'Empty Data',
+                style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
           SmartRefresher(
             key: ValueKey<String>('smart_refresher_$T'),
             enablePullDown: true,
@@ -363,24 +380,15 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
             controller: _refreshController!,
             onRefresh: _onRefresh,
             onLoading: _onLoading,
-            child: homeNotifier.hasData
-                ? ListView.builder(
-                    controller: _scrollController!,
-                    itemBuilder: (BuildContext context, int index) =>
-                        _buildOrderItemView(
-                            context, index, homeNotifier, constraints),
-                    itemExtent: _itemHeight,
-                    itemCount: homeNotifier.size,
-                  )
-                : (_isLoading.value ?? false)
-                    ? const SizedBox()
-                    : const Center(
-                        child: Text(
-                          'Empty Data',
-                          style: TextStyle(
-                              fontSize: 18, fontStyle: FontStyle.italic),
-                        ),
-                      ),
+            child: ListView.builder(
+              controller: _scrollController!,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildOrderItemView(
+                    context, index, homeNotifier, constraints);
+              },
+              itemExtent: _itemHeight,
+              itemCount: homeNotifier.size,
+            ),
           ),
           ObWidget<bool>(
               initialValue: _isLoading,

@@ -22,11 +22,11 @@ class TokenInterceptor extends Interceptor {
     }
 
     if (httpResult != null &&
-        httpResult.code == HttpResultCode.tokenExpired &&
-        AppData.instance.loginInfo != null) {
-      final String oldToken = AppData.instance.loginInfo!.token;
-      AppStorage.updateLoginInfo(null);
-      onTokenExpired?.call(httpResult.code, oldToken);
+       httpResult.code == HttpResultCode.tokenExpired &&
+       AppData.instance.loginInfo != null) {
+       final String oldToken = AppData.instance.loginInfo!.token;
+       AppStorage.updateLoginInfo(null);
+       onTokenExpired?.call(httpResult.code, oldToken);
     }
 
     return super.onResponse(response, handler);

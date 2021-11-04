@@ -3,10 +3,10 @@ import 'package:mileage_wash/common/listener/tap.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/server/controller/activity_controller.dart';
 
-import '../app_state.dart';
+import '../../state/app_state.dart';
 import '../base.dart';
-import 'home/home.dart';
-import 'me/me.dart';
+import 'home/home_page.dart';
+import 'me/me_page.dart';
 
 class ActivityPage extends StatefulWidget {
   @override

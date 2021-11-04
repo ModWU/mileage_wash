@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_state.dart';
+import '../state/app_state.dart';
 import 'boot_manager.dart';
 
 @optionalTypeArgs

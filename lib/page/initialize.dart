@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
-import 'package:mileage_wash/page/app_state.dart';
+import 'package:mileage_wash/state/app_state.dart';
 import 'package:mileage_wash/server/app_server.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';

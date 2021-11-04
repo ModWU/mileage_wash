@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mileage_wash/resource/styles.dart';
-import 'app_state.dart';
+import '../state/app_state.dart';
 import 'boot_page.dart';
 
 abstract class BootContext {

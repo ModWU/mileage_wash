@@ -23,7 +23,7 @@ abstract class HomeNotifier with ChangeNotifier {
     }
 
     _orderData = null;
-    notifyListeners();
+   // notifyListeners();
   }
 
   void refreshData(List<OrderInfo> data) {

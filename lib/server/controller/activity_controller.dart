@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/http/dio_manager.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/page/activity/activity_page.dart';
+import 'package:mileage_wash/page/login/login_page.dart';
 import 'package:mileage_wash/server/interceptor/token_interceptor.dart';
 
 mixin ActivityController on State<ActivityPage> {
@@ -12,12 +13,12 @@ mixin ActivityController on State<ActivityPage> {
   void initState() {
     super.initState();
     _tokenInterceptor = TokenInterceptor(_onTokenExpired);
-    DioManager.dio.interceptors.add(_tokenInterceptor!);
+    DioManager.dio.interceptors.insert(0, _tokenInterceptor!);
   }
 
   void _onTokenExpired(int code, String oldToken) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteIds.login, (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamed(
+        RouteIds.login, arguments: LoginNavigationWay.pop);
   }
 
   @override

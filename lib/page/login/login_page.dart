@@ -7,6 +7,8 @@ import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/server/controller/login_controller.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
 
+enum LoginNavigationWay { pop, pushNamedAndRemoveUntil }
+
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -143,8 +145,14 @@ class _LoginPageState extends State<LoginPage> {
       );
       LoadingUtils.hide();
       if (isSuccess) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            RouteIds.activity, (Route<dynamic> route) => false);
+        final LoginNavigationWay? navigationWay =
+            ModalRoute.of(context)!.settings.arguments as LoginNavigationWay?;
+        if (navigationWay == LoginNavigationWay.pop) {
+          Navigator.of(context).pop();
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteIds.activity, (Route<dynamic> route) => false);
+        }
       }
     }
   }
