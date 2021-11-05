@@ -31,6 +31,12 @@ class _ActivityPageState extends State<ActivityPage> with BootMiXin, ActivityCon
   void _pageChanged() => setState(() {});
 
   @override
+  void onBackFromLoginPage() {
+    int i = 0;
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(

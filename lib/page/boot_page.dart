@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/page/app_notifier.dart';
 import 'package:mileage_wash/page/route_generator.dart';
 import 'package:mileage_wash/resource/strings.dart';
 import 'package:mileage_wash/resource/styles.dart';
@@ -17,10 +18,12 @@ class BootPage extends StatefulWidget {
 class _BootPageState extends State<BootPage> with BootManager {
   ThemeData? _themeData;
   Locale? _locale;
+  AppNotifier? _appNotifier;
 
   @override
   void initState() {
     super.initState();
+    _appNotifier = AppNotifier();
     _themeData = ThemeAttrs.get(theme.value);
     _locale = LanguageCodes.getLocaleByLanguage(language.value);
     theme.addListener(_themeChanged);
@@ -33,6 +36,8 @@ class _BootPageState extends State<BootPage> with BootManager {
     language.removeListener(_languageChanged);
     _themeData = null;
     _locale = null;
+    NotificationType.values.forEach(_appNotifier!.removeAllListenerByKey);
+    _appNotifier = null;
     super.dispose();
   }
 
@@ -122,6 +127,9 @@ class _BootPageState extends State<BootPage> with BootManager {
 
   @override
   Locale? get locale => _locale;
+
+  @override
+  AppNotifier get appNotifier => _appNotifier!;
 }
 
 const List<LocalizationsDelegate<dynamic>> _delegates =

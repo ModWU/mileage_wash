@@ -14,6 +14,8 @@ abstract class HomeNotifier with ChangeNotifier {
   int? _curPage;
   int? get curPage => _curPage;
 
+  int get index => state.index;
+
   List<OrderInfo>? _orderData;
   List<OrderInfo>? get orderData => _orderData;
 
@@ -23,7 +25,7 @@ abstract class HomeNotifier with ChangeNotifier {
     }
 
     _orderData = null;
-   // notifyListeners();
+    // notifyListeners();
   }
 
   void refreshData(List<OrderInfo> data) {

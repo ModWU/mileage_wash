@@ -67,9 +67,7 @@ class _CountdownBuilderState extends State<CountdownBuilder>
     final bool needReset = widget.resetTag != oldWidget.resetTag;
 
     if (needReset) {
-      setState(() {
-        _countdownTicker = _createCountDownTicker(widget.initialValue);
-      });
+      _countdownTicker = _createCountDownTicker(widget.initialValue);
     }
   }
 

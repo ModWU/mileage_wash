@@ -11,8 +11,19 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
   Widget build(BuildContext context) {
     final OrderInfo orderInfo =
         ModalRoute.of(context)!.settings.arguments as OrderInfo;
-    return Center(
-      child: Text(orderInfo.shortName),
+    return Column(
+      children: <Widget>[
+        TextButton(onPressed: () {
+          setState(() {
+
+          });
+        }, child: Text("1234"))
+      ],
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant WashingReviewPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 }

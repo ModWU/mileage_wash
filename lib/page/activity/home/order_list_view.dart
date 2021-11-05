@@ -5,6 +5,7 @@ import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
+import 'package:mileage_wash/page/base.dart';
 import 'package:mileage_wash/server/controller/home_controller.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class OrderListView<T extends HomeNotifier> extends StatefulWidget {
 }
 
 class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
-    with AutomaticKeepAliveClientMixin {
+    with BootMiXin, AutomaticKeepAliveClientMixin {
   RefreshController? _refreshController;
   ScrollController? _scrollController;
 
@@ -39,14 +40,27 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     _scrollController = ScrollController();
 
     widget.homeStateListener.addTabClickListener(_onTabClick);
+    appNotifier.addLoginPopListener(_onLoginPop);
+  }
+
+  void _onLoginPop() {
+    final T homeNotifier = context.read<T>();
+    if (widget.homeStateListener.isTabAt(homeNotifier.index)) {
+      _isLoading.value = true;
+      _refreshData(homeNotifier, onFinished: () {
+        _isLoading.value = false;
+      });
+    }
   }
 
   void _onTabClick(int clickIndex, int previousIndex) {
-    final T homeNotifier = context.read<T>();
-
-    if (clickIndex == homeNotifier.state.index && previousIndex == clickIndex) {
-      _scrollController!.animateTo(0,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    if (previousIndex == clickIndex) {
+      final T homeNotifier = context.read<T>();
+      if (clickIndex == homeNotifier.state.index) {
+        _scrollController!.animateTo(0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+      }
     }
   }
 
@@ -66,8 +80,6 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
         _isLoading.value = false;
       }
     }).catchError((Object error) {
-      print(
-          "didChangeDependenciesdidChangeDependencies123: ${homeNotifier.orderData}");
       if (mounted) {
         setState(() {
           _isLoading.value = false;
@@ -78,6 +90,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
 
   @override
   void dispose() {
+    appNotifier.removeListener(_onLoginPop);
     widget.homeStateListener.removeListener(_onTabClick);
 
     _refreshController?.dispose();

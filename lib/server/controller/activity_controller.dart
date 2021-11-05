@@ -6,7 +6,6 @@ import 'package:mileage_wash/page/login/login_page.dart';
 import 'package:mileage_wash/server/interceptor/token_interceptor.dart';
 
 mixin ActivityController on State<ActivityPage> {
-
   TokenInterceptor? _tokenInterceptor;
 
   @override
@@ -16,9 +15,15 @@ mixin ActivityController on State<ActivityPage> {
     DioManager.dio.interceptors.insert(0, _tokenInterceptor!);
   }
 
-  void _onTokenExpired(int code, String oldToken) {
-    Navigator.of(context).pushNamed(
-        RouteIds.login, arguments: LoginNavigationWay.pop);
+  Future<void> _onTokenExpired(int code, String oldToken) async {
+    await Navigator.of(context)
+        .pushNamed(RouteIds.login, arguments: LoginNavigationWay.pop);
+    onBackFromLoginPage();
+  }
+
+  @protected
+  void onBackFromLoginPage() {
+
   }
 
   @override

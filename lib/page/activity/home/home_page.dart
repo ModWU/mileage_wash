@@ -38,6 +38,9 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
+  bool isTabAt(int index) => index == _tabController?.index;
+
+  @override
   void dispose() {
     _tabController!.removeListener(_onTabChange);
     HomeState.values.forEach(removeAllListenerByKey);
@@ -110,4 +113,6 @@ mixin HomeStateListener on DataNotifier {
   void addTabChangeListener(void Function(int index) listener) {
     addListener(HomeState.tabChange, listener);
   }
+
+  bool isTabAt(int index) => false;
 }
