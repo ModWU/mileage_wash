@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mileage_wash/common/listener/ob.dart';
 
 enum LoadingType { normal }
 
@@ -33,6 +34,26 @@ class LoadingUtils {
 
     _overlay!.remove();
     _overlay = null;
+  }
+
+  static Widget build({
+    required Widget child,
+    required Observer<bool> observer,
+  }) {
+    return Stack(
+      children: <Widget>[
+        child,
+        ObWidget<bool>(
+            builder: (Observer<bool>? observer) {
+              final bool show = observer?.value ?? false;
+              return Offstage(
+                offstage: !show,
+                child: const LoadingWidget(),
+              );
+            },
+            initialValue: observer),
+      ],
+    );
   }
 }
 
@@ -72,7 +93,23 @@ class _LoadingWidgetState extends State<LoadingWidget> {
   }
 
   Widget _buildLoadingView() {
-    return const CircularProgressIndicator();
+    return Container(
+      width: 86,
+      height: 86,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.all(Radius.circular(6.0)),
+      ),
+      child: const SizedBox(
+        width: 28,
+        height: 28,
+        child: CircularProgressIndicator(
+          strokeWidth: 2.6,
+          color: Colors.white70,
+        ),
+      ),
+    );
   }
 
   Widget _buildByPosition() {

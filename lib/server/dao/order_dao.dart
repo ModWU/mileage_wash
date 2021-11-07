@@ -3,6 +3,7 @@ import 'package:mileage_wash/common/http/http_result.dart';
 import 'package:mileage_wash/common/http/http_utils.dart';
 import 'package:mileage_wash/constant/http_apis.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
+import 'package:mileage_wash/state/car_state.dart';
 import 'package:mileage_wash/state/order_state.dart';
 
 class OrderDao {
@@ -32,5 +33,26 @@ class OrderDao {
     }
 
     return orderInfoList;
+  }
+
+  static Future<int> saveOrder({
+    required OrderInfo orderInfo,
+    required String filePaths,
+    required String photoListType,
+    required CarState carState,
+    CancelToken? cancelToken,
+  }) async {
+    final Response<HttpResult> response =
+        await HttpUtil.post(HTTPApis.saveOrder, data: <String, dynamic>{
+      'id': orderInfo.id,
+      'state': orderInfo.state,
+      'carInfo': carState.value,
+      photoListType: filePaths,
+    });
+
+    final HttpResult httpResult = response.data!;
+
+    final int data = httpResult.data as int;
+    return data;
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
 
+@immutable
 class OrderState {
   const OrderState._(this.index, {required this.httpRequestCode});
 

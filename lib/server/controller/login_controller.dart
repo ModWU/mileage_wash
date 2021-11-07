@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/error_utils.dart';
+import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/server/dao/login_dao.dart';
 
@@ -17,7 +18,7 @@ class LoginController {
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
-      ErrorUtils.showToastWhenHttpError(error, '登陆异常!');
+      ErrorUtils.showToastWhenHttpError(error, S.of(context).login_error);
     }
     return false;
   }
@@ -28,7 +29,7 @@ class LoginController {
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
-      ErrorUtils.showToastWhenHttpError(error, '登出异常!');
+      ErrorUtils.showToastWhenHttpError(error, S.of(context).logout_error);
     }
     return false;
   }

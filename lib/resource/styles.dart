@@ -62,20 +62,20 @@ class ThemeAttrs {
     //primaryColor: Colors.red,
     primarySwatch: Colors.brown,
     colorScheme: const ColorScheme(
-          primary: Colors.blue,
-          primaryVariant: Colors.blueAccent,
-          onPrimary: Colors.white,
-          secondary: Colors.red,
-          secondaryVariant: Colors.redAccent,
-          onSecondary: Colors.white,
-          surface: Colors.green,
-          onSurface: Colors.greenAccent,
-          background: Colors.grey,
-          onBackground: Colors.blueGrey,
-          error: Colors.red,
-          onError: Colors.yellowAccent,
-          brightness: Brightness.light,
-        ),
+      primary: Colors.blue,
+      primaryVariant: Colors.blueAccent,
+      onPrimary: Colors.white,
+      secondary: Colors.red,
+      secondaryVariant: Colors.redAccent,
+      onSecondary: Colors.white,
+      surface: Colors.green,
+      onSurface: Colors.greenAccent,
+      background: Colors.grey,
+      onBackground: Colors.blueGrey,
+      error: Colors.red,
+      onError: Colors.yellowAccent,
+      brightness: Brightness.light,
+    ),
     tabBarTheme: const TabBarTheme(
       unselectedLabelColor: ColorAttrs.home_tab_unselected_light_color,
       labelColor: ColorAttrs.home_tab_selected_light_color,
@@ -101,6 +101,15 @@ class ThemeAttrs {
         statusBarBrightness: Brightness.light,
       ),
       toolbarTextStyle: TextAttrs.home_light_body,
+    ),
+    radioTheme: RadioThemeData(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return Colors.blue;
+        }
+        return Colors.grey;
+      }),
     ),
   );
 

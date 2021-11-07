@@ -15,6 +15,9 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
   @protected
   void themeChanged() {}
 
+  @protected
+  void onLoginPop() {}
+
   bool isPageAt(PageCategory page) {
     return bootContext.isPageAt(page);
   }
@@ -24,12 +27,14 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
     super.initState();
     bootContext.page.addListener(pageChanged);
     bootContext.theme.addListener(themeChanged);
+    appNotifier.addLoginPopListener(onLoginPop);
   }
 
   @override
   void dispose() {
     bootContext.page.removeListener(pageChanged);
     bootContext.theme.removeListener(themeChanged);
+    appNotifier.removeListener(onLoginPop);
     super.dispose();
   }
 }

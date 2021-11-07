@@ -170,6 +170,156 @@ class S {
     );
   }
 
+  /// `Check vehicle condition before washing`
+  String get washing_review_title {
+    return Intl.message(
+      'Check vehicle condition before washing',
+      name: 'washing_review_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! `
+  String get washing_review_tip {
+    return Intl.message(
+      'Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ',
+      name: 'washing_review_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `*Car Status:`
+  String get washing_review_car_status_title {
+    return Intl.message(
+      '*Car Status:',
+      name: 'washing_review_car_status_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `well`
+  String get washing_review_car_status_well {
+    return Intl.message(
+      'well',
+      name: 'washing_review_car_status_well',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `a scratch`
+  String get washing_review_car_status_scratch {
+    return Intl.message(
+      'a scratch',
+      name: 'washing_review_car_status_scratch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `a collision`
+  String get washing_review_car_status_collision {
+    return Intl.message(
+      'a collision',
+      name: 'washing_review_car_status_collision',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Photos have reached their limit!`
+  String get washing_review_car_pick_picture_limit_error {
+    return Intl.message(
+      'Photos have reached their limit!',
+      name: 'washing_review_car_pick_picture_limit_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `*Please upload photos of vehicle condition:`
+  String get washing_review_car_photo_upload_title {
+    return Intl.message(
+      '*Please upload photos of vehicle condition:',
+      name: 'washing_review_car_photo_upload_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take a close-up of the scratches and bumps, please`
+  String get washing_review_car_photo_upload_tip {
+    return Intl.message(
+      'Take a close-up of the scratches and bumps, please',
+      name: 'washing_review_car_photo_upload_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Load fail`
+  String get washing_review_car_photo_upload_fail_tip {
+    return Intl.message(
+      'Load fail',
+      name: 'washing_review_car_photo_upload_fail_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload photos for washing`
+  String get washing_review_car_submit_button {
+    return Intl.message(
+      'Upload photos for washing',
+      name: 'washing_review_car_submit_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please take pictures!`
+  String get washing_review_car_submit_no_data {
+    return Intl.message(
+      'Please take pictures!',
+      name: 'washing_review_car_submit_no_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please remove or reload the failed loading photos first!`
+  String get washing_review_car_submit_progress_error {
+    return Intl.message(
+      'Please remove or reload the failed loading photos first!',
+      name: 'washing_review_car_submit_progress_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please wait, photos are being uploaded...`
+  String get washing_review_car_submit_progress_uploading_tip {
+    return Intl.message(
+      'Please wait, photos are being uploaded...',
+      name: 'washing_review_car_submit_progress_uploading_tip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick photo error!`
+  String get washing_review_car_pick_photo_error {
+    return Intl.message(
+      'Pick photo error!',
+      name: 'washing_review_car_pick_photo_error',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get login_title {
     return Intl.message(
@@ -250,11 +400,91 @@ class S {
     );
   }
 
+  /// `personal center`
+  String get me_title {
+    return Intl.message(
+      'personal center',
+      name: 'me_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `order receiving`
+  String get me_order_state_receiving {
+    return Intl.message(
+      'order receiving',
+      name: 'me_order_state_receiving',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Logout`
   String get me_logout_text {
     return Intl.message(
       'Logout',
       name: 'me_logout_text',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press exit again`
+  String get exit_tip_twice_click {
+    return Intl.message(
+      'Press exit again',
+      name: 'exit_tip_twice_click',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login error!`
+  String get login_error {
+    return Intl.message(
+      'Login error!',
+      name: 'login_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout error!`
+  String get logout_error {
+    return Intl.message(
+      'Logout error!',
+      name: 'logout_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error querying order!`
+  String get order_query_error {
+    return Intl.message(
+      'Error querying order!',
+      name: 'order_query_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error saving order!`
+  String get order_save_error {
+    return Intl.message(
+      'Error saving order!',
+      name: 'order_save_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error uploading photo!`
+  String get photo_upload_error {
+    return Intl.message(
+      'Error uploading photo!',
+      name: 'photo_upload_error',
       desc: '',
       args: [],
     );

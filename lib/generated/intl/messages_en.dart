@@ -25,6 +25,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("home"),
         "bottom_navigation_me_title":
             MessageLookupByLibrary.simpleMessage("me"),
+        "exit_tip_twice_click":
+            MessageLookupByLibrary.simpleMessage("Press exit again"),
         "home_order_item_cancelled_btn":
             MessageLookupByLibrary.simpleMessage("cancelled"),
         "home_order_item_done_btn":
@@ -38,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "home_tab_waiting": MessageLookupByLibrary.simpleMessage("waiting"),
         "home_tab_washing": MessageLookupByLibrary.simpleMessage("washing"),
         "home_title": MessageLookupByLibrary.simpleMessage("Mileage Wash"),
+        "login_error": MessageLookupByLibrary.simpleMessage("Login error!"),
         "login_password_hint_text":
             MessageLookupByLibrary.simpleMessage("Please input password"),
         "login_password_length_error": MessageLookupByLibrary.simpleMessage(
@@ -50,7 +53,52 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_phone_text": MessageLookupByLibrary.simpleMessage("phone"),
         "login_submit_text": MessageLookupByLibrary.simpleMessage("Login"),
         "login_title": MessageLookupByLibrary.simpleMessage("Login"),
+        "logout_error": MessageLookupByLibrary.simpleMessage("Logout error!"),
         "me_logout_text": MessageLookupByLibrary.simpleMessage("Logout"),
-        "title": MessageLookupByLibrary.simpleMessage("Mileage Wash")
+        "me_order_state_receiving":
+            MessageLookupByLibrary.simpleMessage("order receiving"),
+        "me_title": MessageLookupByLibrary.simpleMessage("personal center"),
+        "order_query_error":
+            MessageLookupByLibrary.simpleMessage("Error querying order!"),
+        "order_save_error":
+            MessageLookupByLibrary.simpleMessage("Error saving order!"),
+        "photo_upload_error":
+            MessageLookupByLibrary.simpleMessage("Error uploading photo!"),
+        "title": MessageLookupByLibrary.simpleMessage("Mileage Wash"),
+        "washing_review_car_photo_upload_fail_tip":
+            MessageLookupByLibrary.simpleMessage("Load fail"),
+        "washing_review_car_photo_upload_tip":
+            MessageLookupByLibrary.simpleMessage(
+                "Take a close-up of the scratches and bumps, please"),
+        "washing_review_car_photo_upload_title":
+            MessageLookupByLibrary.simpleMessage(
+                "*Please upload photos of vehicle condition:"),
+        "washing_review_car_pick_photo_error":
+            MessageLookupByLibrary.simpleMessage("Pick photo error!"),
+        "washing_review_car_pick_picture_limit_error":
+            MessageLookupByLibrary.simpleMessage(
+                "Photos have reached their limit!"),
+        "washing_review_car_status_collision":
+            MessageLookupByLibrary.simpleMessage("a collision"),
+        "washing_review_car_status_scratch":
+            MessageLookupByLibrary.simpleMessage("a scratch"),
+        "washing_review_car_status_title":
+            MessageLookupByLibrary.simpleMessage("*Car Status:"),
+        "washing_review_car_status_well":
+            MessageLookupByLibrary.simpleMessage("well"),
+        "washing_review_car_submit_button":
+            MessageLookupByLibrary.simpleMessage("Upload photos for washing"),
+        "washing_review_car_submit_no_data":
+            MessageLookupByLibrary.simpleMessage("Please take pictures!"),
+        "washing_review_car_submit_progress_error":
+            MessageLookupByLibrary.simpleMessage(
+                "Please remove or reload the failed loading photos first!"),
+        "washing_review_car_submit_progress_uploading_tip":
+            MessageLookupByLibrary.simpleMessage(
+                "Please wait, photos are being uploaded..."),
+        "washing_review_tip": MessageLookupByLibrary.simpleMessage(
+            "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! "),
+        "washing_review_title": MessageLookupByLibrary.simpleMessage(
+            "Check vehicle condition before washing")
       };
 }

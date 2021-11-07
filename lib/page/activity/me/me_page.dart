@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/server/controller/login_controller.dart';
-import 'package:mileage_wash/server/dao/login_dao.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
-import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
 import '../../base.dart';
 
@@ -26,13 +23,13 @@ class _MePageState extends State<MePage> with BootMiXin {
         automaticallyImplyLeading: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const <Widget>[
+          children: <Widget>[
             Text(
-              '个人中心',
+              S.of(context).me_title,
             ),
             Text(
-              '(正在接单)',
-              style: TextStyle(fontSize: 14),
+              S.of(context).me_order_state_receiving,
+              style: const TextStyle(fontSize: 14),
             )
           ],
         ),

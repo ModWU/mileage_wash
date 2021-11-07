@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import 'dio_manager.dart';
@@ -70,5 +72,63 @@ class HttpUtil {
       cancelToken: cancelToken,
       options: options,
     );
+  }
+
+  static Future<Response<T>> uploadFile<T>(
+    String path,
+    File file, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+  }) async {
+    final Map<String, dynamic> dataMap = <String, dynamic>{
+      'file': await MultipartFile.fromFile(file.path),
+    };
+
+    if (data != null) {
+      dataMap.addAll(data);
+    }
+
+    final FormData formData = FormData.fromMap(dataMap);
+
+    return DioManager.dio.post<T>(path,
+        queryParameters: params,
+        data: formData,
+        cancelToken: cancelToken,
+        options: options,
+        onSendProgress: onSendProgress);
+  }
+
+  static Future<Response<T>> uploadFiles<T>(
+    String path,
+    List<File> files, {
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+  }) async {
+    assert(files.isNotEmpty);
+
+    final Map<String, dynamic> dataMap = <String, dynamic>{
+      'files': <MultipartFile>[
+        for (final File file in files) await MultipartFile.fromFile(file.path)
+      ],
+    };
+
+    if (data != null) {
+      dataMap.addAll(data);
+    }
+
+    final FormData formData = FormData.fromMap(dataMap);
+
+    return DioManager.dio.post<T>(path,
+        queryParameters: params,
+        data: formData,
+        cancelToken: cancelToken,
+        options: options,
+        onSendProgress: onSendProgress);
   }
 }

@@ -14,6 +14,22 @@
   "home_order_item_done_btn": "已完成",
   "home_order_item_cancelled_btn": "已取消",
 
+  "washing_review_title": "清洗前检验车辆状况",
+  "washing_review_tip": "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！",
+  "washing_review_car_status_title": "*车辆状况：",
+  "washing_review_car_status_well": "车况良好",
+  "washing_review_car_status_scratch": "有刮痕",
+  "washing_review_car_status_collision": "有碰撞",
+  "washing_review_car_pick_picture_limit_error": "照片已经达到上限！",
+  "washing_review_car_photo_upload_title": "*请上传车辆状况照片：",
+  "washing_review_car_photo_upload_tip": "刮痕、碰撞请加拍个特写",
+  "washing_review_car_photo_upload_fail_tip": "加载失败",
+  "washing_review_car_submit_button": "上传照片 开始清洗",
+  "washing_review_car_submit_no_data": "请拍照！",
+  "washing_review_car_submit_progress_error": "请先处理掉加载失败的照片！",
+  "washing_review_car_submit_progress_uploading_tip": "请稍后，照片正在上传中...",
+  "washing_review_car_pick_photo_error": "拍照失败！",
+
   "login_title": "登陆",
   "login_phone_text": "手机号",
   "login_phone_hint_text": "请输入手机号",
@@ -23,5 +39,15 @@
   "login_password_length_error": "密码长度不能小于6位",
   "login_submit_text": "登陆",
 
-  "me_logout_text": "退出登录"
+  "me_title": "个人中心",
+  "me_order_state_receiving": "正在接单",
+  "me_logout_text": "退出登录",
+
+  "exit_tip_twice_click": "再按一次退出",
+
+  "login_error": "登陆异常！",
+  "logout_error": "登出异常！",
+  "order_query_error": "查询订单异常！",
+  "order_save_error": "保存订单异常！",
+  "photo_upload_error": "上传照片异常！"
 }

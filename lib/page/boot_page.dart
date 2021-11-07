@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/common/util/scroll_behavior.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/page/app_notifier.dart';
 import 'package:mileage_wash/page/route_generator.dart';
 import 'package:mileage_wash/resource/strings.dart';
 import 'package:mileage_wash/resource/styles.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'boot_manager.dart';
 
 class BootPage extends StatefulWidget {
@@ -81,42 +82,19 @@ class _BootPageState extends State<BootPage> with BootManager {
   @override
   Widget build(BuildContext context) {
     Logger.log('boot build');
-    return RefreshConfiguration(
-        headerBuilder: () => const WaterDropHeader(
-              waterDropColor: Colors.blue,
-            ),
-        footerBuilder: () => CustomFooter(
-              builder: (BuildContext context, LoadStatus? mode) {
-                Widget body;
-                if (mode == LoadStatus.idle) {
-                  body = const Text('pull up load');
-                } else if (mode == LoadStatus.loading) {
-                  body = const CupertinoActivityIndicator();
-                } else if (mode == LoadStatus.failed) {
-                  body = const Text('Load Failed! Click retry!');
-                } else if (mode == LoadStatus.canLoading) {
-                  body = const Text('release to load more');
-                } else {
-                  body = const Text('No more data');
-                }
-                return Container(
-                  height: 55.0,
-                  child: Center(child: body),
-                );
-              },
-            ),
-        child: MaterialApp(
-          localizationsDelegates: _delegates,
-          restorationScopeId: 'root',
-          supportedLocales: S.delegate.supportedLocales,
-          locale: _locale,
-          localeListResolutionCallback: _handleLocales,
-          theme: _themeData,
-          onGenerateRoute: (RouteSettings settings) {
-            return RouteGenerator.generate(settings);
-          },
-          initialRoute: RouteGenerator.initial,
-        ));
+    return MaterialApp(
+      localizationsDelegates: _delegates,
+      restorationScopeId: 'root',
+      supportedLocales: S.delegate.supportedLocales,
+      locale: _locale,
+      localeListResolutionCallback: _handleLocales,
+      theme: _themeData,
+      scrollBehavior: const IOSScrollBehavior(),
+      onGenerateRoute: (RouteSettings settings) {
+        return RouteGenerator.generate(settings);
+      },
+      initialRoute: RouteGenerator.initial,
+    );
   }
 
   @override
