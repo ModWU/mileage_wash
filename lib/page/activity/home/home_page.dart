@@ -12,8 +12,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with BootMiXin, TickerProviderStateMixin, DataNotifier, HomeStateListener {
+    with BootMiXin, TickerProviderStateMixin {
   TabController? _tabController;
+
+  HomeStateListener? homeStateListener;
 
   int _previousIndex = 0;
 
@@ -23,28 +25,30 @@ class _HomePageState extends State<HomePage>
     _tabController =
         TabController(initialIndex: _previousIndex, length: 4, vsync: this);
     _tabController!.addListener(_onTabChange);
+
+    homeStateListener = HomeStateListener(_tabController!);
   }
 
   void _onTabClick(int index) {
-    notifyListeners(HomeState.tabClick, index, _previousIndex);
+    homeStateListener!
+        .notifyListeners(HomeState.tabClick, index, _previousIndex);
     _previousIndex = index;
   }
 
   void _onTabChange() {
     final int currentIndex = _tabController!.index;
     if (currentIndex == _tabController!.animation?.value) {
-      notifyListeners(HomeState.tabChange, currentIndex);
+      homeStateListener!.notifyListeners(HomeState.tabChange, currentIndex);
     }
   }
 
   @override
-  bool isTabAt(int index) => index == _tabController?.index;
-
-  @override
   void dispose() {
-    _tabController!.removeListener(_onTabChange);
-    HomeState.values.forEach(removeAllListenerByKey);
+    HomeState.values.forEach(homeStateListener!.removeAllListenerByKey);
+    homeStateListener!.dispose();
+    homeStateListener = null;
 
+    _tabController!.removeListener(_onTabChange);
     _tabController!.dispose();
     _tabController = null;
     super.dispose();
@@ -90,10 +94,10 @@ class _HomePageState extends State<HomePage>
             controller: _tabController,
             physics: const BouncingScrollPhysics(),
             children: <Widget>[
-              OrderListView<HomeWaitingNotifier>(this),
-              OrderListView<HomeWashingNotifier>(this),
-              OrderListView<HomeDoneNotifier>(this),
-              OrderListView<HomeCancelledNotifier>(this),
+              OrderListView<HomeWaitingNotifier>(homeStateListener!),
+              OrderListView<HomeWashingNotifier>(homeStateListener!),
+              OrderListView<HomeDoneNotifier>(homeStateListener!),
+              OrderListView<HomeCancelledNotifier>(homeStateListener!),
             ],
           ),
         ),
@@ -104,7 +108,11 @@ class _HomePageState extends State<HomePage>
 
 enum HomeState { tabClick, tabChange }
 
-mixin HomeStateListener on DataNotifier {
+class HomeStateListener with DataNotifier {
+  HomeStateListener(this.tabController);
+
+  TabController? tabController;
+
   void addTabClickListener(
       void Function(int clickIndex, int previousIndex) listener) {
     addListener(HomeState.tabClick, listener);
@@ -114,5 +122,11 @@ mixin HomeStateListener on DataNotifier {
     addListener(HomeState.tabChange, listener);
   }
 
-  bool isTabAt(int index) => false;
+  bool isTabAt(int index) => index == tabController!.index;
+
+  @override
+  void dispose() {
+    tabController = null;
+    super.dispose();
+  }
 }

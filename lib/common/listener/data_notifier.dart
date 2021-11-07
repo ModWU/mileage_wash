@@ -106,8 +106,6 @@ class DataNotifier implements DataListenable {
     _listeners = null;
   }
 
-  @protected
-  @visibleForTesting
   void notifyListeners(dynamic key,
       [Object? arg01,
       Object? arg02,

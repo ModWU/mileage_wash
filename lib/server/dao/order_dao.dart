@@ -9,12 +9,15 @@ import 'package:mileage_wash/state/order_state.dart';
 class OrderDao {
   OrderDao._();
 
-  static Future<List<OrderInfo>> queryOrderList(
-      {required OrderState orderState,
-      required int curPage,
-      required int pageSize}) async {
+  static Future<List<OrderInfo>> queryOrderList({
+    required OrderState orderState,
+    required int curPage,
+    required int pageSize,
+    CancelToken? cancelToken,
+  }) async {
     final Response<HttpResult> response = await HttpUtil.post<HttpResult>(
         HTTPApis.orderList,
+        cancelToken: cancelToken,
         data: <String, dynamic>{
           'state': orderState.httpRequestCode,
           'curPage': curPage,

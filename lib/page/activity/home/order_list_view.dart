@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,6 +34,8 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   final int _cacheScreenLength = 2;
 
   final Observer<bool> _isLoading = true.ob;
+
+  CancelToken? _cancelToken;
 
   @override
   void initState() {
@@ -75,9 +78,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     super.didChangeDependencies();
     final T homeNotifier = context.read<T>();
     final double screenHeight = MediaQuery.of(context).size.height;
+    _cancelToken = CancelToken();
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: 0,
+            cancelToken: _cancelToken,
             pageSize: (screenHeight / _itemHeight).ceil() * _cacheScreenLength,
             allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {
@@ -96,6 +101,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
 
   @override
   void dispose() {
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
+      _cancelToken!.cancel();
+    }
+    _cancelToken = null;
+
     widget.homeStateListener.removeListener(_onTabClick);
 
     _refreshController?.dispose();
@@ -149,9 +159,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
       VoidCallback? onFailed,
       VoidCallback? onFinished}) {
     final int cacheSize = _cacheSize;
+    _cancelToken = CancelToken();
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: 0,
+            cancelToken: _cancelToken,
             pageSize: cacheSize,
             allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {
@@ -177,9 +189,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
       VoidCallback? onNoData,
       VoidCallback? onFailed}) {
     final int cacheSize = _cacheSize;
+    _cancelToken = CancelToken();
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: homeNotifier.curPage! + 1,
+            cancelToken: _cancelToken,
             pageSize: cacheSize,
             allowThrowError: true)
         .then((List<OrderInfo>? orderInfoList) {

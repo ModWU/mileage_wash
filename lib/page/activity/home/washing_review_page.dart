@@ -38,6 +38,8 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
 
   final Observer<bool> _loading = false.ob;
 
+  CancelToken? _saveOrderCancelToken;
+
   int get _photoLength => _photos?.length ?? 0;
 
   @override
@@ -67,9 +69,9 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
 
   String get _httpRequestPhotoListType {
     if (_homeNotifier is HomeWaitingNotifier) {
-      return 'beginPhotoList';
+      return 'beginPhoto';
     } else if (_homeNotifier is HomeWashingNotifier) {
-      return 'endPhotoList';
+      return 'endPhoto';
     }
 
     throw 'homeNotifier type "${_homeNotifier.runtimeType}" error';
@@ -115,12 +117,18 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
       cancelToken: photoUploadProgress.cancelToken,
       allowThrowError: true,
       onSendProgress: (int count, int total) {
-        photoUploadProgress.value = count / total;
+        if (mounted) {
+          photoUploadProgress.value = count / total;
+        }
       },
     ).then((UploadResult? uploadResult) {
-      photoUploadProgress.result = uploadResult!.photo;
+      if (mounted) {
+        photoUploadProgress.result = uploadResult!.photo;
+      }
     }).catchError((Object error) {
-      photoUploadProgress.value = -1;
+      if (mounted) {
+        photoUploadProgress.value = -1;
+      }
     });
   }
 
@@ -290,6 +298,12 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
       }
       _photos = null;
     }
+
+    if (_saveOrderCancelToken != null && !_saveOrderCancelToken!.isCancelled) {
+      _saveOrderCancelToken!.cancel();
+      _saveOrderCancelToken = null;
+    }
+
     super.dispose();
   }
 
@@ -478,11 +492,14 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
 
     assert(photoList.isNotEmpty);
 
+    _saveOrderCancelToken = CancelToken();
+
     HomeController.saveOrder(context,
             orderInfo: _orderInfo,
             filePaths: photoList,
             allowThrowError: false,
             carState: _carState!,
+            cancelToken: _saveOrderCancelToken,
             photoListType: _httpRequestPhotoListType)
         .then((_) {
       Navigator.of(context).pop();

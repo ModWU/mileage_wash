@@ -41,6 +41,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  @override
+  void dispose() {
+    _lastPopTime = null;
+    super.dispose();
+  }
+
   String? _verifyPhone(String? phone) {
     if (phone == null || phone == '') {
       return null;

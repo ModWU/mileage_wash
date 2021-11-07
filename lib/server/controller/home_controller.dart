@@ -19,19 +19,27 @@ mixin HomeController {
     required OrderState orderState,
     required int curPage,
     required int pageSize,
+    CancelToken? cancelToken,
     bool allowThrowError = false,
   }) async {
     try {
       final List<OrderInfo> orderInfo = await OrderDao.queryOrderList(
-          orderState: orderState, curPage: curPage, pageSize: pageSize);
+          orderState: orderState,
+          curPage: curPage,
+          pageSize: pageSize,
+          cancelToken: cancelToken);
 
       return orderInfo;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
-      ErrorUtils.showToastWhenHttpError(error, S.of(context).order_query_error);
 
-      if (allowThrowError) {
-        rethrow;
+      if (error is! DioError || error.type != DioErrorType.cancel) {
+        ErrorUtils.showToastWhenHttpError(
+            error, S.of(context).order_query_error);
+
+        if (allowThrowError) {
+          rethrow;
+        }
       }
     }
   }
@@ -54,11 +62,12 @@ mixin HomeController {
       Logger.reportDartError(error, stack);
 
       if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(error, S.of(context).photo_upload_error);
-      }
+        ErrorUtils.showToastWhenHttpError(
+            error, S.of(context).photo_upload_error);
 
-      if (allowThrowError) {
-        rethrow;
+        if (allowThrowError) {
+          rethrow;
+        }
       }
     }
     return null;
@@ -85,11 +94,12 @@ mixin HomeController {
       Logger.reportDartError(error, stack);
 
       if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(error, S.of(context).order_save_error);
-      }
+        ErrorUtils.showToastWhenHttpError(
+            error, S.of(context).order_save_error);
 
-      if (allowThrowError) {
-        rethrow;
+        if (allowThrowError) {
+          rethrow;
+        }
       }
     }
   }
