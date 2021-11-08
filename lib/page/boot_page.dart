@@ -20,15 +20,18 @@ class _BootPageState extends State<BootPage> with BootManager {
   ThemeData? _themeData;
   Locale? _locale;
   AppNotifier? _appNotifier;
+  GlobalKey<NavigatorState>? _navigationKey;
 
   @override
   void initState() {
     super.initState();
     _appNotifier = AppNotifier();
+    _navigationKey = GlobalKey<NavigatorState>();
     _themeData = ThemeAttrs.get(theme.value);
     _locale = LanguageCodes.getLocaleByLanguage(language.value);
     theme.addListener(_themeChanged);
     language.addListener(_languageChanged);
+
   }
 
   @override
@@ -39,6 +42,7 @@ class _BootPageState extends State<BootPage> with BootManager {
     _locale = null;
     NotificationType.values.forEach(_appNotifier!.removeAllListenerByKey);
     _appNotifier = null;
+    _navigationKey = null;
     super.dispose();
   }
 
@@ -85,6 +89,7 @@ class _BootPageState extends State<BootPage> with BootManager {
     return MaterialApp(
       localizationsDelegates: _delegates,
       restorationScopeId: 'root',
+      navigatorKey: _navigationKey!,
       supportedLocales: S.delegate.supportedLocales,
       locale: _locale,
       localeListResolutionCallback: _handleLocales,

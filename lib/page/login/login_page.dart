@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
+import 'package:mileage_wash/common/util/app_utils.dart';
 import 'package:mileage_wash/common/util/verification_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
@@ -68,20 +69,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<bool> _isAllowBack() async {
-    final LoginNavigationWay? navigationWay =
-        ModalRoute.of(context)!.settings.arguments as LoginNavigationWay?;
-    if (navigationWay != LoginNavigationWay.pop) {
-      if (_lastPopTime == null ||
-          DateTime.now().difference(_lastPopTime!) >
-              const Duration(seconds: 2)) {
-        _lastPopTime = DateTime.now();
-        ToastUtils.showToast(S.of(context).exit_tip_twice_click);
-        return false;
-      } else {
-        _lastPopTime = DateTime.now();
-      }
+    if (_lastPopTime == null ||
+        DateTime.now().difference(_lastPopTime!) > const Duration(seconds: 2)) {
+      _lastPopTime = DateTime.now();
+      ToastUtils.showToast(S.of(context).exit_tip_twice_click);
+      return false;
+    } else {
+      _lastPopTime = DateTime.now();
     }
-    return true;
+    AppUtils.exit();
+    return false;
   }
 
   Widget _buildLoginForm() {
