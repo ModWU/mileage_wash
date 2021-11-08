@@ -43,6 +43,14 @@
   "me_order_state_receiving": "order receiving",
   "me_logout_text": "Logout",
 
+  "notification_title": "notification",
+  "notification_item_tips": "You have a new order!",
+  "notification_item_order_number_title": "order number: ",
+  "notification_item_car_address_title": "car address: ",
+  "notification_item_car_number_title": "car number: ",
+  "notification_item_appointment_time_title": "appointment time：",
+  "notification_item_order_details_title": "details",
+
   "exit_tip_twice_click": "Press exit again",
 
   "login_error": "Login error!",

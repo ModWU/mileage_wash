@@ -5,6 +5,7 @@ import 'package:mileage_wash/page/login/login_page.dart';
 
 import 'activity/activity_page.dart';
 import 'activity/home/washing_review_page.dart';
+import 'notification/notification_page.dart';
 
 class RouteGenerator {
   RouteGenerator._();
@@ -26,6 +27,12 @@ class RouteGenerator {
       case RouteIds.washingReview:
         return MaterialPageRoute<WashingReviewPage>(
           builder: (BuildContext context) => WashingReviewPage(),
+          settings: settings,
+        );
+
+      case RouteIds.notification:
+        return MaterialPageRoute<NotificationPage>(
+          builder: (BuildContext context) => NotificationPage(),
           settings: settings,
         );
 

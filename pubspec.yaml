@@ -42,6 +42,7 @@ dependencies:
   flutter_screenutil: ^5.0.0+2
   # retrofit: ^2.0.1
   image_picker: ^0.8.4+4
+  jpush_flutter: ^2.1.5
 
 dev_dependencies:
   flutter_test:

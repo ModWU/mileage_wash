@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
+import 'package:mileage_wash/model/notifier/order_push_notifier.dart';
 import 'package:mileage_wash/server/app_server.dart';
 import 'package:mileage_wash/state/app_state.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,9 @@ void bootApp(Widget app) {
         ChangeNotifierProvider<HomeDoneNotifier>(
             create: (_) => HomeDoneNotifier()),
         ChangeNotifierProvider<HomeCancelledNotifier>(
-            create: (_) => HomeCancelledNotifier())
+            create: (_) => HomeCancelledNotifier()),
+        ChangeNotifierProvider<OrderPushNotifier>(
+            create: (_) => OrderPushNotifier())
       ],
       child: _buildConfiguration(app),
     ));

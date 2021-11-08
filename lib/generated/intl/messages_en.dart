@@ -58,6 +58,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "me_order_state_receiving":
             MessageLookupByLibrary.simpleMessage("order receiving"),
         "me_title": MessageLookupByLibrary.simpleMessage("personal center"),
+        "notification_item_appointment_time_title":
+            MessageLookupByLibrary.simpleMessage("appointment time："),
+        "notification_item_car_address_title":
+            MessageLookupByLibrary.simpleMessage("car address: "),
+        "notification_item_car_number_title":
+            MessageLookupByLibrary.simpleMessage("car number: "),
+        "notification_item_order_details_title":
+            MessageLookupByLibrary.simpleMessage("details"),
+        "notification_item_order_number_title":
+            MessageLookupByLibrary.simpleMessage("order number: "),
+        "notification_item_tips":
+            MessageLookupByLibrary.simpleMessage("You have a new order!"),
+        "notification_title":
+            MessageLookupByLibrary.simpleMessage("notification"),
         "order_query_error":
             MessageLookupByLibrary.simpleMessage("Error querying order!"),
         "order_save_error":

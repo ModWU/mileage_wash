@@ -430,6 +430,76 @@ class S {
     );
   }
 
+  /// `notification`
+  String get notification_title {
+    return Intl.message(
+      'notification',
+      name: 'notification_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have a new order!`
+  String get notification_item_tips {
+    return Intl.message(
+      'You have a new order!',
+      name: 'notification_item_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `order number: `
+  String get notification_item_order_number_title {
+    return Intl.message(
+      'order number: ',
+      name: 'notification_item_order_number_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `car address: `
+  String get notification_item_car_address_title {
+    return Intl.message(
+      'car address: ',
+      name: 'notification_item_car_address_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `car number: `
+  String get notification_item_car_number_title {
+    return Intl.message(
+      'car number: ',
+      name: 'notification_item_car_number_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `appointment time：`
+  String get notification_item_appointment_time_title {
+    return Intl.message(
+      'appointment time：',
+      name: 'notification_item_appointment_time_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `details`
+  String get notification_item_order_details_title {
+    return Intl.message(
+      'details',
+      name: 'notification_item_order_details_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Press exit again`
   String get exit_tip_twice_click {
     return Intl.message(

@@ -43,6 +43,14 @@
   "me_order_state_receiving": "正在接单",
   "me_logout_text": "退出登录",
 
+  "notification_title": "服务通知",
+  "notification_item_tips": "您有一笔新的洗车订单待处理！",
+  "notification_item_order_number_title": "订单号：",
+  "notification_item_car_address_title": "车辆地址：",
+  "notification_item_car_number_title": "车牌号：",
+  "notification_item_appointment_time_title": "预约时间：",
+  "notification_item_order_details_title": "查看详情",
+
   "exit_tip_twice_click": "再按一次退出",
 
   "login_error": "登陆异常！",

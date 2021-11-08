@@ -64,7 +64,7 @@ class ThemeAttrs {
     colorScheme: const ColorScheme(
       primary: Colors.blue,
       primaryVariant: Colors.blueAccent,
-      onPrimary: Colors.white,
+      onPrimary: Colors.black,
       secondary: Colors.red,
       secondaryVariant: Colors.redAccent,
       onSecondary: Colors.white,
