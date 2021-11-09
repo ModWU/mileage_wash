@@ -2,17 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:mileage_wash/model/notification_order_info.dart';
 
 class OrderPushNotifier with ChangeNotifier {
-  List<NotificationOrderInfo>? _notificationInfoList = [
-    NotificationOrderInfo(orderNumber: "vc", carAddress: "lkfdjlajlfd", carNumber: "fkla8989", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "vczvczvc", carAddress: "fdafdafd", carNumber: "vc", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "cv", carAddress: "fda", carNumber: "fda44", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "sddfd3435", carAddress: "vdafd", carNumber: "vc23", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "vcv", carAddress: "vda", carNumber: "vc13", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "vcz454", carAddress: "vcz", carNumber: "vc3", appointmentTime: "2012-10-9 23:01:04"),
-    NotificationOrderInfo(orderNumber: "vc2354", carAddress: "trsr", carNumber: "vczzd5", appointmentTime: "2012-10-9 23:01:04"),
-  ];
+  List<NotificationOrderInfo>? _notificationInfoList;
 
   int get size => _notificationInfoList?.length ?? 0;
+
+  late NotificationState _notificationState = NotificationState.hide;
+  NotificationState get notificationState => _notificationState;
+  set notificationState(NotificationState value) {
+    if (value == _notificationState) {
+      return;
+    }
+    _notificationState = value;
+    notifyListeners();
+  }
 
   NotificationOrderInfo? getNotificationInfo(int index) {
     assert(index >= 0);
@@ -24,13 +26,25 @@ class OrderPushNotifier with ChangeNotifier {
     return notificationInfoList[index];
   }
 
-  void add(NotificationOrderInfo notificationOrderInfo) {
+  void push(NotificationOrderInfo notificationOrderInfo) {
     _notificationInfoList ??= <NotificationOrderInfo>[];
-    _notificationInfoList!.add(notificationOrderInfo);
+    _notificationInfoList!.insert(0, notificationOrderInfo);
+    if (_notificationState != NotificationState.show) {
+      _notificationState = NotificationState.show;
+    }
     notifyListeners();
   }
 
-  void remove(NotificationOrderInfo notificationOrderInfo) {
+  void removeAllNotifications() {
+    _notificationInfoList = null;
+
+    if (_notificationState != NotificationState.hide) {
+      _notificationState = NotificationState.hide;
+    }
+    notifyListeners();
+  }
+
+  void removeNotification(NotificationOrderInfo notificationOrderInfo) {
     final List<NotificationOrderInfo>? notificationInfoList =
         _notificationInfoList;
     if (notificationInfoList == null) {
@@ -42,3 +56,5 @@ class OrderPushNotifier with ChangeNotifier {
     }
   }
 }
+
+enum NotificationState { show, hide }

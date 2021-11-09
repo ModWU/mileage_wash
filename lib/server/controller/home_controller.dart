@@ -1,19 +1,34 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/error_utils.dart';
+import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/http/upload_result.dart';
+import 'package:mileage_wash/model/notification_order_info.dart';
+import 'package:mileage_wash/model/notifier/order_push_notifier.dart';
+import 'package:mileage_wash/page/activity/home/home_page.dart';
+import 'package:mileage_wash/page/boot_manager.dart';
 import 'package:mileage_wash/server/dao/order_dao.dart';
 import 'package:mileage_wash/server/dao/upload_dao.dart';
 import 'package:mileage_wash/state/car_state.dart';
 import 'package:mileage_wash/state/order_state.dart';
+import 'package:provider/provider.dart';
 
-mixin HomeController {
+import '../plugin_server.dart';
+
+mixin HomeController on State<HomePage> {
+  bool _isEnterNotificationPage = false;
+  bool get isEnterNotificationPage => _isEnterNotificationPage;
+
+  late final audio_players.AudioCache _audioCache = audio_players.AudioCache();
+
   static Future<List<OrderInfo>?> queryOrderList(
     BuildContext context, {
     required OrderState orderState,
@@ -102,5 +117,57 @@ mixin HomeController {
         }
       }
     }
+  }
+
+  Future<void> openNotificationPage() async {
+    final OrderPushNotifier orderPushNotifier =
+        context.read<OrderPushNotifier>();
+    if (_isEnterNotificationPage || orderPushNotifier.size <= 0) {
+      return;
+    }
+
+    _isEnterNotificationPage = true;
+    PluginServer.instance.jPush.clearAllNotifications();
+    await Navigator.of(context).pushNamed(RouteIds.notification);
+    orderPushNotifier.removeAllNotifications();
+    BootContext.get().appNotifier.doNotificationPop();
+    _isEnterNotificationPage = false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isIOS) {
+      _audioCache.fixedPlayer?.notificationService.startHeadlessService();
+    }
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      try {
+        PluginServer.instance.jPush.addEventHandler(
+            onReceiveNotification: (Map<String, dynamic> message) async {
+          Logger.log('JPush => onReceiveNotification message: $message');
+          if (!isEnterNotificationPage) {
+            _audioCache.play('order_messenger.mp3', isNotification: true);
+          }
+          final OrderPushNotifier orderPushNotifier =
+              context.read<OrderPushNotifier>();
+          orderPushNotifier.push(NotificationOrderInfo(
+              orderNumber: "vc_${orderPushNotifier.size}",
+              carAddress: "lkfdjlajlfd",
+              carNumber: "fkla8989",
+              appointmentTime: "2012-10-9 23:01:04"));
+        }, onOpenNotification: (Map<String, dynamic> message) async {
+          Logger.log('JPush => onOpenNotification message: $message');
+          openNotificationPage();
+        }, onReceiveMessage: (Map<String, dynamic> message) async {
+          Logger.log('JPush => onReceiveMessage message: $message');
+        }, onReceiveNotificationAuthorization:
+                (Map<String, dynamic> message) async {
+          Logger.log(
+              'JPush => onReceiveNotificationAuthorization message: $message');
+        });
+      } on PlatformException catch (error, stack) {
+        Logger.reportDartError(error, stack);
+      }
+    });
   }
 }

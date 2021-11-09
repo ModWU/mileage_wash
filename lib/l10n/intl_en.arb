@@ -14,6 +14,8 @@
   "home_order_item_done_btn": "done",
   "home_order_item_cancelled_btn": "cancelled",
 
+  "home_notification_order_tips": "You have a new order, please deal with it promptly",
+
   "washing_review_title": "Check vehicle condition before washing",
   "washing_review_tip": "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ",
   "washing_review_car_status_title": "*Car Status:",
@@ -50,6 +52,8 @@
   "notification_item_car_number_title": "car number: ",
   "notification_item_appointment_time_title": "appointment time：",
   "notification_item_order_details_title": "details",
+
+  "system_setting_open_notification_tips": "You need to enable application notification, otherwise you cannot use notification service!",
 
   "exit_tip_twice_click": "Press exit again",
 

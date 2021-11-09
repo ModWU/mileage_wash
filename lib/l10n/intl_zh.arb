@@ -14,6 +14,8 @@
   "home_order_item_done_btn": "已完成",
   "home_order_item_cancelled_btn": "已取消",
 
+  "home_notification_order_tips": "您有一笔新的订单，请及时处理",
+
   "washing_review_title": "清洗前检验车辆状况",
   "washing_review_tip": "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！",
   "washing_review_car_status_title": "*车辆状况：",
@@ -50,6 +52,8 @@
   "notification_item_car_number_title": "车牌号：",
   "notification_item_appointment_time_title": "预约时间：",
   "notification_item_order_details_title": "查看详情",
+
+  "system_setting_open_notification_tips": "您需要打开应用通知权限，否则无法使用通知服务！",
 
   "exit_tip_twice_click": "再按一次退出",
 

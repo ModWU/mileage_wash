@@ -34,6 +34,8 @@ void bootApp(Widget app) {
   });
 }
 
+
+
 Widget _buildConfiguration(Widget app) {
   return ScreenUtilInit(
     builder: () {

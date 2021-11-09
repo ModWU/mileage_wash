@@ -51,6 +51,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     _refresh();
   }
 
+  @override
+  void onNotificationPop() {
+    _refresh();
+  }
+
   void _refresh() {
     final T homeNotifier = context.read<T>();
     if (widget.homeStateListener.isTabAt(homeNotifier.index)) {

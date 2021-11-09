@@ -5,6 +5,8 @@ import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/server/dao/login_dao.dart';
 
+import '../plugin_server.dart';
+
 class LoginController {
   LoginController._();
 
@@ -15,6 +17,7 @@ class LoginController {
   }) async {
     try {
       await LoginDao.login(username: username, password: password);
+      PluginServer.instance.startOnLogin(context);
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
@@ -26,6 +29,7 @@ class LoginController {
   static Future<bool> logout(BuildContext context) async {
     try {
       await LoginDao.logout(AppData.instance.loginInfo!);
+      PluginServer.instance.stopOnLogout(context);
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);

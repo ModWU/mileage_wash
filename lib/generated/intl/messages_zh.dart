@@ -26,6 +26,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "bottom_navigation_me_title":
             MessageLookupByLibrary.simpleMessage("我的"),
         "exit_tip_twice_click": MessageLookupByLibrary.simpleMessage("再按一次退出"),
+        "home_notification_order_tips":
+            MessageLookupByLibrary.simpleMessage("您有一笔新的订单，请及时处理"),
         "home_order_item_cancelled_btn":
             MessageLookupByLibrary.simpleMessage("已取消"),
         "home_order_item_done_btn": MessageLookupByLibrary.simpleMessage("已完成"),
@@ -70,6 +72,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "order_query_error": MessageLookupByLibrary.simpleMessage("查询订单异常！"),
         "order_save_error": MessageLookupByLibrary.simpleMessage("保存订单异常！"),
         "photo_upload_error": MessageLookupByLibrary.simpleMessage("上传照片异常！"),
+        "system_setting_open_notification_tips":
+            MessageLookupByLibrary.simpleMessage("您需要打开应用通知权限，否则无法使用通知服务！"),
         "title": MessageLookupByLibrary.simpleMessage("里程洗车"),
         "washing_review_car_photo_upload_fail_tip":
             MessageLookupByLibrary.simpleMessage("加载失败"),

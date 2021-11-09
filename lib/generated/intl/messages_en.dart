@@ -27,6 +27,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("me"),
         "exit_tip_twice_click":
             MessageLookupByLibrary.simpleMessage("Press exit again"),
+        "home_notification_order_tips": MessageLookupByLibrary.simpleMessage(
+            "You have a new order, please deal with it promptly"),
         "home_order_item_cancelled_btn":
             MessageLookupByLibrary.simpleMessage("cancelled"),
         "home_order_item_done_btn":
@@ -78,6 +80,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error saving order!"),
         "photo_upload_error":
             MessageLookupByLibrary.simpleMessage("Error uploading photo!"),
+        "system_setting_open_notification_tips":
+            MessageLookupByLibrary.simpleMessage(
+                "You need to enable application notification, otherwise you cannot use notification service!"),
         "title": MessageLookupByLibrary.simpleMessage("Mileage Wash"),
         "washing_review_car_photo_upload_fail_tip":
             MessageLookupByLibrary.simpleMessage("Load fail"),

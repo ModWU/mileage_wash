@@ -170,6 +170,16 @@ class S {
     );
   }
 
+  /// `You have a new order, please deal with it promptly`
+  String get home_notification_order_tips {
+    return Intl.message(
+      'You have a new order, please deal with it promptly',
+      name: 'home_notification_order_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Check vehicle condition before washing`
   String get washing_review_title {
     return Intl.message(
@@ -495,6 +505,16 @@ class S {
     return Intl.message(
       'details',
       name: 'notification_item_order_details_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You need to enable application notification, otherwise you cannot use notification service!`
+  String get system_setting_open_notification_tips {
+    return Intl.message(
+      'You need to enable application notification, otherwise you cannot use notification service!',
+      name: 'system_setting_open_notification_tips',
       desc: '',
       args: [],
     );

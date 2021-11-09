@@ -1,46 +1,75 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
+import 'package:mileage_wash/common/listener/data_notifier.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/model/global/app_data.dart';
+import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
-class PluginServer {
+class PluginServer with DataNotifier {
   PluginServer._();
 
   static late final PluginServer instance = PluginServer._();
 
-  late final JPush _jPush = JPush();
+  late final JPush jPush = JPush();
 
   Future<void> initialize() async {
-    try {
-      _jPush.addEventHandler(
-          onReceiveNotification: (Map<String, dynamic> message) async {
-        Logger.log('flutter JPush => onReceiveNotification message: $message');
-      }, onOpenNotification: (Map<String, dynamic> message) async {
-        Logger.log('flutter JPush => onOpenNotification message: $message');
-      }, onReceiveMessage: (Map<String, dynamic> message) async {
-        Logger.log('flutter JPush => onReceiveMessage message: $message');
-      }, onReceiveNotificationAuthorization:
-              (Map<String, dynamic> message) async {
-        Logger.log(
-            'flutter JPush => onReceiveNotificationAuthorization message: $message');
-      });
-    } on PlatformException catch (error, stack) {
-      Logger.reportDartError(error, stack);
-    }
+    await _initJPush();
+  }
 
-    _jPush.setup(
-      appKey: '6c4f471bbbd289871ab25829',
+  Future<void> _initJPush() async {
+    Logger.log('JPush => initJPush');
+
+    jPush.setup(
+      appKey: 'a2364d3faeb79aeaff6cbe4e',
       channel: 'developer-default',
       production: true,
       debug: kDebugMode,
     );
 
-    _jPush.applyPushAuthority(
+    jPush.applyPushAuthority(
         const NotificationSettingsIOS(sound: true, alert: true, badge: true));
 
-    _jPush.getRegistrationID().then((String registrationId) {
-      Logger.log(
-          'flutter JPush => getRegistrationID registrationId: $registrationId');
-    });
+    final String registrationId = await jPush.getRegistrationID();
+
+    if (AppData.instance.isLogin) {
+      startOnLogin();
+    }
+
+    jPush.setWakeEnable(enable: false);
+
+    Logger.log('JPush => registrationId: $registrationId');
+  }
+
+  Future<void> startOnLogin([BuildContext? context]) async {
+    Logger.log('JPush => startOnLogin');
+    final String phoneNumber = AppData.instance.loginInfo!.phoneNumber;
+    Logger.log('JPush => setAlias: $phoneNumber');
+    //_jPush.addTags(<String>[phoneNumber]);
+    jPush.setAlias(phoneNumber);
+    jPush.resumePush();
+
+    if (context != null) {
+      try {
+        final bool notificationEnabled = await jPush.isNotificationEnabled();
+        Logger.log('JPush => notificationEnabled: $notificationEnabled');
+
+        if (!notificationEnabled) {
+          ToastUtils.showToast(
+              S.of(context).system_setting_open_notification_tips);
+          jPush.openSettingsForNotification();
+        }
+      } catch (error, stack) {
+        Logger.reportDartError(error, stack);
+      }
+    }
+  }
+
+  Future<void> stopOnLogout(BuildContext context) async {
+    Logger.log('JPush => stopOnLogout');
+    //_jPush.cleanTags();
+    jPush.stopPush();
   }
 }

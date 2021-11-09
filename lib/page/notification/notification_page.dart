@@ -93,24 +93,30 @@ class _NotificationItem extends StatelessWidget {
             ),
           ),
           const Divider(height: 1, color: Colors.black12),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(S.of(context).notification_item_order_details_title,
-                    style: const TextStyle(fontSize: 15.4)),
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                    size: 20,
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(S.of(context).notification_item_order_details_title,
+                      style: const TextStyle(fontSize: 15.4)),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black12,
+                      size: 20,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
