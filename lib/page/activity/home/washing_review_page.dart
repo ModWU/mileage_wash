@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +78,7 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
 
   TextSpan get _getAppBarBottomTextSpan {
     return TextSpan(
-        text: S.of(context).washing_review_tip,
+        text: S.of(context).washing_review_tips,
         style: TextStyle(color: Colors.grey, fontSize: 24.sp));
   }
 

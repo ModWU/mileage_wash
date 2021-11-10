@@ -314,11 +314,11 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                   SizedBox(width: 8.h),
                   if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
                     GestureDetector(
-                      onTap: () async {
+                     /* onTap: () async {
                         await Navigator.of(context)
                             .pushNamed(RouteIds.notification);
                         _refresh();
-                      },
+                      },*/
                       child: Icon(
                         Icons.assistant_navigation,
                         size: 72.w,

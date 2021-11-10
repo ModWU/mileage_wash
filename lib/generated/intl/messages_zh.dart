@@ -105,7 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请先处理掉加载失败的照片！"),
         "washing_review_car_submit_progress_uploading_tip":
             MessageLookupByLibrary.simpleMessage("请稍后，照片正在上传中..."),
-        "washing_review_tip": MessageLookupByLibrary.simpleMessage(
+        "washing_review_tips": MessageLookupByLibrary.simpleMessage(
             "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！"),
         "washing_review_title":
             MessageLookupByLibrary.simpleMessage("清洗前检验车辆状况")

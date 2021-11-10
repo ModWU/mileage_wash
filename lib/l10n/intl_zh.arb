@@ -18,7 +18,7 @@
   "home_notification_order_cancel_tips": "你有一笔订单已取消，请及时查看",
 
   "washing_review_title": "清洗前检验车辆状况",
-  "washing_review_tip": "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！",
+  "washing_review_tips": "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！",
   "washing_review_car_status_title": "*车辆状况：",
   "washing_review_car_status_well": "车况良好",
   "washing_review_car_status_scratch": "有刮痕",

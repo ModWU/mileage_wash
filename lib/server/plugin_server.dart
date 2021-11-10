@@ -7,7 +7,6 @@ import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
-
 class PluginServer with DataNotifier {
   PluginServer._();
 

@@ -201,10 +201,10 @@ class S {
   }
 
   /// `Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! `
-  String get washing_review_tip {
+  String get washing_review_tips {
     return Intl.message(
       'Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ',
-      name: 'washing_review_tip',
+      name: 'washing_review_tips',
       desc: '',
       args: [],
     );

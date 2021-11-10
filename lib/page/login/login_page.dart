@@ -27,11 +27,15 @@ class _LoginPageState extends State<LoginPage> {
 
   final Observer<bool> _loading = false.ob;
 
+  final Observer<bool> _enableLoginButton = false.ob;
+
   DateTime? _lastPopTime;
 
   bool _isShowPassword = false;
 
   bool _nameAutoFocus = true;
+
+  bool _isUsernameOk = false, _isPasswordOk = false;
 
   @override
   void initState() {
@@ -53,9 +57,15 @@ class _LoginPageState extends State<LoginPage> {
       return null;
     }
 
-    return VerificationUtils.isChinaPhoneLegal(phone)
+    final String? error = VerificationUtils.isChinaPhoneLegal(phone)
         ? null
         : S.of(context).login_phone_error;
+    final bool isOk = error == null;
+    if (isOk != _isUsernameOk) {
+      _isUsernameOk = isOk;
+    }
+    _notifyLoginButton();
+    return error;
   }
 
   String? _verifyPassword(String? password) {
@@ -63,9 +73,20 @@ class _LoginPageState extends State<LoginPage> {
       return null;
     }
 
-    return password.trim().length >= 6
+    final String? error = password.trim().length >= 6
         ? null
         : S.of(context).login_password_length_error;
+    final bool isOk = error == null;
+    if (isOk != _isPasswordOk) {
+      _isPasswordOk = isOk;
+    }
+    _notifyLoginButton();
+    return error;
+  }
+
+  void _notifyLoginButton() {
+    final bool isOk = _isPasswordOk && _isUsernameOk;
+    _enableLoginButton.value = isOk;
   }
 
   Future<bool> _isAllowBack() async {
@@ -134,25 +155,34 @@ class _LoginPageState extends State<LoginPage> {
             }),
             Padding(
               padding: const EdgeInsets.only(top: 25),
-              child: TextButton(
-                onPressed: _onLogin,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.blue),
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(vertical: 16)),
-                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)))),
-                  minimumSize: MaterialStateProperty.all(
-                      Size(MediaQuery.of(context).size.width - 24, 0)),
-                ),
-                child: Text(
-                  S.of(context).login_submit_text,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
+              child: ObWidget<bool>(
+                builder: (Observer<bool>? observer) {
+                  final bool enable = observer?.value ?? false;
+                  return TextButton(
+                    onPressed: enable ? _onLogin : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          enable ? Colors.blue : Colors.grey),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(vertical: 16)),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)))),
+                      minimumSize: MaterialStateProperty.all(
+                          Size(MediaQuery.of(context).size.width - 24, 0)),
+                    ),
+                    child: Text(
+                      S.of(context).login_submit_text,
+                      style: TextStyle(
+                        color: enable ? Colors.white : Colors.white70,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  );
+                },
+                initialValue: _enableLoginButton,
               ),
             ),
           ],

@@ -18,7 +18,7 @@
   "home_notification_order_cancel_tips": "Your order has been cancelled, please check it in time",
 
   "washing_review_title": "Check vehicle condition before washing",
-  "washing_review_tip": "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ",
+  "washing_review_tips": "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ",
   "washing_review_car_status_title": "*Car Status:",
   "washing_review_car_status_well": "well",
   "washing_review_car_status_scratch": "a scratch",

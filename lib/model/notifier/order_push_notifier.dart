@@ -33,7 +33,7 @@ class OrderPushNotifier with ChangeNotifier {
     _notificationInfoList!.sort();
     if (notificationOrderInfo.orderPushState == OrderPushState.add) {
       _notificationState = NotificationState.newAdd;
-    } else {
+    } else if (notificationOrderInfo.orderPushState == OrderPushState.cancel) {
       _notificationState = NotificationState.newCancel;
     }
     notifyListeners();

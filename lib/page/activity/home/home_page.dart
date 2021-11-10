@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/listener/data_notifier.dart';
-import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/model/notifier/order_push_notifier.dart';

@@ -18,6 +18,7 @@ import 'package:mileage_wash/page/boot_manager.dart';
 import 'package:mileage_wash/server/dao/order_dao.dart';
 import 'package:mileage_wash/server/dao/upload_dao.dart';
 import 'package:mileage_wash/state/car_state.dart';
+import 'package:mileage_wash/state/order_push_state.dart';
 import 'package:mileage_wash/state/order_state.dart';
 import 'package:provider/provider.dart';
 
@@ -145,11 +146,6 @@ mixin HomeController on State<HomePage> {
         PluginServer.instance.jPush.addEventHandler(
             onReceiveNotification: (Map<String, dynamic> message) async {
           Logger.log('JPush => onReceiveNotification message: $message');
-          if (!isEnterNotificationPage) {
-            _audioCache.play('order_messenger.mp3', isNotification: true);
-            Logger.log('play mp3');
-          }
-
           Logger.log(
               'JPush => onReceiveMessage containes extras: ${message.containsKey('extras')}');
 
@@ -176,8 +172,20 @@ mixin HomeController on State<HomePage> {
 
           final OrderPushNotifier orderPushNotifier =
               context.read<OrderPushNotifier>();
-          orderPushNotifier
-              .push(NotificationOrderInfo.fromJson(orderPushData!));
+          final NotificationOrderInfo notificationOrderInfo =
+              NotificationOrderInfo.fromJson(orderPushData!);
+          orderPushNotifier.push(notificationOrderInfo);
+
+          if (!isEnterNotificationPage) {
+            if (notificationOrderInfo.orderPushState == OrderPushState.add) {
+              _audioCache.play('order_add_messenger.mp3', isNotification: true);
+            } else if (notificationOrderInfo.orderPushState ==
+                OrderPushState.cancel) {
+              _audioCache.play('order_cancel_messenger.mp3',
+                  isNotification: true);
+            }
+            Logger.log('play mp3');
+          }
         }, onOpenNotification: (Map<String, dynamic> message) async {
           Logger.log('JPush => onOpenNotification message: $message');
           openNotificationPage();

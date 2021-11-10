@@ -121,7 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "washing_review_car_submit_progress_uploading_tip":
             MessageLookupByLibrary.simpleMessage(
                 "Please wait, photos are being uploaded..."),
-        "washing_review_tip": MessageLookupByLibrary.simpleMessage(
+        "washing_review_tips": MessageLookupByLibrary.simpleMessage(
             "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! "),
         "washing_review_title": MessageLookupByLibrary.simpleMessage(
             "Check vehicle condition before washing")

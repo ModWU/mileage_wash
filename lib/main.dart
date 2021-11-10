@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mileage_wash/page/boot_page.dart';
 import 'package:mileage_wash/page/initialize.dart';
 
-void main() => bootApp(TencentVideoApp());
+void main() => bootApp(MileageWashApp());
 
-class TencentVideoApp extends StatelessWidget {
+class MileageWashApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BootPage();
 }
