@@ -1,9 +1,9 @@
+import 'dart:convert' as json;
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/error_utils.dart';
@@ -147,14 +147,37 @@ mixin HomeController on State<HomePage> {
           Logger.log('JPush => onReceiveNotification message: $message');
           if (!isEnterNotificationPage) {
             _audioCache.play('order_messenger.mp3', isNotification: true);
+            Logger.log('play mp3');
           }
+
+          Logger.log(
+              'JPush => onReceiveMessage containes extras: ${message.containsKey('extras')}');
+
+          if (!message.containsKey('extras')) {
+            return;
+          }
+
+          final dynamic extrasObj = message['extras']!;
+
+          assert(extrasObj is Map<dynamic, dynamic>);
+          final Map<dynamic, dynamic> extra =
+              extrasObj as Map<dynamic, dynamic>;
+
+          final String jPushExtra = extra['cn.jpush.android.EXTRA']! as String;
+
+          final Map<String, dynamic>? orderPushData =
+              json.jsonDecode(jPushExtra) as Map<String, dynamic>?;
+
+          assert(orderPushData != null);
+
+          if (!mounted) {
+            return;
+          }
+
           final OrderPushNotifier orderPushNotifier =
               context.read<OrderPushNotifier>();
-          orderPushNotifier.push(NotificationOrderInfo(
-              orderNumber: "vc_${orderPushNotifier.size}",
-              carAddress: "lkfdjlajlfd",
-              carNumber: "fkla8989",
-              appointmentTime: "2012-10-9 23:01:04"));
+          orderPushNotifier
+              .push(NotificationOrderInfo.fromJson(orderPushData!));
         }, onOpenNotification: (Map<String, dynamic> message) async {
           Logger.log('JPush => onOpenNotification message: $message');
           openNotificationPage();
@@ -165,7 +188,7 @@ mixin HomeController on State<HomePage> {
           Logger.log(
               'JPush => onReceiveNotificationAuthorization message: $message');
         });
-      } on PlatformException catch (error, stack) {
+      } catch (error, stack) {
         Logger.reportDartError(error, stack);
       }
     });

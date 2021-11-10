@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mileage_wash/model/notification_order_info.dart';
+import 'package:mileage_wash/state/order_push_state.dart';
 
 class OrderPushNotifier with ChangeNotifier {
   List<NotificationOrderInfo>? _notificationInfoList;
@@ -28,9 +29,12 @@ class OrderPushNotifier with ChangeNotifier {
 
   void push(NotificationOrderInfo notificationOrderInfo) {
     _notificationInfoList ??= <NotificationOrderInfo>[];
-    _notificationInfoList!.insert(0, notificationOrderInfo);
-    if (_notificationState != NotificationState.show) {
-      _notificationState = NotificationState.show;
+    _notificationInfoList!.add(notificationOrderInfo);
+    _notificationInfoList!.sort();
+    if (notificationOrderInfo.orderPushState == OrderPushState.add) {
+      _notificationState = NotificationState.newAdd;
+    } else {
+      _notificationState = NotificationState.newCancel;
     }
     notifyListeners();
   }
@@ -57,4 +61,4 @@ class OrderPushNotifier with ChangeNotifier {
   }
 }
 
-enum NotificationState { show, hide }
+enum NotificationState { newAdd, newCancel, hide }

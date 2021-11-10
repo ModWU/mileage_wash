@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:mileage_wash/common/listener/data_notifier.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
+
 
 class PluginServer with DataNotifier {
   PluginServer._();
@@ -35,10 +35,8 @@ class PluginServer with DataNotifier {
     final String registrationId = await jPush.getRegistrationID();
 
     if (AppData.instance.isLogin) {
-      startOnLogin();
+      jPush.setWakeEnable(enable: true);
     }
-
-    jPush.setWakeEnable(enable: false);
 
     Logger.log('JPush => registrationId: $registrationId');
   }
@@ -47,7 +45,6 @@ class PluginServer with DataNotifier {
     Logger.log('JPush => startOnLogin');
     final String phoneNumber = AppData.instance.loginInfo!.phoneNumber;
     Logger.log('JPush => setAlias: $phoneNumber');
-    //_jPush.addTags(<String>[phoneNumber]);
     jPush.setAlias(phoneNumber);
     jPush.resumePush();
 
@@ -70,6 +67,7 @@ class PluginServer with DataNotifier {
   Future<void> stopOnLogout(BuildContext context) async {
     Logger.log('JPush => stopOnLogout');
     //_jPush.cleanTags();
+    jPush.setWakeEnable(enable: false);
     jPush.stopPush();
   }
 }

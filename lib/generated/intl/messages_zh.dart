@@ -26,8 +26,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "bottom_navigation_me_title":
             MessageLookupByLibrary.simpleMessage("我的"),
         "exit_tip_twice_click": MessageLookupByLibrary.simpleMessage("再按一次退出"),
-        "home_notification_order_tips":
+        "home_notification_order_add_tips":
             MessageLookupByLibrary.simpleMessage("您有一笔新的订单，请及时处理"),
+        "home_notification_order_cancel_tips":
+            MessageLookupByLibrary.simpleMessage("你有一笔订单已取消，请及时查看"),
         "home_order_item_cancelled_btn":
             MessageLookupByLibrary.simpleMessage("已取消"),
         "home_order_item_done_btn": MessageLookupByLibrary.simpleMessage("已完成"),
@@ -56,8 +58,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "me_order_state_receiving":
             MessageLookupByLibrary.simpleMessage("正在接单"),
         "me_title": MessageLookupByLibrary.simpleMessage("个人中心"),
+        "notification_item_add_tips":
+            MessageLookupByLibrary.simpleMessage("您有一笔新的洗车订单待处理！"),
         "notification_item_appointment_time_title":
             MessageLookupByLibrary.simpleMessage("预约时间："),
+        "notification_item_cancel_tips":
+            MessageLookupByLibrary.simpleMessage("您有一笔订单已取消！"),
         "notification_item_car_address_title":
             MessageLookupByLibrary.simpleMessage("车辆地址："),
         "notification_item_car_number_title":
@@ -66,8 +72,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("查看详情"),
         "notification_item_order_number_title":
             MessageLookupByLibrary.simpleMessage("订单号："),
-        "notification_item_tips":
-            MessageLookupByLibrary.simpleMessage("您有一笔新的洗车订单待处理！"),
         "notification_title": MessageLookupByLibrary.simpleMessage("服务通知"),
         "order_query_error": MessageLookupByLibrary.simpleMessage("查询订单异常！"),
         "order_save_error": MessageLookupByLibrary.simpleMessage("保存订单异常！"),

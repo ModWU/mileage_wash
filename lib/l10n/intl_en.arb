@@ -14,7 +14,8 @@
   "home_order_item_done_btn": "done",
   "home_order_item_cancelled_btn": "cancelled",
 
-  "home_notification_order_tips": "You have a new order, please deal with it promptly",
+  "home_notification_order_add_tips": "You have a new order, please deal with it promptly",
+  "home_notification_order_cancel_tips": "Your order has been cancelled, please check it in time",
 
   "washing_review_title": "Check vehicle condition before washing",
   "washing_review_tip": "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! ",
@@ -46,7 +47,8 @@
   "me_logout_text": "Logout",
 
   "notification_title": "notification",
-  "notification_item_tips": "You have a new order!",
+  "notification_item_add_tips": "You have a new order!",
+  "notification_item_cancel_tips": "You have a cancelled order!",
   "notification_item_order_number_title": "order number: ",
   "notification_item_car_address_title": "car address: ",
   "notification_item_car_number_title": "car number: ",

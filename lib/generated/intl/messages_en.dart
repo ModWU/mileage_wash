@@ -27,8 +27,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("me"),
         "exit_tip_twice_click":
             MessageLookupByLibrary.simpleMessage("Press exit again"),
-        "home_notification_order_tips": MessageLookupByLibrary.simpleMessage(
-            "You have a new order, please deal with it promptly"),
+        "home_notification_order_add_tips":
+            MessageLookupByLibrary.simpleMessage(
+                "You have a new order, please deal with it promptly"),
+        "home_notification_order_cancel_tips":
+            MessageLookupByLibrary.simpleMessage(
+                "Your order has been cancelled, please check it in time"),
         "home_order_item_cancelled_btn":
             MessageLookupByLibrary.simpleMessage("cancelled"),
         "home_order_item_done_btn":
@@ -60,8 +64,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "me_order_state_receiving":
             MessageLookupByLibrary.simpleMessage("order receiving"),
         "me_title": MessageLookupByLibrary.simpleMessage("personal center"),
+        "notification_item_add_tips":
+            MessageLookupByLibrary.simpleMessage("You have a new order!"),
         "notification_item_appointment_time_title":
             MessageLookupByLibrary.simpleMessage("appointment time："),
+        "notification_item_cancel_tips":
+            MessageLookupByLibrary.simpleMessage("You have a cancelled order!"),
         "notification_item_car_address_title":
             MessageLookupByLibrary.simpleMessage("car address: "),
         "notification_item_car_number_title":
@@ -70,8 +78,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("details"),
         "notification_item_order_number_title":
             MessageLookupByLibrary.simpleMessage("order number: "),
-        "notification_item_tips":
-            MessageLookupByLibrary.simpleMessage("You have a new order!"),
         "notification_title":
             MessageLookupByLibrary.simpleMessage("notification"),
         "order_query_error":

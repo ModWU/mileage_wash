@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage>
           child: Selector<OrderPushNotifier, NotificationState>(
             builder: (BuildContext context, NotificationState notificationState,
                 Widget? child) {
-              return notificationState == NotificationState.show &&
+              return notificationState != NotificationState.hide &&
                       !isEnterNotificationPage
                   ? GestureDetector(
                       onTap: () async {
@@ -106,7 +106,11 @@ class _HomePageState extends State<HomePage>
                       child: MaterialBanner(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         content: Text(
-                          S.of(context).home_notification_order_tips,
+                          notificationState == NotificationState.newAdd
+                              ? S.of(context).home_notification_order_add_tips
+                              : S
+                                  .of(context)
+                                  .home_notification_order_cancel_tips,
                           style: const TextStyle(color: Colors.redAccent),
                         ),
                         leading: const Icon(Icons.notifications_active,

@@ -31,7 +31,6 @@ class _BootPageState extends State<BootPage> with BootManager {
     _locale = LanguageCodes.getLocaleByLanguage(language.value);
     theme.addListener(_themeChanged);
     language.addListener(_languageChanged);
-
   }
 
   @override
@@ -95,9 +94,8 @@ class _BootPageState extends State<BootPage> with BootManager {
       localeListResolutionCallback: _handleLocales,
       theme: _themeData,
       scrollBehavior: const IOSScrollBehavior(),
-      onGenerateRoute: (RouteSettings settings) {
-        return RouteGenerator.generate(settings);
-      },
+      onGenerateRoute: (RouteSettings settings) =>
+          RouteGenerator.generate(settings),
       initialRoute: RouteGenerator.initial,
     );
   }

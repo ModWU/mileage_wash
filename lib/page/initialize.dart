@@ -16,7 +16,18 @@ void bootApp(Widget app) {
     WidgetsFlutterBinding.ensureInitialized();
     await AppServer.initialize();
     await AppState.initialize();
-    runApp(MultiProvider(
+    runApp(AppConfigurationWidget(app));
+  });
+}
+
+class AppConfigurationWidget extends StatelessWidget {
+  const AppConfigurationWidget(this.root);
+
+  final Widget root;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
       providers: <SingleChildWidget>[
         ChangeNotifierProvider<HomeWaitingNotifier>(
             create: (_) => HomeWaitingNotifier()),
@@ -29,45 +40,39 @@ void bootApp(Widget app) {
         ChangeNotifierProvider<OrderPushNotifier>(
             create: (_) => OrderPushNotifier())
       ],
-      child: _buildConfiguration(app),
-    ));
-  });
-}
-
-
-
-Widget _buildConfiguration(Widget app) {
-  return ScreenUtilInit(
-    builder: () {
-      return RefreshConfiguration(
-        headerBuilder: () => const WaterDropHeader(
-          waterDropColor: Colors.blue,
-        ),
-        footerBuilder: () => CustomFooter(
-          builder: (BuildContext context, LoadStatus? mode) {
-            Widget body;
-            if (mode == LoadStatus.idle) {
-              body = const Text('pull up load');
-            } else if (mode == LoadStatus.loading) {
-              body = const CupertinoActivityIndicator();
-            } else if (mode == LoadStatus.failed) {
-              body = const Text('Load Failed! Click retry!');
-            } else if (mode == LoadStatus.canLoading) {
-              body = const Text('release to load more');
-            } else {
-              body = const Text('No more data');
-            }
-            return Container(
-              height: 55.0,
-              child: Center(child: body),
-            );
-          },
-        ),
-        child: app,
-      );
-    },
-    designSize: const Size(750, 1334),
-  );
+      child: ScreenUtilInit(
+        builder: () {
+          return RefreshConfiguration(
+            headerBuilder: () => const WaterDropHeader(
+              waterDropColor: Colors.blue,
+            ),
+            footerBuilder: () => CustomFooter(
+              builder: (BuildContext context, LoadStatus? mode) {
+                Widget body;
+                if (mode == LoadStatus.idle) {
+                  body = const Text('pull up load');
+                } else if (mode == LoadStatus.loading) {
+                  body = const CupertinoActivityIndicator();
+                } else if (mode == LoadStatus.failed) {
+                  body = const Text('Load Failed! Click retry!');
+                } else if (mode == LoadStatus.canLoading) {
+                  body = const Text('release to load more');
+                } else {
+                  body = const Text('No more data');
+                }
+                return Container(
+                  height: 55.0,
+                  child: Center(child: body),
+                );
+              },
+            ),
+            child: root,
+          );
+        },
+        designSize: const Size(750, 1334),
+      ),
+    );
+  }
 }
 
 String _stringify(Object? exception) {

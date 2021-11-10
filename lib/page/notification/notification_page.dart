@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mileage_wash/common/util/time_utils.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/model/notifier/order_push_notifier.dart';
+import 'package:mileage_wash/state/order_push_state.dart';
 import 'package:provider/provider.dart';
 
 class NotificationPage extends StatelessWidget {
@@ -68,7 +70,10 @@ class _NotificationItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 4),
-                Text(S.of(context).notification_item_tips,
+                Text(
+                    notificationOrderInfo.orderPushState == OrderPushState.add
+                        ? S.of(context).notification_item_add_tips
+                        : S.of(context).notification_item_cancel_tips,
                     style: const TextStyle(fontSize: 18)),
                 const SizedBox(height: 16),
                 Table(
@@ -86,7 +91,8 @@ class _NotificationItem extends StatelessWidget {
                         notificationOrderInfo.carNumber),
                     _info(
                         S.of(context).notification_item_appointment_time_title,
-                        notificationOrderInfo.appointmentTime),
+                        TimeUtils.getStandardTime(
+                            notificationOrderInfo.appointmentTime)),
                   ],
                 ),
               ],

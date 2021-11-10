@@ -171,10 +171,20 @@ class S {
   }
 
   /// `You have a new order, please deal with it promptly`
-  String get home_notification_order_tips {
+  String get home_notification_order_add_tips {
     return Intl.message(
       'You have a new order, please deal with it promptly',
-      name: 'home_notification_order_tips',
+      name: 'home_notification_order_add_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your order has been cancelled, please check it in time`
+  String get home_notification_order_cancel_tips {
+    return Intl.message(
+      'Your order has been cancelled, please check it in time',
+      name: 'home_notification_order_cancel_tips',
       desc: '',
       args: [],
     );
@@ -451,10 +461,20 @@ class S {
   }
 
   /// `You have a new order!`
-  String get notification_item_tips {
+  String get notification_item_add_tips {
     return Intl.message(
       'You have a new order!',
-      name: 'notification_item_tips',
+      name: 'notification_item_add_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have a cancelled order!`
+  String get notification_item_cancel_tips {
+    return Intl.message(
+      'You have a cancelled order!',
+      name: 'notification_item_cancel_tips',
       desc: '',
       args: [],
     );
