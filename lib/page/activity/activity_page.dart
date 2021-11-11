@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/listener/tap.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/server/controller/activity_controller.dart';
-import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
 import '../../state/app_state.dart';
 import '../base.dart';
@@ -36,17 +35,22 @@ class _ActivityPageState extends State<ActivityPage>
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          body: IndexedStack(
-            index: bootContext.page.value.index,
-            children: <Widget>[
-              HomePage(),
-              MePage(),
-            ],
-          ),
-          bottomNavigationBar: const _BottomNavigationBarWidget(),
-        ));
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            IndexedStack(
+              index: bootContext.page.value.index,
+              children: <Widget>[
+                HomePage(),
+                MePage(),
+              ],
+            ),
+          ],
+        ),
+        bottomNavigationBar: const _BottomNavigationBarWidget(),
+      ),
+    );
   }
 }
 

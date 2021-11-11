@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
+import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
+import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/page/base.dart';
 import 'package:mileage_wash/server/controller/home_controller.dart';
+import 'package:mileage_wash/server/plugin_server.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -56,6 +59,16 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     _refresh();
   }
 
+  @override
+  void onNotification(NotificationOrderInfo notificationOrderInfo,
+      bool isEnterNotificationPage) {
+    Logger.log(
+        'OrderListState#$T => onNotification ${T == HomeWaitingNotifier}');
+    if (!isEnterNotificationPage && (T == HomeWaitingNotifier)) {
+      _refresh();
+    }
+  }
+
   void _refresh() {
     final T homeNotifier = context.read<T>();
     if (widget.homeStateListener.isTabAt(homeNotifier.index)) {
@@ -83,7 +96,12 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     super.didChangeDependencies();
     final T homeNotifier = context.read<T>();
     final double screenHeight = MediaQuery.of(context).size.height;
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
+      _cancelToken!.cancel();
+    }
+
     _cancelToken = CancelToken();
+
     HomeController.queryOrderList(context,
             orderState: homeNotifier.state,
             curPage: 0,
@@ -314,11 +332,103 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                   SizedBox(width: 8.h),
                   if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
                     GestureDetector(
-                     /* onTap: () async {
-                        await Navigator.of(context)
-                            .pushNamed(RouteIds.notification);
-                        _refresh();
-                      },*/
+                      onTap: () async {
+                        showModalBottomSheet<dynamic>(
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 260.h,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          final bool isSuccess =
+                                              await PluginServer.instance
+                                                  .jumpToTencentMapApp(
+                                                      context,
+                                                      orderInfo.latitude,
+                                                      orderInfo.longitude);
+                                          if (isSuccess) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all<Size>(
+                                                  Size.infinite),
+                                        ),
+                                        child: Text(
+                                          S.of(context).map_tencent_title,
+                                          style: TextStyle(fontSize: 32.sp),
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 1,
+                                      color: Colors.black12,
+                                    ),
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          final bool isSuccess =
+                                              await PluginServer.instance
+                                                  .jumpToMiniMapApp(
+                                                      context,
+                                                      orderInfo.latitude,
+                                                      orderInfo.longitude);
+                                          if (isSuccess) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all<Size>(
+                                                  Size.infinite),
+                                        ),
+                                        child: Text(
+                                            S.of(context).map_mini_title,
+                                            style: TextStyle(fontSize: 32.sp)),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 1,
+                                      color: Colors.black12,
+                                    ),
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          final bool isSuccess =
+                                              await PluginServer.instance
+                                                  .jumpToBaiduMapApp(
+                                                      context,
+                                                      orderInfo.latitude,
+                                                      orderInfo.longitude);
+                                          if (isSuccess) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          minimumSize:
+                                              MaterialStateProperty.all<Size>(
+                                                  Size.infinite),
+                                        ),
+                                        child: Text(
+                                            S.of(context).map_baidu_title,
+                                            style: TextStyle(fontSize: 32.sp)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25.w),
+                                    topRight: Radius.circular(25.w))));
+                      },
                       child: Icon(
                         Icons.assistant_navigation,
                         size: 72.w,

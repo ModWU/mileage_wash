@@ -111,7 +111,7 @@ class _BootPageState extends State<BootPage> with BootManager {
   Locale? get locale => _locale;
 
   @override
-  AppHandler get appHandler => appHandler!;
+  AppHandler get appHandler => _appHandler!;
 }
 
 const List<LocalizationsDelegate<dynamic>> _delegates =

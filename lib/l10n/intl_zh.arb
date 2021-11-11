@@ -57,6 +57,16 @@
 
   "system_setting_open_notification_tips": "您需要打开应用通知权限，否则无法使用通知服务！",
 
+  "map_tencent_title": "腾讯地图",
+  "map_mini_title": "高德地图",
+  "map_baidu_title": "百度地图",
+
+  "map_tencent_not_installed_tips": "腾讯地图未安装",
+  "map_mini_not_installed_tips": "高德地图未安装",
+  "map_baidu_not_installed_tips": "百度地图未安装",
+
+  "map_not_activated_tips": "地图定位功能没有被激活",
+
   "exit_tip_twice_click": "再按一次退出",
 
   "login_error": "登陆异常！",

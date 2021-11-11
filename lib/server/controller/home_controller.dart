@@ -176,6 +176,10 @@ mixin HomeController on State<HomePage> {
               NotificationOrderInfo.fromJson(orderPushData!);
           orderPushNotifier.push(notificationOrderInfo);
 
+          BootContext.get()
+              .appHandler
+              .doNotification(notificationOrderInfo, isEnterNotificationPage);
+
           if (!isEnterNotificationPage) {
             if (notificationOrderInfo.orderPushState == OrderPushState.add) {
               _audioCache.play('order_add_messenger.mp3', isNotification: true);

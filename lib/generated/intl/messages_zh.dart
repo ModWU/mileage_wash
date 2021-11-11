@@ -54,6 +54,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_submit_text": MessageLookupByLibrary.simpleMessage("登陆"),
         "login_title": MessageLookupByLibrary.simpleMessage("登陆"),
         "logout_error": MessageLookupByLibrary.simpleMessage("登出异常！"),
+        "map_baidu_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("百度地图未安装"),
+        "map_baidu_title": MessageLookupByLibrary.simpleMessage("百度地图"),
+        "map_mini_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("高德地图未安装"),
+        "map_mini_title": MessageLookupByLibrary.simpleMessage("高德地图"),
+        "map_not_activated_tips":
+            MessageLookupByLibrary.simpleMessage("地图定位功能没有被激活"),
+        "map_tencent_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("腾讯地图未安装"),
+        "map_tencent_title": MessageLookupByLibrary.simpleMessage("腾讯地图"),
         "me_logout_text": MessageLookupByLibrary.simpleMessage("退出登录"),
         "me_order_state_receiving":
             MessageLookupByLibrary.simpleMessage("正在接单"),

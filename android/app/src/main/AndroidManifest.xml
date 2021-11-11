@@ -5,6 +5,9 @@
         android:label="mileage_wash"
         android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher">
+       <meta-data
+           android:name="TencentMapSDK"
+           android:value="UXBBZ-3MJ6P-VZDDU-LVNRS-YYNI7-J6FGU"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

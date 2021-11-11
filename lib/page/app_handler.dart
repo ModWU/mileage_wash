@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:mileage_wash/common/listener/data_notifier.dart';
 import 'package:mileage_wash/common/util/app_utils.dart';
 import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
-enum NotificationType { loginPop, notificationPop }
+enum NotificationType { loginPop, notificationPop, notification }
 
 class AppHandler with DataNotifier {
   AppHandler();
@@ -20,12 +21,25 @@ class AppHandler with DataNotifier {
     addListener(NotificationType.notificationPop, listener);
   }
 
+  void addNotificationListener(
+      void Function(NotificationOrderInfo notificationOrderInfo,
+              bool isEnterNotificationPage)
+          listener) {
+    addListener(NotificationType.notification, listener);
+  }
+
   void doLoginPop() {
     notifyListeners(NotificationType.loginPop);
   }
 
   void doNotificationPop() {
     notifyListeners(NotificationType.notificationPop);
+  }
+
+  void doNotification(NotificationOrderInfo notificationOrderInfo,
+      bool isEnterNotificationPage) {
+    notifyListeners(NotificationType.notification, notificationOrderInfo,
+        isEnterNotificationPage);
   }
 
   Future<bool> isAllowBack(BuildContext context) async {

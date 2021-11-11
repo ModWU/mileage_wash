@@ -29,10 +29,6 @@ abstract class HomeNotifier with ChangeNotifier {
   }
 
   void refreshData(List<OrderInfo> data) {
-    if (data.isEmpty) {
-      return;
-    }
-
     List<OrderInfo>? orderData = _orderData;
     if (orderData != null) {
       orderData.clear();

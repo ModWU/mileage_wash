@@ -27,6 +27,11 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  mileage_tencent:
+    git:
+      url: git://github.com/ModWU/mileage_tencent.git
+      ref: main
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3

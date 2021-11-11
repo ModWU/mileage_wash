@@ -540,6 +540,76 @@ class S {
     );
   }
 
+  /// `QQ Map`
+  String get map_tencent_title {
+    return Intl.message(
+      'QQ Map',
+      name: 'map_tencent_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amap`
+  String get map_mini_title {
+    return Intl.message(
+      'Amap',
+      name: 'map_mini_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Baidu Maps`
+  String get map_baidu_title {
+    return Intl.message(
+      'Baidu Maps',
+      name: 'map_baidu_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QQ Map is not installed`
+  String get map_tencent_not_installed_tips {
+    return Intl.message(
+      'QQ Map is not installed',
+      name: 'map_tencent_not_installed_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Amap is not installed`
+  String get map_mini_not_installed_tips {
+    return Intl.message(
+      'Amap is not installed',
+      name: 'map_mini_not_installed_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Baidu is not installed`
+  String get map_baidu_not_installed_tips {
+    return Intl.message(
+      'Baidu is not installed',
+      name: 'map_baidu_not_installed_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Map location is not activated`
+  String get map_not_activated_tips {
+    return Intl.message(
+      'Map location is not activated',
+      name: 'map_not_activated_tips',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Press exit again`
   String get exit_tip_twice_click {
     return Intl.message(

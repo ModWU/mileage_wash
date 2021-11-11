@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/page/app_handler.dart';
 import '../state/app_state.dart';
 import 'boot_manager.dart';
@@ -21,6 +22,10 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
   @protected
   void onNotificationPop() {}
 
+  @protected
+  void onNotification(NotificationOrderInfo notificationOrderInfo,
+      bool isEnterNotificationPage) {}
+
   bool isPageAt(PageCategory page) {
     return bootContext.isPageAt(page);
   }
@@ -32,6 +37,7 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
     bootContext.theme.addListener(themeChanged);
     appHandler.addLoginPopListener(onLoginPop);
     appHandler.addNotificationPopListener(onNotificationPop);
+    appHandler.addNotificationListener(onNotification);
   }
 
   @override
@@ -40,6 +46,7 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
     bootContext.theme.removeListener(themeChanged);
     appHandler.removeListener(onLoginPop);
     appHandler.removeListener(onNotificationPop);
+    appHandler.removeListener(onNotification);
     super.dispose();
   }
 }

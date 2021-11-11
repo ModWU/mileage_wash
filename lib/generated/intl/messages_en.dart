@@ -60,6 +60,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_submit_text": MessageLookupByLibrary.simpleMessage("Login"),
         "login_title": MessageLookupByLibrary.simpleMessage("Login"),
         "logout_error": MessageLookupByLibrary.simpleMessage("Logout error!"),
+        "map_baidu_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("Baidu is not installed"),
+        "map_baidu_title": MessageLookupByLibrary.simpleMessage("Baidu Maps"),
+        "map_mini_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("Amap is not installed"),
+        "map_mini_title": MessageLookupByLibrary.simpleMessage("Amap"),
+        "map_not_activated_tips": MessageLookupByLibrary.simpleMessage(
+            "Map location is not activated"),
+        "map_tencent_not_installed_tips":
+            MessageLookupByLibrary.simpleMessage("QQ Map is not installed"),
+        "map_tencent_title": MessageLookupByLibrary.simpleMessage("QQ Map"),
         "me_logout_text": MessageLookupByLibrary.simpleMessage("Logout"),
         "me_order_state_receiving":
             MessageLookupByLibrary.simpleMessage("order receiving"),
