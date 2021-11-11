@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mileage_wash/resource/styles.dart';
 import '../state/app_state.dart';
-import 'app_notifier.dart';
+import 'app_handler.dart';
 import 'boot_page.dart';
 
 abstract class BootContext {
@@ -22,7 +22,7 @@ abstract class BootContext {
   TextStyle get bodyText;
   ThemeData get themeData;
   Locale? get locale;
-  AppNotifier get appNotifier;
+  AppHandler get appHandler;
 }
 
 mixin BootManager on State<BootPage> implements BootContext {

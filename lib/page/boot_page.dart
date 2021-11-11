@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/scroll_behavior.dart';
 import 'package:mileage_wash/generated/l10n.dart';
-import 'package:mileage_wash/page/app_notifier.dart';
+import 'package:mileage_wash/page/app_handler.dart';
 import 'package:mileage_wash/page/route_generator.dart';
 import 'package:mileage_wash/resource/strings.dart';
 import 'package:mileage_wash/resource/styles.dart';
@@ -19,13 +19,13 @@ class BootPage extends StatefulWidget {
 class _BootPageState extends State<BootPage> with BootManager {
   ThemeData? _themeData;
   Locale? _locale;
-  AppNotifier? _appNotifier;
+  AppHandler? _appHandler;
   GlobalKey<NavigatorState>? _navigationKey;
 
   @override
   void initState() {
     super.initState();
-    _appNotifier = AppNotifier();
+    _appHandler = AppHandler();
     _navigationKey = GlobalKey<NavigatorState>();
     _themeData = ThemeAttrs.get(theme.value);
     _locale = LanguageCodes.getLocaleByLanguage(language.value);
@@ -37,10 +37,11 @@ class _BootPageState extends State<BootPage> with BootManager {
   void dispose() {
     theme.removeListener(_themeChanged);
     language.removeListener(_languageChanged);
+    _appHandler?.dispose();
+
     _themeData = null;
     _locale = null;
-    NotificationType.values.forEach(_appNotifier!.removeAllListenerByKey);
-    _appNotifier = null;
+    _appHandler = null;
     _navigationKey = null;
     super.dispose();
   }
@@ -110,7 +111,7 @@ class _BootPageState extends State<BootPage> with BootManager {
   Locale? get locale => _locale;
 
   @override
-  AppNotifier get appNotifier => _appNotifier!;
+  AppHandler get appHandler => appHandler!;
 }
 
 const List<LocalizationsDelegate<dynamic>> _delegates =

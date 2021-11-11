@@ -131,7 +131,7 @@ mixin HomeController on State<HomePage> {
     PluginServer.instance.jPush.clearAllNotifications();
     await Navigator.of(context).pushNamed(RouteIds.notification);
     orderPushNotifier.removeAllNotifications();
-    BootContext.get().appNotifier.doNotificationPop();
+    BootContext.get().appHandler.doNotificationPop();
     _isEnterNotificationPage = false;
   }
 

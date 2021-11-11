@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mileage_wash/page/app_notifier.dart';
+import 'package:mileage_wash/page/app_handler.dart';
 import '../state/app_state.dart';
 import 'boot_manager.dart';
 
@@ -7,7 +7,7 @@ import 'boot_manager.dart';
 mixin BootMiXin<T extends StatefulWidget> on State<T> {
   BootContext get bootContext => BootContext.get();
 
-  AppNotifier get appNotifier => bootContext.appNotifier;
+  AppHandler get appHandler => bootContext.appHandler;
 
   @protected
   void pageChanged() {}
@@ -30,16 +30,16 @@ mixin BootMiXin<T extends StatefulWidget> on State<T> {
     super.initState();
     bootContext.page.addListener(pageChanged);
     bootContext.theme.addListener(themeChanged);
-    appNotifier.addLoginPopListener(onLoginPop);
-    appNotifier.addNotificationPopListener(onNotificationPop);
+    appHandler.addLoginPopListener(onLoginPop);
+    appHandler.addNotificationPopListener(onNotificationPop);
   }
 
   @override
   void dispose() {
     bootContext.page.removeListener(pageChanged);
     bootContext.theme.removeListener(themeChanged);
-    appNotifier.removeListener(onLoginPop);
-    appNotifier.removeListener(onNotificationPop);
+    appHandler.removeListener(onLoginPop);
+    appHandler.removeListener(onNotificationPop);
     super.dispose();
   }
 }

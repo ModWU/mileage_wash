@@ -19,7 +19,7 @@ mixin ActivityController on State<ActivityPage> {
   Future<void> _onTokenExpired(int code, String oldToken) async {
     await Navigator.of(context)
         .pushNamed(RouteIds.login, arguments: LoginNavigationWay.pop);
-    BootContext.get().appNotifier.doLoginPop();
+    BootContext.get().appHandler.doLoginPop();
   }
 
   @override

@@ -16,8 +16,6 @@ class ActivityPage extends StatefulWidget {
 
 class _ActivityPageState extends State<ActivityPage>
     with BootMiXin, ActivityController {
-  DateTime? _lastPopTime;
-
   @override
   void initState() {
     super.initState();
@@ -28,26 +26,12 @@ class _ActivityPageState extends State<ActivityPage>
   @override
   void dispose() {
     bootContext.page.removeListener(_pageChanged);
-
-    _lastPopTime = null;
     super.dispose();
   }
 
   void _pageChanged() => setState(() {});
 
-  Future<bool> _isAllowBack() async {
-    if (_lastPopTime == null ||
-        DateTime.now().difference(_lastPopTime!) > const Duration(seconds: 2)) {
-      _lastPopTime = DateTime.now();
-      ToastUtils.showToast(S.of(context).exit_tip_twice_click);
-      return false;
-    } else {
-      _lastPopTime = DateTime.now();
-    }
-    return true;
-  }
-
-  Future<bool> _onWillPop() => _isAllowBack();
+  Future<bool> _onWillPop() => bootContext.appHandler.isAllowBack(context);
 
   @override
   Widget build(BuildContext context) {

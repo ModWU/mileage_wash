@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
-import 'package:mileage_wash/common/util/app_utils.dart';
 import 'package:mileage_wash/common/util/verification_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
+import 'package:mileage_wash/page/boot_manager.dart';
 import 'package:mileage_wash/server/controller/login_controller.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
-import 'package:mileage_wash/ui/utils/toast_utils.dart';
 
 enum LoginNavigationWay { pop, pushNamedAndRemoveUntil }
 
@@ -29,8 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final Observer<bool> _enableLoginButton = false.ob;
 
-  DateTime? _lastPopTime;
-
   bool _isShowPassword = false;
 
   bool _nameAutoFocus = true;
@@ -44,12 +41,6 @@ class _LoginPageState extends State<LoginPage> {
     if (_unameController.text != '') {
       _nameAutoFocus = false;
     }
-  }
-
-  @override
-  void dispose() {
-    _lastPopTime = null;
-    super.dispose();
   }
 
   String? _verifyPhone(String? phone) {
@@ -87,19 +78,6 @@ class _LoginPageState extends State<LoginPage> {
   void _notifyLoginButton() {
     final bool isOk = _isPasswordOk && _isUsernameOk;
     _enableLoginButton.value = isOk;
-  }
-
-  Future<bool> _isAllowBack() async {
-    if (_lastPopTime == null ||
-        DateTime.now().difference(_lastPopTime!) > const Duration(seconds: 2)) {
-      _lastPopTime = DateTime.now();
-      ToastUtils.showToast(S.of(context).exit_tip_twice_click);
-      return false;
-    } else {
-      _lastPopTime = DateTime.now();
-    }
-    AppUtils.exit();
-    return false;
   }
 
   Widget _buildLoginForm() {
@@ -194,12 +172,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(title: Text(S.of(context).login_title)),
-          body:
-              LoadingUtils.build(child: _buildLoginForm(), observer: _loading),
-        ),
-        onWillPop: _isAllowBack);
+      child: Scaffold(
+        appBar: AppBar(title: Text(S.of(context).login_title)),
+        body: LoadingUtils.build(child: _buildLoginForm(), observer: _loading),
+      ),
+      onWillPop: () => BootContext.get().appHandler.isAllowBack(context),
+    );
   }
 
   Future<void> _onLogin() async {
