@@ -49,6 +49,7 @@ dependencies:
   image_picker: ^0.8.4+4
   jpush_flutter: ^2.1.5
   audioplayers: ^0.20.1
+  permission_handler: ^8.2.6
   #workmanager: ^0.4.1
 
 dev_dependencies:

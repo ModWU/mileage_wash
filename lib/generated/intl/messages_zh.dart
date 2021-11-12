@@ -57,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "map_baidu_not_installed_tips":
             MessageLookupByLibrary.simpleMessage("百度地图未安装"),
         "map_baidu_title": MessageLookupByLibrary.simpleMessage("百度地图"),
+        "map_destination_name": MessageLookupByLibrary.simpleMessage("终点"),
+        "map_jump_error": MessageLookupByLibrary.simpleMessage("跳转地图发生异常"),
         "map_mini_not_installed_tips":
             MessageLookupByLibrary.simpleMessage("高德地图未安装"),
         "map_mini_title": MessageLookupByLibrary.simpleMessage("高德地图"),

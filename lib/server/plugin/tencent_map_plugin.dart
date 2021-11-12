@@ -1,24 +1,19 @@
 import 'dart:io';
-
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:mileage_tencent/mileage_tencent.dart';
-import 'package:mileage_wash/common/listener/data_notifier.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/common/util/permission_handler.dart';
+import 'package:mileage_wash/constant/package_names.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
+import 'package:mileage_wash/server/dao/order_dao.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
+import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 
-class PluginServer with DataNotifier {
-  PluginServer._();
-
-  static late final PluginServer instance = PluginServer._();
-
-  late final JPush jPush = JPush();
-
+class TencentMapPlugin implements PluginInterface {
   PlatformViewController? _mapViewController;
   PlatformViewController? get mapViewController => _mapViewController;
 
@@ -28,15 +23,17 @@ class PluginServer with DataNotifier {
   bool _isMapActivated = false;
   bool get isMapActivated => _isMapActivated;
 
-  Future<void> initialize() async {
-    await _initJPush();
-
-    if (AppData.instance.isLogin) {
-      await _initMap();
-    }
+  @override
+  Future<bool> initialize() {
+    return createMap();
   }
 
-  Future<void> _initMap() async {
+  Future<bool> createMap() async {
+    if (!AppData.instance.isLogin ||
+        !(await PermissionHandler.check(permissions))) {
+      return false;
+    }
+
     if (_mapViewController != null) {
       _mapViewController?.dispose();
       _mapViewController = null;
@@ -65,6 +62,17 @@ class PluginServer with DataNotifier {
         _onLocationChanged(latitude, longitude);
       }
     });
+
+    return _mapViewController != null;
+  }
+
+  void _onLocationChanged(double latitude, double longitude) {
+    Logger.log(
+        'TencentMapPlugin.onLocationChanged => latitude: $latitude, longitude: $longitude');
+    OrderDao.updateAddress(latitude: '$latitude', longitude: '$longitude')
+        .catchError((Object error, StackTrace stack) {
+      Logger.reportDartError(error, stack);
+    });
   }
 
   Future<bool> _jumpToMapApp(
@@ -87,13 +95,21 @@ class PluginServer with DataNotifier {
   ) async {
     return _jumpToMapApp(context, latitude, longitude,
         (String latitude, String longitude) async {
-      if (!(await _flutterMileageTencent.isAvailable('com.tencent.map'))) {
+      if (!(await _flutterMileageTencent
+          .isAvailable(PackageNames.tencentMap.platform))) {
         ToastUtils.showToast(S.of(context).map_tencent_not_installed_tips);
         return false;
       }
 
-      return _flutterMileageTencent.jumpToMapByData(
-          'qqmap://map/routeplan?type=drive&to=我的终点&tocoord=$latitude,$longitude');
+      try {
+        final bool isSuccess = await _flutterMileageTencent.jumpToMapByData(
+            'qqmap://map/routeplan?type=drive&to=${S.of(context).map_destination_name}&tocoord=$latitude,$longitude');
+        return isSuccess;
+      } catch (error, stack) {
+        Logger.reportDartError(error, stack);
+        ToastUtils.showToast(S.of(context).map_jump_error);
+      }
+      return false;
     });
   }
 
@@ -104,15 +120,24 @@ class PluginServer with DataNotifier {
   ) async {
     return _jumpToMapApp(context, latitude, longitude,
         (String latitude, String longitude) async {
-      if (!(await _flutterMileageTencent.isAvailable('com.baidu.BaiduMap'))) {
+      if (!(await _flutterMileageTencent
+          .isAvailable(PackageNames.baiduMap.platform))) {
         ToastUtils.showToast(S.of(context).map_baidu_not_installed_tips);
         return false;
       }
-      return _flutterMileageTencent.jumpToMapByIntent('intent://map/direction?'
-          'destination=latlng:$latitude,$longitude'
-          '|name:我的终点'
-          '&mode=driving&'
-          '&src=appname#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end');
+      try {
+        final bool isSuccess = await _flutterMileageTencent.jumpToMapByIntent(
+            'intent://map/direction?'
+            'destination=latlng:$latitude,$longitude'
+            '|name:${S.of(context).map_destination_name}'
+            '&mode=driving&'
+            '&src=appname#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end');
+        return isSuccess;
+      } catch (error, stack) {
+        Logger.reportDartError(error, stack);
+        ToastUtils.showToast(S.of(context).map_jump_error);
+      }
+      return false;
     });
   }
 
@@ -123,74 +148,39 @@ class PluginServer with DataNotifier {
   ) async {
     return _jumpToMapApp(context, latitude, longitude,
         (String latitude, String longitude) async {
-      if (!(await _flutterMileageTencent.isAvailable('com.autonavi.minimap'))) {
+      if (!(await _flutterMileageTencent
+          .isAvailable(PackageNames.miniMap.platform))) {
         ToastUtils.showToast(S.of(context).map_mini_not_installed_tips);
         return false;
       }
-      return _flutterMileageTencent.jumpToMapByData(
-          'androidamap://navi?sourceApplication=appname&poiname=fangheng&lat=$latitude&lon=$longitude&dev=1&style=2');
+      try {
+        final bool isSuccess = await _flutterMileageTencent.jumpToMapByData(
+            'androidamap://navi?sourceApplication=appname&poiname=${S.of(context).map_destination_name}&lat=$latitude&lon=$longitude&dev=1&style=2');
+        return isSuccess;
+      } catch (error, stack) {
+        Logger.reportDartError(error, stack);
+        ToastUtils.showToast(S.of(context).map_jump_error);
+      }
+      return false;
     });
   }
 
-  void _onLocationChanged(double latitude, double longitude) {
-    print('_onLocationChanged => latitude: $latitude, longitude: $longitude');
+  @override
+  Future<bool> onLogin(BuildContext context) {
+    return createMap();
   }
 
-  Future<void> _initJPush() async {
-    Logger.log('JPush => initJPush');
-
-    jPush.setup(
-      appKey: 'a2364d3faeb79aeaff6cbe4e',
-      channel: 'developer-default',
-      production: true,
-      debug: kDebugMode,
-    );
-
-    jPush.applyPushAuthority(
-        const NotificationSettingsIOS(sound: true, alert: true, badge: true));
-
-    final String registrationId = await jPush.getRegistrationID();
-
-    if (AppData.instance.isLogin) {
-      jPush.setWakeEnable(enable: true);
-    }
-
-    Logger.log('JPush => registrationId: $registrationId');
-  }
-
-  Future<void> startOnLogin([BuildContext? context]) async {
-    Logger.log('JPush => startOnLogin');
-    final String phoneNumber = AppData.instance.loginInfo!.phoneNumber;
-    Logger.log('JPush => setAlias: $phoneNumber');
-    jPush.setAlias(phoneNumber);
-    jPush.resumePush();
-
-    if (context != null) {
-      try {
-        final bool notificationEnabled = await jPush.isNotificationEnabled();
-        Logger.log('JPush => notificationEnabled: $notificationEnabled');
-
-        if (!notificationEnabled) {
-          ToastUtils.showToast(
-              S.of(context).system_setting_open_notification_tips);
-          jPush.openSettingsForNotification();
-        }
-      } catch (error, stack) {
-        Logger.reportDartError(error, stack);
-      }
-    }
-
-    await _initMap();
-  }
-
-  Future<void> stopOnLogout(BuildContext context) async {
-    Logger.log('JPush => stopOnLogout');
-    //_jPush.cleanTags();
-    jPush.deleteAlias();
-    jPush.setWakeEnable(enable: false);
-    jPush.stopPush();
-
+  @override
+  Future<bool> onLogout(BuildContext context) async {
     _mapViewController?.dispose();
     _mapViewController = null;
+    return true;
   }
+
+  @override
+  List<Permission> get permissions => <Permission>[
+        Permission.location,
+        Permission.phone,
+        Permission.storage,
+      ];
 }

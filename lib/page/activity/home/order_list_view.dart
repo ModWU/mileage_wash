@@ -38,6 +38,8 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
 
   final Observer<bool> _isLoading = true.ob;
 
+  bool _isClickJumpMap = false;
+
   CancelToken? _cancelToken;
 
   @override
@@ -343,16 +345,14 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                                   children: <Widget>[
                                     Expanded(
                                       child: TextButton(
-                                        onPressed: () async {
-                                          final bool isSuccess =
-                                              await PluginServer.instance
+                                        onPressed: () {
+                                          _jumpToMapByClick(
+                                              context,
+                                              () => PluginServer.instance
                                                   .jumpToTencentMapApp(
                                                       context,
                                                       orderInfo.latitude,
-                                                      orderInfo.longitude);
-                                          if (isSuccess) {
-                                            Navigator.of(context).pop();
-                                          }
+                                                      orderInfo.longitude));
                                         },
                                         style: ButtonStyle(
                                           minimumSize:
@@ -372,15 +372,13 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                                     Expanded(
                                       child: TextButton(
                                         onPressed: () async {
-                                          final bool isSuccess =
-                                              await PluginServer.instance
+                                          _jumpToMapByClick(
+                                              context,
+                                              () => PluginServer.instance
                                                   .jumpToMiniMapApp(
                                                       context,
                                                       orderInfo.latitude,
-                                                      orderInfo.longitude);
-                                          if (isSuccess) {
-                                            Navigator.of(context).pop();
-                                          }
+                                                      orderInfo.longitude));
                                         },
                                         style: ButtonStyle(
                                           minimumSize:
@@ -399,15 +397,13 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                                     Expanded(
                                       child: TextButton(
                                         onPressed: () async {
-                                          final bool isSuccess =
-                                              await PluginServer.instance
+                                          _jumpToMapByClick(
+                                              context,
+                                              () => PluginServer.instance
                                                   .jumpToBaiduMapApp(
                                                       context,
                                                       orderInfo.latitude,
-                                                      orderInfo.longitude);
-                                          if (isSuccess) {
-                                            Navigator.of(context).pop();
-                                          }
+                                                      orderInfo.longitude));
                                         },
                                         style: ButtonStyle(
                                           minimumSize:
@@ -507,6 +503,19 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
         ),
       ),
     );
+  }
+
+  Future<void> _jumpToMapByClick(
+      BuildContext context, Future<bool> Function() sendJumpCallback) async {
+    if (_isClickJumpMap) {
+      return;
+    }
+    _isClickJumpMap = true;
+    final bool isSuccess = await sendJumpCallback();
+    _isClickJumpMap = false;
+    if (isSuccess) {
+      Navigator.of(context).pop();
+    }
   }
 
   String _splitDate(String date) {

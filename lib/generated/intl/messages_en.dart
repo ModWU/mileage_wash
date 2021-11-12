@@ -63,6 +63,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "map_baidu_not_installed_tips":
             MessageLookupByLibrary.simpleMessage("Baidu is not installed"),
         "map_baidu_title": MessageLookupByLibrary.simpleMessage("Baidu Maps"),
+        "map_destination_name":
+            MessageLookupByLibrary.simpleMessage("destination"),
+        "map_jump_error": MessageLookupByLibrary.simpleMessage("Jump error!"),
         "map_mini_not_installed_tips":
             MessageLookupByLibrary.simpleMessage("Amap is not installed"),
         "map_mini_title": MessageLookupByLibrary.simpleMessage("Amap"),

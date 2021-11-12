@@ -9,6 +9,7 @@ class HTTPApis {
 
   static const String orderList = '/order/orderList';
   static const String saveOrder = '/order/saveOrder';
+  static const String updateAddress = '/order/updateAddress';
 
   static const String upload = '/common/upload';
 

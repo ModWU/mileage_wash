@@ -58,4 +58,18 @@ class OrderDao {
     final int data = httpResult.data as int;
     return data;
   }
+
+  static Future<void> updateAddress({
+    required String latitude,
+    required String longitude,
+    CancelToken? cancelToken,
+  }) async {
+    final Response<HttpResult> response =
+        await HttpUtil.post(HTTPApis.updateAddress, data: <String, dynamic>{
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+
+    final HttpResult httpResult = response.data!;
+  }
 }

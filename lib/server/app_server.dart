@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mileage_wash/common/http/dio_manager.dart';
 import 'package:mileage_wash/server/interceptor/response_interceptor.dart';
-import 'package:mileage_wash/server/plugin_server.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/server/storage/app_storage.dart';
 
 import 'interceptor/header_interceptor.dart';
@@ -18,6 +18,6 @@ class AppServer {
       ResponseInterceptor(),
     ]);
     await AppStorage.initialize();
-    await PluginServer.instance.initialize();
+    await ThirdPartyPlugin.instance.initialize();
   }
 }

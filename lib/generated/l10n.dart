@@ -600,6 +600,26 @@ class S {
     );
   }
 
+  /// `Jump error!`
+  String get map_jump_error {
+    return Intl.message(
+      'Jump error!',
+      name: 'map_jump_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `destination`
+  String get map_destination_name {
+    return Intl.message(
+      'destination',
+      name: 'map_destination_name',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Map location is not activated`
   String get map_not_activated_tips {
     return Intl.message(
