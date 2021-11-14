@@ -69,6 +69,8 @@
 
   "exit_tip_twice_click": "Press exit again",
 
+  "permission_permanently_denied_tips": "Permission[{permission}] is permanently denied, open 'Settings' to grant",
+
   "login_error": "Login error!",
   "logout_error": "Logout error!",
   "order_query_error": "Error querying order!",

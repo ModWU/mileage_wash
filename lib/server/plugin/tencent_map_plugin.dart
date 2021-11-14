@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:mileage_tencent/mileage_tencent.dart';
+import 'package:mileage_wash/common/listener/ob.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/permission_handler.dart';
 import 'package:mileage_wash/constant/package_names.dart';
@@ -13,7 +14,7 @@ import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 
-class TencentMapPlugin implements PluginInterface {
+class TencentMapPlugin with BasePluginMiXin {
   PlatformViewController? _mapViewController;
   PlatformViewController? get mapViewController => _mapViewController;
 
@@ -23,16 +24,23 @@ class TencentMapPlugin implements PluginInterface {
   bool _isMapActivated = false;
   bool get isMapActivated => _isMapActivated;
 
+  final Observer<String> debugPositionObserver = Observer<String>(null);
+
   @override
-  Future<bool> initialize() {
-    return createMap();
+  Future<bool> initialize() async {
+    if (AppData().isLogin) {
+      //await requestPermission();
+      return create();
+    }
+    return true;
   }
 
-  Future<bool> createMap() async {
-    if (!AppData.instance.isLogin ||
-        !(await PermissionHandler.check(permissions))) {
+  Future<bool> create() async {
+    if (_isMapActivated || !AppData.instance.isLogin) {
       return false;
     }
+
+    Logger.log('TencentMapPlugin.createMap success');
 
     if (_mapViewController != null) {
       _mapViewController?.dispose();
@@ -45,6 +53,7 @@ class TencentMapPlugin implements PluginInterface {
         id: _flutterMileageTencent.viewId,
         viewType: FlutterMileageTencent.viewType,
         layoutDirection: TextDirection.ltr,
+        creationParams: 1000 * 60, //间隔多少毫秒定位一次
         creationParamsCodec: const StandardMessageCodec(),
       );
       _mapViewController = androidViewController;
@@ -55,6 +64,7 @@ class TencentMapPlugin implements PluginInterface {
       if (type == CallbackType.activate) {
         if (arguments['isSuccess'] == true) {
           _isMapActivated = true;
+          Logger.log('TencentMapPlugin.activated');
         }
       } else if (type == CallbackType.onLocationChanged) {
         final double latitude = arguments['latitude'] as double;
@@ -69,6 +79,9 @@ class TencentMapPlugin implements PluginInterface {
   void _onLocationChanged(double latitude, double longitude) {
     Logger.log(
         'TencentMapPlugin.onLocationChanged => latitude: $latitude, longitude: $longitude');
+    debugPositionObserver
+        .alwaysNotifyValue('latitude: $latitude, longitude: $longitude');
+
     OrderDao.updateAddress(latitude: '$latitude', longitude: '$longitude')
         .catchError((Object error, StackTrace stack) {
       Logger.reportDartError(error, stack);
@@ -166,21 +179,29 @@ class TencentMapPlugin implements PluginInterface {
   }
 
   @override
-  Future<bool> onLogin(BuildContext context) {
-    return createMap();
+  Future<bool> onLogin(BuildContext context) async {
+    //await requestPermission();
+    return create();
   }
 
   @override
   Future<bool> onLogout(BuildContext context) async {
+    _isMapActivated = false;
     _mapViewController?.dispose();
     _mapViewController = null;
     return true;
   }
 
   @override
-  List<Permission> get permissions => <Permission>[
-        Permission.location,
-        Permission.phone,
-        Permission.storage,
-      ];
+  Future<bool> requestPermission([BuildContext? context]) =>
+      PermissionHandler.request(_permissions, context);
+
+  @override
+  Future<bool> checkPermission() => PermissionHandler.check(_permissions);
+
+  late final List<Permission> _permissions = <Permission>[
+    Permission.locationAlways,
+    Permission.phone,
+    Permission.storage,
+  ];
 }

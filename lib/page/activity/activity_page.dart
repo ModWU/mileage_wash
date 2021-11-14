@@ -1,7 +1,18 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:mileage_wash/common/listener/ob.dart';
 import 'package:mileage_wash/common/listener/tap.dart';
 import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
+import 'package:mileage_wash/model/notifier/order_push_notifier.dart';
 import 'package:mileage_wash/server/controller/activity_controller.dart';
+import 'package:mileage_wash/server/plugin/tencent_map_plugin.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import '../../state/app_state.dart';
 import '../base.dart';
@@ -32,8 +43,12 @@ class _ActivityPageState extends State<ActivityPage>
 
   Future<bool> _onWillPop() => bootContext.appHandler.isAllowBack(context);
 
+  bool _debugPositionAnimation = false;
+
   @override
   Widget build(BuildContext context) {
+    // 活动页数据放到活动页面，一旦登出后便不存在。
+    // 等以后数据类别较多时需要统一管理，可移动到顶层。
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -46,6 +61,53 @@ class _ActivityPageState extends State<ActivityPage>
                 MePage(),
               ],
             ),
+            /*AndroidViewSurface(
+              controller: ThirdPartyPlugin.find<TencentMapPlugin>().mapViewController as SurfaceAndroidViewController,
+              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                ),
+              },
+            ),*/
+            /*Center(
+              child: IgnorePointer(
+                child: ObWidget<String>(
+                    builder: (Observer<String>? observer) {
+                      final String position = observer?.value ?? 'null';
+                      _debugPositionAnimation = !_debugPositionAnimation;
+                      return Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(6.0)),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: AnimatedDefaultTextStyle(
+                          style: _debugPositionAnimation
+                              ? const TextStyle(
+                            color: Colors.white,
+                          )
+                              : const TextStyle(
+                            color: Colors.lightGreenAccent,
+                          ),
+                          duration: const Duration(milliseconds: 800),
+                          curve: Curves.easeInOut,
+                          child: Text(
+                            position,
+                            style: const TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    initialValue: ThirdPartyPlugin.find<TencentMapPlugin>()
+                        .debugPositionObserver),
+              ),
+            ),*/
           ],
         ),
         bottomNavigationBar: const _BottomNavigationBarWidget(),

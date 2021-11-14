@@ -7,4 +7,5 @@ class RouteIds {
   static const String notification = '/notification';
 
   static const String washingReview = '/activity/home/washing_review';
+  static const String orderDetails = '/activity/home/order_details';
 }

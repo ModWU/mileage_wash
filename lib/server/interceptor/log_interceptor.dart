@@ -44,7 +44,7 @@ class MyLogInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    logPrint('*** Request ***');
+    Logger.logHttp('*** Request ***');
     _printKV('uri', options.uri);
     //options.headers;
 

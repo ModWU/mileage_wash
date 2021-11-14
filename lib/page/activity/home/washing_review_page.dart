@@ -44,8 +44,8 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _appBarBottomTextSize = TextUtils.measureSize(_getAppBarBottomTextSpan,
-        maxWidth: 1.sw - 22 * 2);
+    _appBarBottomTextSize =
+        TextUtils.measureSize(_appBarBottomTextSpan, maxWidth: 1.sw - 22 * 2);
 
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -76,7 +76,7 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
     throw 'homeNotifier type "${_homeNotifier.runtimeType}" error';
   }
 
-  TextSpan get _getAppBarBottomTextSpan {
+  TextSpan get _appBarBottomTextSpan {
     return TextSpan(
         text: S.of(context).washing_review_tips,
         style: TextStyle(color: Colors.grey, fontSize: 24.sp));
@@ -456,7 +456,7 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
           child: Container(
             height: _appBarBottomTextSize.height + 24.h,
             width: _appBarBottomTextSize.width,
-            child: Text.rich(_getAppBarBottomTextSpan),
+            child: Text.rich(_appBarBottomTextSpan),
           ),
         ),
       ),

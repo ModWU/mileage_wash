@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart' as audio_players;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/error_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
@@ -17,18 +18,20 @@ import 'package:mileage_wash/page/activity/home/home_page.dart';
 import 'package:mileage_wash/page/boot_manager.dart';
 import 'package:mileage_wash/server/dao/order_dao.dart';
 import 'package:mileage_wash/server/dao/upload_dao.dart';
+import 'package:mileage_wash/server/plugin/jpush_plugin.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/state/car_state.dart';
 import 'package:mileage_wash/state/order_push_state.dart';
 import 'package:mileage_wash/state/order_state.dart';
 import 'package:provider/provider.dart';
-
-import '../plugin_server.dart';
 
 mixin HomeController on State<HomePage> {
   bool _isEnterNotificationPage = false;
   bool get isEnterNotificationPage => _isEnterNotificationPage;
 
   late final audio_players.AudioCache _audioCache = audio_players.AudioCache();
+
+  late final JPush _jPush = ThirdPartyPlugin.find<JPushPlugin>().jPush;
 
   static Future<List<OrderInfo>?> queryOrderList(
     BuildContext context, {
@@ -128,7 +131,7 @@ mixin HomeController on State<HomePage> {
     }
 
     _isEnterNotificationPage = true;
-    PluginServer.instance.jPush.clearAllNotifications();
+    _jPush.clearAllNotifications();
     await Navigator.of(context).pushNamed(RouteIds.notification);
     orderPushNotifier.removeAllNotifications();
     BootContext.get().appHandler.doNotificationPop();
@@ -143,11 +146,11 @@ mixin HomeController on State<HomePage> {
     }
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       try {
-        PluginServer.instance.jPush.addEventHandler(
+        _jPush.addEventHandler(
             onReceiveNotification: (Map<String, dynamic> message) async {
-          Logger.log('JPush => onReceiveNotification message: $message');
+          Logger.log('JPush111 => onReceiveNotification message: $message');
           Logger.log(
-              'JPush => onReceiveMessage containes extras: ${message.containsKey('extras')}');
+              'JPush222 => onReceiveMessage containes extras: ${message.containsKey('extras')}');
 
           if (!message.containsKey('extras')) {
             return;
@@ -155,11 +158,17 @@ mixin HomeController on State<HomePage> {
 
           final dynamic extrasObj = message['extras']!;
 
+          Logger.log('JPush3333 => onReceiveMessage extrasObj $extrasObj');
+
           assert(extrasObj is Map<dynamic, dynamic>);
           final Map<dynamic, dynamic> extra =
               extrasObj as Map<dynamic, dynamic>;
 
+          Logger.log('JPush4444 => onReceiveMessage extras $extra');
+
           final String jPushExtra = extra['cn.jpush.android.EXTRA']! as String;
+
+          Logger.log('JPush5555 => onReceiveMessage jPushExtra $jPushExtra');
 
           final Map<String, dynamic>? orderPushData =
               json.jsonDecode(jPushExtra) as Map<String, dynamic>?;

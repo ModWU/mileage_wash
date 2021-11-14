@@ -45,7 +45,7 @@ class _MePageState extends State<MePage> with BootMiXin {
             color: Colors.white,
             child: ListTile(
               leading: const Icon(Icons.person),
-              title: Text(AppData.instance.loginInfo!.username),
+              title: Text(AppData().loginInfo!.username),
               subtitle: Text(AppData.instance.loginInfo!.phoneNumber),
             ),
           ),

@@ -7,7 +7,6 @@ extension ObExtension<T> on T {
 }
 
 class Observer<T> with ChangeNotifier {
-
   Observer(this._value);
 
   T? _value;
@@ -18,6 +17,11 @@ class Observer<T> with ChangeNotifier {
     if (_value == value) {
       return;
     }
+    _value = value;
+    notifyListeners();
+  }
+
+  void alwaysNotifyValue(T? value) {
     _value = value;
     notifyListeners();
   }
@@ -43,7 +47,10 @@ class Observer<T> with ChangeNotifier {
 }
 
 class ObWidget<T> extends StatefulWidget {
-  const ObWidget({required this.builder, required this.initialValue});
+  const ObWidget({
+    required this.builder,
+    required this.initialValue,
+  });
 
   final Observer<T> initialValue;
   final WidgetCallback<T> builder;
@@ -57,7 +64,6 @@ class ObWidget<T> extends StatefulWidget {
 }
 
 class _ObsWidgetState<T> extends State<ObWidget<T>> {
-
   Observer<T>? _data;
 
   @override

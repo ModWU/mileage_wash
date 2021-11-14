@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 
 @immutable
 class OrderInfo {
-  const OrderInfo(
-      {required this.id,
-      required this.shortName,
-      required this.adsName,
-      required this.adsDetail,
-      required this.washId,
-      required this.washName,
-      required this.washDate,
-      required this.latitude,
-      required this.longitude,
-      required this.carNumber,
-      required this.state,
-      this.endDate,
-      this.cancelDate});
+  const OrderInfo({
+    required this.id,
+    required this.shortName,
+    required this.adsName,
+    required this.adsDetail,
+    required this.washId,
+    required this.washName,
+    required this.washDate,
+    required this.latitude,
+    required this.longitude,
+    required this.carNumber,
+    required this.state,
+    this.endDate,
+    this.cancelDate,
+    this.photo,
+  });
 
   factory OrderInfo.fromJson(Map<String, dynamic> data) {
     assert(data.containsKey('id'));
@@ -46,6 +48,7 @@ class OrderInfo {
 
     final String? endDate = data['end_date'] as String?;
     final String? cancelDate = data['cancel_date'] as String?;
+    final String? photo = data['photo'] as String?;
 
     return OrderInfo(
       id: id,
@@ -61,6 +64,7 @@ class OrderInfo {
       state: state,
       endDate: endDate,
       cancelDate: cancelDate,
+      photo: photo,
     );
   }
 
@@ -77,11 +81,26 @@ class OrderInfo {
   final int state;
   final String? endDate;
   final String? cancelDate;
+  final String? photo;
 
   @override
   int get hashCode {
-    return hashValues(id, shortName, adsName, adsDetail, washId, washName,
-        washDate, latitude, longitude, carNumber, state, endDate, cancelDate);
+    return hashValues(
+      id,
+      shortName,
+      adsName,
+      adsDetail,
+      washId,
+      washName,
+      washDate,
+      latitude,
+      longitude,
+      carNumber,
+      state,
+      endDate,
+      cancelDate,
+      photo,
+    );
   }
 
   @override
@@ -101,10 +120,11 @@ class OrderInfo {
         other.carNumber == carNumber &&
         other.state == state &&
         other.endDate == endDate &&
-        other.cancelDate == cancelDate;
+        other.cancelDate == cancelDate &&
+        other.photo == photo;
   }
 
   @override
   String toString() =>
-      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, carNumber: $carNumber, state: $state, endDate: $endDate, cancelDate: $cancelDate)';
+      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, carNumber: $carNumber, state: $state, endDate: $endDate, cancelDate: $cancelDate, photo: $photo)';
 }

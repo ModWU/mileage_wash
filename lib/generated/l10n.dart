@@ -640,6 +640,16 @@ class S {
     );
   }
 
+  /// `Permission[{permission}] is permanently denied, open 'Settings' to grant`
+  String permission_permanently_denied_tips(Object permission) {
+    return Intl.message(
+      'Permission[$permission] is permanently denied, open \'Settings\' to grant',
+      name: 'permission_permanently_denied_tips',
+      desc: '',
+      args: [permission],
+    );
+  }
+
   /// `Login error!`
   String get login_error {
     return Intl.message(

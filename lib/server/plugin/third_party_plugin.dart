@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:mileage_wash/server/plugin/jpush_plugin.dart';
 import 'package:mileage_wash/server/plugin/tencent_map_plugin.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 abstract class PluginInterface {
   Future<bool> initialize();
   Future<bool> onLogin(BuildContext context);
   Future<bool> onLogout(BuildContext context);
-  List<Permission>? get permissions;
+  Future<bool> checkPermission();
+  Future<bool> requestPermission([BuildContext? context]);
 }
 
-class ThirdPartyPlugin implements PluginInterface {
+mixin BasePluginMiXin implements PluginInterface {
+  @override
+  Future<bool> checkPermission() => Future<bool>.value(true);
+  @override
+  Future<bool> requestPermission([BuildContext? context]) => Future<bool>.value(true);
+}
+
+class ThirdPartyPlugin with BasePluginMiXin {
   ThirdPartyPlugin._();
 
   static late final ThirdPartyPlugin instance = ThirdPartyPlugin._();
 
-  late final Map<PluginType, PluginInterface> _plugins =
-      <PluginType, PluginInterface>{
-    PluginType.jPush: JPushPlugin(),
-    PluginType.tencentMap: TencentMapPlugin(),
-  };
+  late final List<PluginInterface> _plugins = <PluginInterface>[
+    JPushPlugin(),
+    TencentMapPlugin()
+  ];
+
+  static T find<T extends PluginInterface>() {
+    return instance._plugins
+        .singleWhere((PluginInterface plugin) => plugin is T) as T;
+  }
 
   @override
   Future<bool> initialize() async {
@@ -35,9 +46,11 @@ class ThirdPartyPlugin implements PluginInterface {
 
   Future<bool> _visitPlugins(
       Future<bool> Function(PluginInterface pluginInterface) visitor) async {
-    bool isSuccess = false;
-    for (final PluginInterface pluginInterface in _plugins.values) {
-      isSuccess = await visitor(pluginInterface);
+    bool isSuccess = true;
+    for (final PluginInterface pluginInterface in _plugins) {
+      if (!(await visitor(pluginInterface))) {
+        isSuccess = false;
+      }
     }
     return isSuccess;
   }
@@ -49,16 +62,14 @@ class ThirdPartyPlugin implements PluginInterface {
   }
 
   @override
-  List<Permission>? get permissions {
-    final List<Permission> permissions = <Permission>[];
-    for (final PluginInterface pluginInterface in _plugins.values) {
-      final List<Permission>? pluginPermissions = pluginInterface.permissions;
-      if (pluginPermissions != null) {
-        permissions.addAll(pluginPermissions);
-      }
-    }
-    return permissions;
+  Future<bool> checkPermission() {
+    return _visitPlugins(
+        (PluginInterface pluginInterface) => pluginInterface.checkPermission());
+  }
+
+  @override
+  Future<bool> requestPermission([BuildContext? context]) {
+    return _visitPlugins((PluginInterface pluginInterface) =>
+        pluginInterface.requestPermission());
   }
 }
-
-enum PluginType { jPush, tencentMap }

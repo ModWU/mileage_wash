@@ -68,6 +68,8 @@
   "map_not_activated_tips": "地图定位功能没有被激活",
   "exit_tip_twice_click": "再按一次退出",
 
+  "permission_permanently_denied_tips": "权限[{permission}]被永久拒绝，请打开设置授予",
+
   "login_error": "登陆异常！",
   "logout_error": "登出异常！",
   "order_query_error": "查询订单异常！",

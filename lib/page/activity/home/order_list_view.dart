@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
+import 'package:mileage_wash/common/util/string_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
@@ -11,8 +13,10 @@ import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/page/base.dart';
 import 'package:mileage_wash/server/controller/home_controller.dart';
-import 'package:mileage_wash/server/plugin_server.dart';
+import 'package:mileage_wash/server/plugin/tencent_map_plugin.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/ui/utils/loading_utils.dart';
+import 'package:mileage_wash/ui/utils/toast_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -275,243 +279,294 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
   Widget _buildOrderItemView(BuildContext context, int index, T homeNotifier,
       BoxConstraints constraints) {
     final OrderInfo orderInfo = homeNotifier.orderData![index];
-    return Card(
-      margin: EdgeInsets.only(top: 12.w),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 0),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Tooltip(
-                          message:
-                              '${orderInfo.adsName} ${orderInfo.adsDetail}',
-                          textStyle:
-                              TextStyle(fontSize: 26.sp, color: Colors.white),
-                          margin: EdgeInsets.symmetric(horizontal: 12.w),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4.w, horizontal: 12.w),
-                          child: Text(
-                            '${orderInfo.adsName} ${orderInfo.adsDetail}',
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                fontSize: 28.sp),
+    return GestureDetector(
+      onTap: () async {
+        if (StringUtils.isTrimEmpty(orderInfo.photo)) {
+          return;
+        }
+        await Navigator.of(context)
+            .pushNamed(RouteIds.orderDetails, arguments: <String, dynamic>{
+          'homeNotifier': homeNotifier,
+          'orderInfo': orderInfo,
+        });
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: <SystemUiOverlay>[
+              SystemUiOverlay.top,
+              SystemUiOverlay.bottom
+            ]);
+        _refresh();
+      },
+      child: IntrinsicHeight(
+        child: Card(
+          margin: EdgeInsets.only(top: 12.w),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.w),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Tooltip(
+                              message:
+                                  '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                              textStyle: TextStyle(
+                                  fontSize: 26.sp, color: Colors.white),
+                              margin: EdgeInsets.symmetric(horizontal: 12.w),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 4.w, horizontal: 12.w),
+                              child: Text(
+                                '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                                style: TextStyle(fontSize: 28.sp),
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              orderInfo.shortName,
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: 22.sp),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              orderInfo.washDate,
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: 26.sp,
+                                  color: Colors.grey),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              orderInfo.carNumber,
+                              style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  fontSize: 26.sp,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8.h),
+                      if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
+                        GestureDetector(
+                          /*onTap: () async {
+                          showModalBottomSheet<dynamic>(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 260.h,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            _jumpToMapByClick(
+                                                context,
+                                                (TencentMapPlugin
+                                                        tencentMapPlugin) =>
+                                                    tencentMapPlugin
+                                                        .jumpToTencentMapApp(
+                                                            context,
+                                                            orderInfo.latitude,
+                                                            orderInfo
+                                                                .longitude));
+                                          },
+                                          style: ButtonStyle(
+                                            minimumSize:
+                                                MaterialStateProperty.all<Size>(
+                                                    Size.infinite),
+                                          ),
+                                          child: Text(
+                                            S.of(context).map_tencent_title,
+                                            style: TextStyle(fontSize: 32.sp),
+                                          ),
+                                        ),
+                                      ),
+                                      const Divider(
+                                        height: 1,
+                                        color: Colors.black12,
+                                      ),
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () async {
+                                            _jumpToMapByClick(
+                                                context,
+                                                (TencentMapPlugin
+                                                        tencentMapPlugin) =>
+                                                    tencentMapPlugin
+                                                        .jumpToMiniMapApp(
+                                                            context,
+                                                            orderInfo.latitude,
+                                                            orderInfo
+                                                                .longitude));
+                                          },
+                                          style: ButtonStyle(
+                                            minimumSize:
+                                                MaterialStateProperty.all<Size>(
+                                                    Size.infinite),
+                                          ),
+                                          child: Text(
+                                              S.of(context).map_mini_title,
+                                              style:
+                                                  TextStyle(fontSize: 32.sp)),
+                                        ),
+                                      ),
+                                      const Divider(
+                                        height: 1,
+                                        color: Colors.black12,
+                                      ),
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () async {
+                                            _jumpToMapByClick(
+                                                context,
+                                                (TencentMapPlugin
+                                                        tencentMapPlugin) =>
+                                                    tencentMapPlugin
+                                                        .jumpToBaiduMapApp(
+                                                            context,
+                                                            orderInfo.latitude,
+                                                            orderInfo
+                                                                .longitude));
+                                          },
+                                          style: ButtonStyle(
+                                            minimumSize:
+                                                MaterialStateProperty.all<Size>(
+                                                    Size.infinite),
+                                          ),
+                                          child: Text(
+                                              S.of(context).map_baidu_title,
+                                              style:
+                                                  TextStyle(fontSize: 32.sp)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(25.w),
+                                      topRight: Radius.circular(25.w))));
+                        },*/
+                          child: Icon(
+                            Icons.assistant_navigation,
+                            size: 88.w,
+                            color: Colors.blueAccent,
                           ),
                         ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          orderInfo.shortName,
-                          style: TextStyle(
-                              overflow: TextOverflow.ellipsis, fontSize: 22.sp),
+                        SizedBox(width: 48.w),
+                      ]
+                    ],
+                  ),
+                ),
+                if (homeNotifier is HomeWaitingNotifier ||
+                    homeNotifier is HomeWashingNotifier)
+                  TextButton(
+                      onPressed: () async {
+                        await Navigator.of(context).pushNamed(
+                            RouteIds.washingReview,
+                            arguments: <String, dynamic>{
+                              'homeNotifier': homeNotifier,
+                              'orderInfo': orderInfo,
+                            });
+                        _refresh();
+                      },
+                      style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.w)))),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size.zero),
+                          fixedSize: MaterialStateProperty.all<Size>(
+                              Size(98.w, _itemHeight - 72.h)),
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(horizontal: 0.w))),
+                      child: Text(
+                        _getButtonText(homeNotifier),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 8.h),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                if (homeNotifier is HomeCancelledNotifier ||
+                    homeNotifier is HomeDoneNotifier)
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 14.w),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
                         Text(
-                          orderInfo.washDate,
+                          _getButtonText(homeNotifier),
                           style: TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              fontSize: 26.sp,
-                              color: Colors.grey),
+                            color: Colors.grey,
+                            fontSize: 26.sp,
+                          ),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: 18.h),
                         Text(
-                          orderInfo.carNumber,
+                          _splitDate(homeNotifier is HomeDoneNotifier
+                              ? orderInfo.endDate!
+                              : orderInfo.cancelDate!),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                              overflow: TextOverflow.ellipsis,
-                              fontSize: 26.sp,
-                              color: Colors.grey),
+                            fontSize: 16.8.sp,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(width: 8.h),
-                  if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
-                    GestureDetector(
-                      onTap: () async {
-                        showModalBottomSheet<dynamic>(
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: 260.h,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () {
-                                          _jumpToMapByClick(
-                                              context,
-                                              () => PluginServer.instance
-                                                  .jumpToTencentMapApp(
-                                                      context,
-                                                      orderInfo.latitude,
-                                                      orderInfo.longitude));
-                                        },
-                                        style: ButtonStyle(
-                                          minimumSize:
-                                              MaterialStateProperty.all<Size>(
-                                                  Size.infinite),
-                                        ),
-                                        child: Text(
-                                          S.of(context).map_tencent_title,
-                                          style: TextStyle(fontSize: 32.sp),
-                                        ),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 1,
-                                      color: Colors.black12,
-                                    ),
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () async {
-                                          _jumpToMapByClick(
-                                              context,
-                                              () => PluginServer.instance
-                                                  .jumpToMiniMapApp(
-                                                      context,
-                                                      orderInfo.latitude,
-                                                      orderInfo.longitude));
-                                        },
-                                        style: ButtonStyle(
-                                          minimumSize:
-                                              MaterialStateProperty.all<Size>(
-                                                  Size.infinite),
-                                        ),
-                                        child: Text(
-                                            S.of(context).map_mini_title,
-                                            style: TextStyle(fontSize: 32.sp)),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 1,
-                                      color: Colors.black12,
-                                    ),
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () async {
-                                          _jumpToMapByClick(
-                                              context,
-                                              () => PluginServer.instance
-                                                  .jumpToBaiduMapApp(
-                                                      context,
-                                                      orderInfo.latitude,
-                                                      orderInfo.longitude));
-                                        },
-                                        style: ButtonStyle(
-                                          minimumSize:
-                                              MaterialStateProperty.all<Size>(
-                                                  Size.infinite),
-                                        ),
-                                        child: Text(
-                                            S.of(context).map_baidu_title,
-                                            style: TextStyle(fontSize: 32.sp)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            context: context,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(25.w),
-                                    topRight: Radius.circular(25.w))));
-                      },
-                      child: Icon(
-                        Icons.assistant_navigation,
-                        size: 72.w,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                    SizedBox(width: 68.w),
-                  ]
-                ],
-              ),
+                  )
+              ],
             ),
-            if (homeNotifier is HomeWaitingNotifier ||
-                homeNotifier is HomeWashingNotifier)
-              TextButton(
-                  onPressed: () async {
-                    await Navigator.of(context).pushNamed(
-                        RouteIds.washingReview,
-                        arguments: <String, dynamic>{
-                          'homeNotifier': homeNotifier,
-                          'orderInfo': orderInfo,
-                        });
-                    _refresh();
-                  },
-                  style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.w)))),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                      minimumSize: MaterialStateProperty.all<Size>(Size.zero),
-                      fixedSize: MaterialStateProperty.all<Size>(
-                          Size(98.w, _itemHeight - 72.h)),
-                      padding: MaterialStateProperty.all(
-                          EdgeInsets.symmetric(horizontal: 0.w))),
-                  child: Text(
-                    _getButtonText(homeNotifier),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-            if (homeNotifier is HomeCancelledNotifier ||
-                homeNotifier is HomeDoneNotifier)
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 14.w),
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      _getButtonText(homeNotifier),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 26.sp,
-                      ),
-                    ),
-                    SizedBox(height: 18.h),
-                    Text(
-                      _splitDate(homeNotifier is HomeDoneNotifier
-                          ? orderInfo.endDate!
-                          : orderInfo.cancelDate!),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16.8.sp,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-          ],
+          ),
         ),
       ),
     );
   }
 
   Future<void> _jumpToMapByClick(
-      BuildContext context, Future<bool> Function() sendJumpCallback) async {
+      BuildContext context,
+      Future<bool> Function(TencentMapPlugin tencentMapPlugin)
+          sendJumpCallback) async {
     if (_isClickJumpMap) {
       return;
     }
     _isClickJumpMap = true;
-    final bool isSuccess = await sendJumpCallback();
+    final TencentMapPlugin tencentMapPlugin =
+        ThirdPartyPlugin.find<TencentMapPlugin>();
+    bool isSuccess = true;
+    if (!(await tencentMapPlugin.checkPermission())) {
+      isSuccess = await tencentMapPlugin.requestPermission();
+      /*if (isSuccess) {
+        isSuccess = await tencentMapPlugin.createMap();
+      }*/
+    }
+
+    if (!isSuccess) {
+      _isClickJumpMap = false;
+      ToastUtils.showToast(S.of(context).map_jump_error);
+      Navigator.of(context).pop();
+      return;
+    }
+
+    isSuccess = await sendJumpCallback(tencentMapPlugin);
     _isClickJumpMap = false;
     if (isSuccess) {
       Navigator.of(context).pop();
@@ -556,7 +611,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                 return _buildOrderItemView(
                     context, index, homeNotifier, constraints);
               },
-              itemExtent: _itemHeight,
+              //itemExtent: _itemHeight,
               itemCount: homeNotifier.size,
             ),
           ),

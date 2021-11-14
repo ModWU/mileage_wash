@@ -18,8 +18,6 @@ class DioManager {
   final int sendTimeout = 5000;
   final int receiveTimeout = 3000;
 
-  final AppData appData = AppData.instance;
-
   DefaultHttpClientAdapter get _defaultHttpClientAdapter =>
       _rootDio.httpClientAdapter as DefaultHttpClientAdapter;
 
@@ -27,7 +25,7 @@ class DioManager {
 
   void _init() {
     final BaseOptions options = BaseOptions(
-      baseUrl: HTTPApis.beta,
+      baseUrl: HTTPApis.offlineBeta,
       connectTimeout: connectTimeout,
       receiveTimeout: receiveTimeout,
       sendTimeout: sendTimeout,
@@ -36,10 +34,13 @@ class DioManager {
     final Dio dio = Dio(options);
     _rootDio = dio;
 
-    _setHttpClientCreate(appData.httpProxy);
+    _defaultHttpClientAdapter.onHttpClientCreate = (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
   }
 
-  void _setHttpClientCreate(String? proxy) {
+  void setHttpProxy(String? proxy) {
     if (proxy != null) {
       _defaultHttpClientAdapter.onHttpClientCreate = (HttpClient client) {
         client.findProxy = (Uri uri) => 'PROXY $proxy';

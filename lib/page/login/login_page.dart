@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
@@ -37,9 +38,14 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _unameController.text = AppData.instance.lastLoginInfo?.phoneNumber ?? '';
+    _unameController.text = AppData().lastLoginInfo?.phoneNumber ?? '';
     if (_unameController.text != '') {
       _nameAutoFocus = false;
+    }
+
+    if (kDebugMode) {
+      _unameController.text = '13162892612';
+      _pwdController.text = '123456';
     }
   }
 

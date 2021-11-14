@@ -19,6 +19,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh';
 
+  static String m0(permission) => "权限[${permission}]被永久拒绝，请打开设置授予";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "bottom_navigation_home_title":
@@ -88,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification_title": MessageLookupByLibrary.simpleMessage("服务通知"),
         "order_query_error": MessageLookupByLibrary.simpleMessage("查询订单异常！"),
         "order_save_error": MessageLookupByLibrary.simpleMessage("保存订单异常！"),
+        "permission_permanently_denied_tips": m0,
         "photo_upload_error": MessageLookupByLibrary.simpleMessage("上传照片异常！"),
         "system_setting_open_notification_tips":
             MessageLookupByLibrary.simpleMessage("您需要打开应用通知权限，否则无法使用通知服务！"),

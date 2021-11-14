@@ -3,9 +3,9 @@ import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/error_utils.dart';
 import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
+import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/server/dao/login_dao.dart';
-
-import '../plugin_server.dart';
+import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 
 class LoginController {
   LoginController._();
@@ -17,7 +17,7 @@ class LoginController {
   }) async {
     try {
       await LoginDao.login(username: username, password: password);
-      await PluginServer.instance.startOnLogin(context);
+      await ThirdPartyPlugin.instance.onLogin(context);
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
@@ -28,8 +28,10 @@ class LoginController {
 
   static Future<bool> logout(BuildContext context) async {
     try {
-      await LoginDao.logout(AppData.instance.loginInfo!);
-      await PluginServer.instance.stopOnLogout(context);
+      await LoginDao.logout(AppData().loginInfo!);
+      // 清除数据
+      await ThirdPartyPlugin.instance.onLogout(context);
+      HomeNotifier.clearAll(context);
       return true;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);

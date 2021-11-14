@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mileage_wash">
     <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
-        android:label="mileage_wash"
+        android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/app_logo">
        <meta-data
            android:name="TencentMapSDK"
            android:value="UXBBZ-3MJ6P-VZDDU-LVNRS-YYNI7-J6FGU"/>

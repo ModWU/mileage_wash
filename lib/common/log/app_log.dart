@@ -47,9 +47,9 @@ class Logger {
   }
 
   static void log(Object object) {
-    if (kDebugMode) {
+    //if (kDebugMode) {
       _print(_colorNowTime().build(object));
-    } else {}
+    //} else {}
   }
 
   static void logHttp(Object object) {

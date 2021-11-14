@@ -2,22 +2,17 @@ import 'package:mileage_wash/common/listener/data_notifier.dart';
 
 import '../http/login_info.dart';
 
-enum AppDataType { httpProxy, loginInfo, lastLoginInfo }
+enum AppDataType { loginInfo, lastLoginInfo }
 
 class AppData with DataNotifier {
+  factory AppData() => instance;
+
   AppData._();
 
   static late final AppData instance = AppData._();
 
   String? httpBaseURL;
-
-  String? _httpProxy;
-  String? get httpProxy => _httpProxy;
-  set httpProxy(String? value) {
-    if (_httpProxy == value) return;
-    _httpProxy = value;
-    notifyListeners(AppDataType.httpProxy);
-  }
+  String? httpProxy;
 
   LoginInfo? _loginInfo;
   LoginInfo? get loginInfo => _loginInfo;

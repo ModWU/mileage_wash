@@ -6,10 +6,11 @@ import 'package:mileage_wash/generated/l10n.dart';
 import 'package:mileage_wash/model/global/app_data.dart';
 import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
 import 'package:mileage_wash/ui/utils/toast_utils.dart';
-import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 
-class JPushPlugin implements PluginInterface {
+class JPushPlugin with BasePluginMiXin {
   late final JPush jPush = JPush();
+
+  bool? _isCallStop;
 
   @override
   Future<bool> initialize() async {
@@ -28,16 +29,37 @@ class JPushPlugin implements PluginInterface {
     final String registrationId = await jPush.getRegistrationID();
 
     Logger.log('JPushPlugin => registrationId: $registrationId');
+
     return true;
   }
 
   @override
   Future<bool> onLogin(BuildContext context) async {
     Logger.log('JPushPlugin => onLogin');
-    final String phoneNumber = AppData.instance.loginInfo!.phoneNumber;
-    Logger.log('JPushPlugin => setAlias: $phoneNumber');
+
+    final bool? isCallStop = _isCallStop;
+
+    if (isCallStop != null && !isCallStop) {
+      return true;
+    }
+
+    if (isCallStop ?? false) {
+      Logger.log('JPushPlugin => onLogin => resumePush start');
+      jPush.resumePush();
+      Logger.log('JPushPlugin => onLogin => resumePush end');
+    }
+
+    _isCallStop = false;
+
+    //final String registrationId = await jPush.getRegistrationID();
+
+    //Logger.log('JPushPlugin => onLogin => registrationId: $registrationId');
+
+    final String phoneNumber = AppData().loginInfo!.phoneNumber;
+    /*final Map<dynamic, dynamic> setAliasData = await jPush.setAlias(phoneNumber);*/
     jPush.setAlias(phoneNumber);
-    jPush.resumePush();
+
+    //Logger.log('JPushPlugin => onLogin => setAlias: setAliasData: $setAliasData');
 
     try {
       final bool notificationEnabled = await jPush.isNotificationEnabled();
@@ -57,13 +79,17 @@ class JPushPlugin implements PluginInterface {
 
   @override
   Future<bool> onLogout(BuildContext context) async {
-    Logger.log('JPushPlugin => onLogout');
-    jPush.deleteAlias();
-    jPush.setWakeEnable(enable: false);
+    Logger.log('JPushPlugin => onLogout => _isCallStop: $_isCallStop');
+    final bool? isCallStop = _isCallStop;
+    if (isCallStop == null || isCallStop) {
+      return true;
+    }
+    Logger.log('JPushPlugin => onLogout => deleteAlias start');
+    final Map<dynamic, dynamic> deleteAliasData = await jPush.deleteAlias();
+    Logger.log('JPushPlugin => onLogout => deleteAlias end => deleteAliasData: $deleteAliasData');
     jPush.stopPush();
+    Logger.log('JPushPlugin => onLogout => stopPush end');
+    _isCallStop = true;
     return true;
   }
-
-  @override
-  List<Permission>? get permissions => null;
 }

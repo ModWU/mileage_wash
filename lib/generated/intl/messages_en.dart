@@ -19,6 +19,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(permission) =>
+      "Permission[${permission}] is permanently denied, open \'Settings\' to grant";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "bottom_navigation_home_title":
@@ -98,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error querying order!"),
         "order_save_error":
             MessageLookupByLibrary.simpleMessage("Error saving order!"),
+        "permission_permanently_denied_tips": m0,
         "photo_upload_error":
             MessageLookupByLibrary.simpleMessage("Error uploading photo!"),
         "system_setting_open_notification_tips":

@@ -50,6 +50,7 @@ dependencies:
   jpush_flutter: ^2.1.5
   audioplayers: ^0.20.1
   permission_handler: ^8.2.6
+  cached_network_image: ^3.1.0+1
   #workmanager: ^0.4.1
 
 dev_dependencies:
