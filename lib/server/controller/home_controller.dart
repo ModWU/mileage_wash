@@ -7,15 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jpush_flutter/jpush_flutter.dart';
 import 'package:mileage_wash/common/log/app_log.dart';
-import 'package:mileage_wash/common/util/error_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/model/http/order_details.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/http/upload_result.dart';
 import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/model/notifier/order_push_notifier.dart';
 import 'package:mileage_wash/page/activity/home/home_page.dart';
 import 'package:mileage_wash/page/boot_manager.dart';
+import 'package:mileage_wash/server/controller/utils/controller_utils.dart';
 import 'package:mileage_wash/server/dao/order_dao.dart';
 import 'package:mileage_wash/server/dao/upload_dao.dart';
 import 'package:mileage_wash/server/plugin/jpush_plugin.dart';
@@ -41,26 +42,27 @@ mixin HomeController on State<HomePage> {
     CancelToken? cancelToken,
     bool allowThrowError = false,
   }) async {
-    try {
-      final List<OrderInfo> orderInfo = await OrderDao.queryOrderList(
-          orderState: orderState,
-          curPage: curPage,
-          pageSize: pageSize,
-          cancelToken: cancelToken);
+    return ControllerUtils.handleDao(context,
+        daoHandler: () => OrderDao.queryOrderList(
+            httpCode: orderState.httpCode,
+            curPage: curPage,
+            pageSize: pageSize,
+            cancelToken: cancelToken),
+        allowThrowError: allowThrowError,
+        errorTip: S.of(context).order_query_error);
+  }
 
-      return orderInfo;
-    } catch (error, stack) {
-      Logger.reportDartError(error, stack);
-
-      if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(
-            error, S.of(context).order_query_error);
-
-        if (allowThrowError) {
-          rethrow;
-        }
-      }
-    }
+  static Future<OrderDetails?> getOrderDetails(
+    BuildContext context, {
+    required int id,
+    CancelToken? cancelToken,
+    bool allowThrowError = false,
+  }) async {
+    return ControllerUtils.handleDao(context,
+        daoHandler: () =>
+            OrderDao.getOrderDetails(id: id, cancelToken: cancelToken),
+        allowThrowError: allowThrowError,
+        errorTip: S.of(context).order_details_get_error);
   }
 
   static Future<UploadResult?> uploadPhoto(
@@ -71,28 +73,17 @@ mixin HomeController on State<HomePage> {
     ProgressCallback? onSendProgress,
     bool allowThrowError = false,
   }) async {
-    try {
-      return UploadDao.uploadPhoto(
-          type: type,
-          file: File(file.path),
-          cancelToken: cancelToken,
-          onSendProgress: onSendProgress);
-    } catch (error, stack) {
-      Logger.reportDartError(error, stack);
-
-      if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(
-            error, S.of(context).photo_upload_error);
-
-        if (allowThrowError) {
-          rethrow;
-        }
-      }
-    }
-    return null;
+    return ControllerUtils.handleDao(context,
+        daoHandler: () => UploadDao.uploadPhoto(
+            type: type,
+            file: File(file.path),
+            cancelToken: cancelToken,
+            onSendProgress: onSendProgress),
+        allowThrowError: allowThrowError,
+        errorTip: S.of(context).photo_upload_error);
   }
 
-  static Future<void> saveOrder(
+  static Future<int?> saveOrder(
     BuildContext context, {
     required OrderInfo orderInfo,
     required List<String> filePaths,
@@ -101,26 +92,16 @@ mixin HomeController on State<HomePage> {
     CancelToken? cancelToken,
     bool allowThrowError = false,
   }) async {
-    try {
-      final int data = await OrderDao.saveOrder(
-        orderInfo: orderInfo,
-        filePaths: filePaths.join(';'),
-        photoListType: photoListType,
-        carState: carState,
-        cancelToken: cancelToken,
-      );
-    } catch (error, stack) {
-      Logger.reportDartError(error, stack);
-
-      if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(
-            error, S.of(context).order_save_error);
-
-        if (allowThrowError) {
-          rethrow;
-        }
-      }
-    }
+    return ControllerUtils.handleDao(context,
+        daoHandler: () => OrderDao.saveOrder(
+              orderInfo: orderInfo,
+              filePaths: filePaths.join(';'),
+              photoListType: photoListType,
+              carState: carState,
+              cancelToken: cancelToken,
+            ),
+        allowThrowError: allowThrowError,
+        errorTip: S.of(context).order_save_error);
   }
 
   Future<void> openNotificationPage() async {

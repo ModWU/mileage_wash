@@ -88,6 +88,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "notification_item_order_number_title":
             MessageLookupByLibrary.simpleMessage("订单号："),
         "notification_title": MessageLookupByLibrary.simpleMessage("服务通知"),
+        "order_details_address_title":
+            MessageLookupByLibrary.simpleMessage("地址："),
+        "order_details_appointment_time_title":
+            MessageLookupByLibrary.simpleMessage("预约日期："),
+        "order_details_car_photo_title":
+            MessageLookupByLibrary.simpleMessage("车辆照片："),
+        "order_details_carport_number_title":
+            MessageLookupByLibrary.simpleMessage("车位："),
+        "order_details_get_error":
+            MessageLookupByLibrary.simpleMessage("获取订单详情异常！"),
+        "order_details_license_plate_number_title":
+            MessageLookupByLibrary.simpleMessage("车牌："),
+        "order_details_order_number_title":
+            MessageLookupByLibrary.simpleMessage("订单号："),
+        "order_details_title": MessageLookupByLibrary.simpleMessage("订单详情"),
+        "order_details_user_remark_title":
+            MessageLookupByLibrary.simpleMessage("备注："),
+        "order_details_wash_after_title":
+            MessageLookupByLibrary.simpleMessage("清洗后："),
+        "order_details_wash_before_title":
+            MessageLookupByLibrary.simpleMessage("清洗前："),
         "order_query_error": MessageLookupByLibrary.simpleMessage("查询订单异常！"),
         "order_save_error": MessageLookupByLibrary.simpleMessage("保存订单异常！"),
         "permission_permanently_denied_tips": m0,

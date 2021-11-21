@@ -33,6 +33,17 @@
   "washing_review_car_submit_progress_uploading_tip": "Please wait, photos are being uploaded...",
   "washing_review_car_pick_photo_error": "Pick photo error!",
 
+  "order_details_title": "Order Details",
+  "order_details_order_number_title": "order number: ",
+  "order_details_address_title": "order address: ",
+  "order_details_carport_number_title": "carport number: ",
+  "order_details_license_plate_number_title": "license plate number: ",
+  "order_details_appointment_time_title": "appointment time: ",
+  "order_details_user_remark_title": "user remark: ",
+  "order_details_car_photo_title": "Car photos: ",
+  "order_details_wash_before_title": "Before wash: ",
+  "order_details_wash_after_title": "After wash: ",
+
   "login_title": "Login",
   "login_phone_text": "phone",
   "login_phone_hint_text": "Please input phone",
@@ -74,6 +85,7 @@
   "login_error": "Login error!",
   "logout_error": "Logout error!",
   "order_query_error": "Error querying order!",
+  "order_details_get_error": "Error get order details!",
   "order_save_error": "Error saving order!",
   "photo_upload_error": "Error uploading photo!"
 }

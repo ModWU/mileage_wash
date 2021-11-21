@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     if (kDebugMode) {
-      _unameController.text = '13162892612';
+      _unameController.text = '18621973081';
       _pwdController.text = '123456';
     }
   }
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _onLogin() async {
     // 提交前，先验证各个表单字段是否合法
-    // 13262892612 123456
+    // 18621973081 123456
     if ((_formKey.currentState as FormState).validate()) {
       FocusScope.of(context).requestFocus(_blankNode);
       _loading.value = true;

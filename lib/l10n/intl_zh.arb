@@ -33,6 +33,17 @@
   "washing_review_car_submit_progress_uploading_tip": "请稍后，照片正在上传中...",
   "washing_review_car_pick_photo_error": "拍照失败！",
 
+  "order_details_title": "订单详情",
+  "order_details_order_number_title": "订单号：",
+  "order_details_address_title": "地址：",
+  "order_details_carport_number_title": "车位：",
+  "order_details_license_plate_number_title": "车牌：",
+  "order_details_appointment_time_title": "预约日期：",
+  "order_details_user_remark_title": "备注：",
+  "order_details_car_photo_title": "车辆照片：",
+  "order_details_wash_before_title": "清洗前：",
+  "order_details_wash_after_title": "清洗后：",
+
   "login_title": "登陆",
   "login_phone_text": "手机号",
   "login_phone_hint_text": "请输入手机号",
@@ -73,6 +84,7 @@
   "login_error": "登陆异常！",
   "logout_error": "登出异常！",
   "order_query_error": "查询订单异常！",
+  "order_details_get_error": "获取订单详情异常！",
   "order_save_error": "保存订单异常！",
   "photo_upload_error": "上传照片异常！"
 }

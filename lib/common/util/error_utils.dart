@@ -7,12 +7,12 @@ class ErrorUtils {
 
   static int? showToastWhenHttpError(Object errorObj, String otherErrMsg) {
     if (errorObj is DioError && errorObj.error is HttpResultException) {
-      final HttpResultException exception = errorObj.error as HttpResultException;
+      final HttpResultException exception =
+          errorObj.error as HttpResultException;
       ToastUtils.showToast(exception.error);
       return exception.code;
     } else {
       ToastUtils.showToast(otherErrMsg);
     }
   }
-
 }

@@ -2,15 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:mileage_wash/common/http/http_result.dart';
 import 'package:mileage_wash/common/http/http_utils.dart';
 import 'package:mileage_wash/constant/http_apis.dart';
+import 'package:mileage_wash/model/http/order_details.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/state/car_state.dart';
-import 'package:mileage_wash/state/order_state.dart';
 
 class OrderDao {
   OrderDao._();
 
   static Future<List<OrderInfo>> queryOrderList({
-    required OrderState orderState,
+    required int httpCode,
     required int curPage,
     required int pageSize,
     CancelToken? cancelToken,
@@ -19,7 +19,7 @@ class OrderDao {
         HTTPApis.orderList,
         cancelToken: cancelToken,
         data: <String, dynamic>{
-          'state': orderState.httpRequestCode,
+          'state': httpCode,
           'curPage': curPage,
           'pageSize': pageSize
         });
@@ -71,5 +71,25 @@ class OrderDao {
     });
 
     final HttpResult httpResult = response.data!;
+  }
+
+  static Future<OrderDetails> getOrderDetails({
+    required int id,
+    CancelToken? cancelToken,
+  }) async {
+    final Response<HttpResult> response =
+        await HttpUtil.post(HTTPApis.orderDetails, data: <String, dynamic>{
+      'id': id,
+    });
+
+    final HttpResult httpResult = response.data!;
+
+    print("data: ${httpResult}");
+
+    assert(httpResult.data is Map<String, dynamic>);
+
+    final Map<String, dynamic> data = httpResult.data! as Map<String, dynamic>;
+
+    return OrderDetails.fromJson(data);
   }
 }

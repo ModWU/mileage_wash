@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,10 +11,12 @@ import 'package:mileage_wash/common/log/app_log.dart';
 import 'package:mileage_wash/common/util/string_utils.dart';
 import 'package:mileage_wash/constant/route_ids.dart';
 import 'package:mileage_wash/generated/l10n.dart';
+import 'package:mileage_wash/model/http/order_details.dart';
 import 'package:mileage_wash/model/http/order_info.dart';
 import 'package:mileage_wash/model/notification_order_info.dart';
 import 'package:mileage_wash/model/notifier/home_state_notifier.dart';
 import 'package:mileage_wash/page/base.dart';
+import 'package:mileage_wash/resource/assets_image.dart';
 import 'package:mileage_wash/server/controller/home_controller.dart';
 import 'package:mileage_wash/server/plugin/tencent_map_plugin.dart';
 import 'package:mileage_wash/server/plugin/third_party_plugin.dart';
@@ -281,81 +286,113 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
     final OrderInfo orderInfo = homeNotifier.orderData![index];
     return GestureDetector(
       onTap: () async {
-        if (StringUtils.isTrimEmpty(orderInfo.photo)) {
-          return;
+        _isLoading.value = true;
+        _cancelToken = CancelToken();
+        final OrderDetails? orderDetails = await HomeController.getOrderDetails(
+            context,
+            id: orderInfo.id,
+            cancelToken: _cancelToken);
+        _isLoading.value = false;
+
+        if (orderDetails != null) {
+          await Navigator.of(context)
+              .pushNamed(RouteIds.orderDetails, arguments: orderDetails);
+          /*SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+              overlays: <SystemUiOverlay>[
+                SystemUiOverlay.top,
+                SystemUiOverlay.bottom
+              ]);*/
+          _refresh();
         }
-        await Navigator.of(context)
-            .pushNamed(RouteIds.orderDetails, arguments: <String, dynamic>{
-          'homeNotifier': homeNotifier,
-          'orderInfo': orderInfo,
-        });
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-            overlays: <SystemUiOverlay>[
-              SystemUiOverlay.top,
-              SystemUiOverlay.bottom
-            ]);
-        _refresh();
       },
       child: IntrinsicHeight(
         child: Card(
           margin: EdgeInsets.only(top: 12.w),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.w),
+          child: Stack(
+            children: <Widget>[
+              if (!StringUtils.isEmptySplitTrim(orderInfo.photo, ','))
+                _buildStickDetailsLogo(),
+              _buildOrderItemContent(context, index, homeNotifier),
+              /*ColorFiltered(
+                colorFilter:
+                    const ColorFilter.mode(Colors.transparent, BlendMode.srcOut),
+                child: _buildOrderItemContent(context, index, homeNotifier),
+              )*/
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStickDetailsLogo() {
+    return Positioned(
+      child: Container(
+        width: 80.w,
+        height: 80.w,
+        child: Image.asset(AssetsImage.stickDetailsLogo, fit: BoxFit.contain),
+      ),
+    );
+  }
+
+  Widget _buildOrderItemContent(
+      BuildContext context, int index, T homeNotifier) {
+    final OrderInfo orderInfo = homeNotifier.orderData![index];
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.w),
+      child: Row(
+        children: <Widget>[
+          Expanded(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Tooltip(
-                              message:
-                                  '${orderInfo.adsName} ${orderInfo.adsDetail}',
-                              textStyle: TextStyle(
-                                  fontSize: 26.sp, color: Colors.white),
-                              margin: EdgeInsets.symmetric(horizontal: 12.w),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 4.w, horizontal: 12.w),
-                              child: Text(
-                                '${orderInfo.adsName} ${orderInfo.adsDetail}',
-                                style: TextStyle(fontSize: 28.sp),
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              orderInfo.shortName,
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 22.sp),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              orderInfo.washDate,
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 26.sp,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              orderInfo.carNumber,
-                              style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
-                                  fontSize: 26.sp,
-                                  color: Colors.grey),
-                            ),
-                          ],
+                      Tooltip(
+                        message: '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                        textStyle:
+                            TextStyle(fontSize: 26.sp, color: Colors.white),
+                        margin: EdgeInsets.symmetric(horizontal: 12.w),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 4.w, horizontal: 12.w),
+                        child: Text(
+                          '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                          style: TextStyle(fontSize: 28.sp),
                         ),
                       ),
-                      SizedBox(width: 8.h),
-                      if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
-                        GestureDetector(
-                          /*onTap: () async {
+                      SizedBox(height: 8.h),
+                      Text(
+                        orderInfo.shortName,
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis, fontSize: 22.sp),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        orderInfo.washDate,
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 26.sp,
+                            color: Colors.grey),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        orderInfo.carNumber,
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 26.sp,
+                            color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 8.h),
+                if (homeNotifier is HomeWaitingNotifier) ...<Widget>[
+                  GestureDetector(
+                    /*onTap: () async {
                           showModalBottomSheet<dynamic>(
                               builder: (BuildContext context) {
                                 return Container(
@@ -457,86 +494,80 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                                       topLeft: Radius.circular(25.w),
                                       topRight: Radius.circular(25.w))));
                         },*/
-                          child: Icon(
-                            Icons.assistant_navigation,
-                            size: 88.w,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        SizedBox(width: 48.w),
-                      ]
-                    ],
-                  ),
-                ),
-                if (homeNotifier is HomeWaitingNotifier ||
-                    homeNotifier is HomeWashingNotifier)
-                  TextButton(
-                      onPressed: () async {
-                        await Navigator.of(context).pushNamed(
-                            RouteIds.washingReview,
-                            arguments: <String, dynamic>{
-                              'homeNotifier': homeNotifier,
-                              'orderInfo': orderInfo,
-                            });
-                        _refresh();
-                      },
-                      style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(8.w)))),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
-                          minimumSize:
-                              MaterialStateProperty.all<Size>(Size.zero),
-                          fixedSize: MaterialStateProperty.all<Size>(
-                              Size(98.w, _itemHeight - 72.h)),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(horizontal: 0.w))),
-                      child: Text(
-                        _getButtonText(homeNotifier),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                if (homeNotifier is HomeCancelledNotifier ||
-                    homeNotifier is HomeDoneNotifier)
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 14.w),
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          _getButtonText(homeNotifier),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 26.sp,
-                          ),
-                        ),
-                        SizedBox(height: 18.h),
-                        Text(
-                          _splitDate(homeNotifier is HomeDoneNotifier
-                              ? orderInfo.endDate!
-                              : orderInfo.cancelDate!),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16.8.sp,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+                    child: Icon(
+                      Icons.assistant_navigation,
+                      size: 88.w,
+                      color: Colors.blueAccent,
                     ),
-                  )
+                  ),
+                  SizedBox(width: 48.w),
+                ]
               ],
             ),
           ),
-        ),
+          if (homeNotifier is HomeWaitingNotifier ||
+              homeNotifier is HomeWashingNotifier)
+            TextButton(
+                onPressed: () async {
+                  await Navigator.of(context).pushNamed(RouteIds.washingReview,
+                      arguments: <String, dynamic>{
+                        'homeNotifier': homeNotifier,
+                        'orderInfo': orderInfo,
+                      });
+                  _refresh();
+                },
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.w)))),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    minimumSize: MaterialStateProperty.all<Size>(Size.zero),
+                    fixedSize: MaterialStateProperty.all<Size>(
+                        Size(98.w, _itemHeight - 72.h)),
+                    padding: MaterialStateProperty.all(
+                        EdgeInsets.symmetric(horizontal: 0.w))),
+                child: Text(
+                  _getButtonText(homeNotifier),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                )),
+          if (homeNotifier is HomeCancelledNotifier ||
+              homeNotifier is HomeDoneNotifier)
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 14.w),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    _getButtonText(homeNotifier),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 26.sp,
+                    ),
+                  ),
+                  SizedBox(height: 18.h),
+                  Text(
+                    _splitDate(homeNotifier is HomeDoneNotifier
+                        ? orderInfo.endDate!
+                        : orderInfo.cancelDate!),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.8.sp,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ],
       ),
     );
   }

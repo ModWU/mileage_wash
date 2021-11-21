@@ -340,6 +340,106 @@ class S {
     );
   }
 
+  /// `Order Details`
+  String get order_details_title {
+    return Intl.message(
+      'Order Details',
+      name: 'order_details_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `order number: `
+  String get order_details_order_number_title {
+    return Intl.message(
+      'order number: ',
+      name: 'order_details_order_number_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `order address: `
+  String get order_details_address_title {
+    return Intl.message(
+      'order address: ',
+      name: 'order_details_address_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `carport number: `
+  String get order_details_carport_number_title {
+    return Intl.message(
+      'carport number: ',
+      name: 'order_details_carport_number_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `license plate number: `
+  String get order_details_license_plate_number_title {
+    return Intl.message(
+      'license plate number: ',
+      name: 'order_details_license_plate_number_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `appointment time: `
+  String get order_details_appointment_time_title {
+    return Intl.message(
+      'appointment time: ',
+      name: 'order_details_appointment_time_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `user remark: `
+  String get order_details_user_remark_title {
+    return Intl.message(
+      'user remark: ',
+      name: 'order_details_user_remark_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Car photos: `
+  String get order_details_car_photo_title {
+    return Intl.message(
+      'Car photos: ',
+      name: 'order_details_car_photo_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Before wash: `
+  String get order_details_wash_before_title {
+    return Intl.message(
+      'Before wash: ',
+      name: 'order_details_wash_before_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `After wash: `
+  String get order_details_wash_after_title {
+    return Intl.message(
+      'After wash: ',
+      name: 'order_details_wash_after_title',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Login`
   String get login_title {
     return Intl.message(
@@ -675,6 +775,16 @@ class S {
     return Intl.message(
       'Error querying order!',
       name: 'order_query_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error get order details!`
+  String get order_details_get_error {
+    return Intl.message(
+      'Error get order details!',
+      name: 'order_details_get_error',
       desc: '',
       args: [],
     );

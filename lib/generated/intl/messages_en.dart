@@ -97,6 +97,28 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("order number: "),
         "notification_title":
             MessageLookupByLibrary.simpleMessage("notification"),
+        "order_details_address_title":
+            MessageLookupByLibrary.simpleMessage("order address: "),
+        "order_details_appointment_time_title":
+            MessageLookupByLibrary.simpleMessage("appointment time: "),
+        "order_details_car_photo_title":
+            MessageLookupByLibrary.simpleMessage("Car photos: "),
+        "order_details_carport_number_title":
+            MessageLookupByLibrary.simpleMessage("carport number: "),
+        "order_details_get_error":
+            MessageLookupByLibrary.simpleMessage("Error get order details!"),
+        "order_details_license_plate_number_title":
+            MessageLookupByLibrary.simpleMessage("license plate number: "),
+        "order_details_order_number_title":
+            MessageLookupByLibrary.simpleMessage("order number: "),
+        "order_details_title":
+            MessageLookupByLibrary.simpleMessage("Order Details"),
+        "order_details_user_remark_title":
+            MessageLookupByLibrary.simpleMessage("user remark: "),
+        "order_details_wash_after_title":
+            MessageLookupByLibrary.simpleMessage("After wash: "),
+        "order_details_wash_before_title":
+            MessageLookupByLibrary.simpleMessage("Before wash: "),
         "order_query_error":
             MessageLookupByLibrary.simpleMessage("Error querying order!"),
         "order_save_error":
