@@ -47,6 +47,8 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
 
   final Observer<bool> _isLoading = true.ob;
 
+  final Observer<bool> _showStickDetailsLogo = true.ob;
+
   bool _isClickJumpMap = false;
 
   CancelToken? _cancelToken;
@@ -297,14 +299,18 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
         if (orderDetails != null) {
           await Navigator.of(context)
               .pushNamed(RouteIds.orderDetails, arguments: orderDetails);
-          /*SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-              overlays: <SystemUiOverlay>[
-                SystemUiOverlay.top,
-                SystemUiOverlay.bottom
-              ]);*/
           _refresh();
         }
       },
+     /* onLongPress: () {
+        _showStickDetailsLogo.value = false;
+      },
+      onLongPressCancel: () {
+        _showStickDetailsLogo.value = true;
+      },
+      onLongPressUp: () {
+        _showStickDetailsLogo.value = true;
+      },*/
       child: IntrinsicHeight(
         child: Card(
           margin: EdgeInsets.only(top: 12.w),
@@ -327,12 +333,20 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
 
   Widget _buildStickDetailsLogo() {
     return Positioned(
-      child: Container(
-        width: 80.w,
-        height: 80.w,
-        child: Image.asset(AssetsImage.stickDetailsLogo, fit: BoxFit.contain),
-      ),
-    );
+        child: ObWidget<bool>(
+            builder: (Observer<bool>? observer) {
+              final bool isShow = observer?.value ?? true;
+              return Offstage(
+                offstage: !isShow,
+                child: Container(
+                  width: 88.w,
+                  height: 88.w,
+                  child: Image.asset(AssetsImage.stickDetailsLogo,
+                      fit: BoxFit.contain),
+                ),
+              );
+            },
+            initialValue: _showStickDetailsLogo));
   }
 
   Widget _buildOrderItemContent(
@@ -352,7 +366,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Tooltip(
+                     /* Tooltip(
                         message: '${orderInfo.adsName} ${orderInfo.adsDetail}',
                         textStyle:
                             TextStyle(fontSize: 26.sp, color: Colors.white),
@@ -363,6 +377,10 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                           '${orderInfo.adsName} ${orderInfo.adsDetail}',
                           style: TextStyle(fontSize: 28.sp),
                         ),
+                      ),*/
+                      Text(
+                        '${orderInfo.adsName} ${orderInfo.adsDetail}',
+                        style: TextStyle(fontSize: 28.sp),
                       ),
                       SizedBox(height: 8.h),
                       Text(

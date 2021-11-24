@@ -138,8 +138,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "washing_review_car_photo_upload_title":
             MessageLookupByLibrary.simpleMessage(
                 "*Please upload photos of vehicle condition:"),
-        "washing_review_car_pick_photo_error":
-            MessageLookupByLibrary.simpleMessage("Pick photo error!"),
+        "washing_review_car_pick_image_error":
+            MessageLookupByLibrary.simpleMessage("Pick image error!"),
+        "washing_review_car_pick_image_title":
+            MessageLookupByLibrary.simpleMessage("Choose Pictures..."),
         "washing_review_car_pick_picture_limit_error":
             MessageLookupByLibrary.simpleMessage(
                 "Photos have reached their limit!"),
@@ -161,6 +163,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "washing_review_car_submit_progress_uploading_tip":
             MessageLookupByLibrary.simpleMessage(
                 "Please wait, photos are being uploaded..."),
+        "washing_review_car_take_photo_error":
+            MessageLookupByLibrary.simpleMessage("Take photo error!"),
+        "washing_review_car_take_photo_title":
+            MessageLookupByLibrary.simpleMessage("Take Photo"),
         "washing_review_tips": MessageLookupByLibrary.simpleMessage(
             "Before washing, please check the appearance of the vehicle for scratches and bumps, and take photos of the front 45° Angle and rear 45° Angle of the vehicle! "),
         "washing_review_title": MessageLookupByLibrary.simpleMessage(

@@ -31,9 +31,9 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
 
   final ImagePicker _picker = ImagePicker();
 
-  late final OrderInfo _orderInfo;
+  late OrderInfo _orderInfo;
 
-  late final HomeNotifier _homeNotifier;
+  late HomeNotifier _homeNotifier;
 
   final Observer<bool> _loading = false.ob;
 
@@ -53,6 +53,7 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
     assert(arguments.containsKey('homeNotifier'));
 
     _orderInfo = arguments['orderInfo']! as OrderInfo;
+
     _homeNotifier = arguments['homeNotifier']! as HomeNotifier;
   }
 
@@ -104,6 +105,22 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
     });
   }
 
+  Future<void> _uploadPhotos(List<XFile> photos, StateSetter setState) async {
+    assert(photos.isNotEmpty);
+    final List<PhotoUploadProgress> photoUploadProgresses =
+        <PhotoUploadProgress>[];
+    for (final XFile xFile in photos) {
+      photoUploadProgresses.add(PhotoUploadProgress(xFile, CancelToken()));
+    }
+
+    setState(() {
+      _photos ??= <PhotoUploadProgress>[];
+      _photos!.addAll(photoUploadProgresses);
+
+      photoUploadProgresses.forEach(_uploadPhotoToServer);
+    });
+  }
+
   void _uploadPhotoToServer(PhotoUploadProgress photoUploadProgress,
       {CancelToken? cancelToken}) {
     if (cancelToken != null) {
@@ -131,6 +148,50 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
     });
   }
 
+  Future<void> _pickImage(BuildContext context, StateSetter setState,
+      ImageSource imageSource) async {
+    if (_photoLength >= 9) {
+      ToastUtils.showToast(
+          S.of(context).washing_review_car_pick_picture_limit_error);
+      return;
+    }
+
+    try {
+      if (imageSource == ImageSource.camera || _photoLength == 8) {
+        final XFile? pickedFile = await _picker.pickImage(
+          source: imageSource,
+        );
+        if (pickedFile != null) {
+          _uploadPhoto(pickedFile, setState);
+        }
+      } else {
+        List<XFile>? pickedFiles = await _picker.pickMultiImage();
+
+        if (pickedFiles != null) {
+          pickedFiles = pickedFiles.whereType<XFile>().toList();
+          if (pickedFiles.isNotEmpty) {
+            final int needRemoveLength =
+                ((9 - _photoLength) - pickedFiles.length) * -1;
+            if (needRemoveLength > 0) {
+              pickedFiles.removeRange(
+                  pickedFiles.length - needRemoveLength, pickedFiles.length);
+            }
+
+            _uploadPhotos(pickedFiles, setState);
+          }
+        }
+      }
+    } catch (e) {
+      if (imageSource == ImageSource.camera) {
+        ToastUtils.showToast(S.of(context).washing_review_car_take_photo_error);
+      } else {
+        ToastUtils.showToast(S.of(context).washing_review_car_pick_image_error);
+      }
+    } finally {
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget _buildPicturePicker(BuildContext context, StateSetter setState) {
     return GestureDetector(
       onTap: () async {
@@ -139,18 +200,56 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
               S.of(context).washing_review_car_pick_picture_limit_error);
           return;
         }
-
-        try {
-          final XFile? pickedFile = await _picker.pickImage(
-            source: ImageSource.camera,
-          );
-          if (pickedFile != null) {
-            _uploadPhoto(pickedFile, setState);
-          }
-        } catch (e) {
-          ToastUtils.showToast(
-              S.of(context).washing_review_car_pick_photo_error);
-        }
+        showModalBottomSheet<dynamic>(
+            builder: (BuildContext context) {
+              return Container(
+                height: 260.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          _pickImage(context, setState, ImageSource.camera);
+                        },
+                        style: ButtonStyle(
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size.infinite),
+                        ),
+                        child: Text(
+                          S.of(context).washing_review_car_take_photo_title,
+                          style: TextStyle(fontSize: 32.sp),
+                        ),
+                      ),
+                    ),
+                    const Divider(
+                      height: 1,
+                      color: Colors.black12,
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          _pickImage(context, setState, ImageSource.gallery);
+                          Navigator.of(context).pop();
+                        },
+                        style: ButtonStyle(
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size.infinite),
+                        ),
+                        child: Text(
+                            S.of(context).washing_review_car_pick_image_title,
+                            style: TextStyle(fontSize: 32.sp)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            context: context,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.w),
+                    topRight: Radius.circular(25.w))));
       },
       child: Container(
         key: _picturePickerKey,

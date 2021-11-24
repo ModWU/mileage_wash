@@ -65,64 +65,68 @@ class _SimpleImageReviewPageState extends State<SimpleImageReviewPage> {
     final List<String> photos = widget.photos;
     final int photoLength = photos.length;
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: <Widget>[
-          Hero(
-            tag: '${photos[widget.initialIndex]}_${widget.initialIndex}',
-            child: PageView.builder(
-              controller: _pageController!,
-              itemBuilder: (BuildContext context, int index) {
-                final String imageUrl = photos[index];
-                // 这里可以解析imageUrl使用不同的image widget，目前只用network widget
+          Center(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Hero(
+                tag: '${photos[widget.initialIndex]}_${widget.initialIndex}',
+                child: PageView.builder(
+                  controller: _pageController!,
+                  itemBuilder: (BuildContext context, int index) {
+                    final String imageUrl = photos[index];
+                    // 这里可以解析imageUrl使用不同的image widget，目前只用network widget
 
-                final Widget child = CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  imageBuilder:
-                      (BuildContext context, ImageProvider imageProvider) =>
+                    final Widget child = CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      imageBuilder:
+                          (BuildContext context, ImageProvider imageProvider) =>
+                              Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      ),
+                      placeholder: (
+                        BuildContext context,
+                        String url,
+                      ) =>
+                          UnconstrainedBox(
+                        child: SizedBox(
+                          width: 78.w,
+                          height: 78.w,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 1.6,
+                          ),
+                        ),
+                      ),
+                      errorWidget: (
+                        BuildContext context,
+                        String url,
+                        dynamic error,
+                      ) =>
                           Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.contain,
-                        /*colorFilter: const ColorFilter.mode(
-                            Colors.red,
-                            BlendMode.colorBurn,
-                          ),*/
+                        color: Colors.grey,
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.white,
+                          size: 88.w,
+                        ),
                       ),
-                    ),
-                  ),
-                  placeholder: (
-                    BuildContext context,
-                    String url,
-                  ) =>
-                      UnconstrainedBox(
-                    child: SizedBox(
-                      width: 78.w,
-                      height: 78.w,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 1.6,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (
-                    BuildContext context,
-                    String url,
-                    dynamic error,
-                  ) =>
-                      UnconstrainedBox(
-                    child: Icon(
-                      Icons.error,
-                      size: 88.w,
-                    ),
-                  ),
-                );
+                    );
 
-                return child;
-              },
-              itemCount: photoLength,
-              onPageChanged: (int index) {
-                _currentPage!.value = index + 1;
-              },
+                    return child;
+                  },
+                  itemCount: photoLength,
+                  onPageChanged: (int index) {
+                    _currentPage!.value = index + 1;
+                  },
+                ),
+              ),
             ),
           ),
           ObWidget<int>(

@@ -330,11 +330,41 @@ class S {
     );
   }
 
-  /// `Pick photo error!`
-  String get washing_review_car_pick_photo_error {
+  /// `Take photo error!`
+  String get washing_review_car_take_photo_error {
     return Intl.message(
-      'Pick photo error!',
-      name: 'washing_review_car_pick_photo_error',
+      'Take photo error!',
+      name: 'washing_review_car_take_photo_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick image error!`
+  String get washing_review_car_pick_image_error {
+    return Intl.message(
+      'Pick image error!',
+      name: 'washing_review_car_pick_image_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Take Photo`
+  String get washing_review_car_take_photo_title {
+    return Intl.message(
+      'Take Photo',
+      name: 'washing_review_car_take_photo_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose Pictures...`
+  String get washing_review_car_pick_image_title {
+    return Intl.message(
+      'Choose Pictures...',
+      name: 'washing_review_car_pick_image_title',
       desc: '',
       args: [],
     );

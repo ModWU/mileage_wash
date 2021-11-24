@@ -31,7 +31,10 @@
   "washing_review_car_submit_no_data": "请拍照！",
   "washing_review_car_submit_progress_error": "请先处理掉加载失败的照片！",
   "washing_review_car_submit_progress_uploading_tip": "请稍后，照片正在上传中...",
-  "washing_review_car_pick_photo_error": "拍照失败！",
+  "washing_review_car_take_photo_error": "拍照失败！",
+  "washing_review_car_pick_image_error": "获取照片失败！",
+  "washing_review_car_take_photo_title": "拍照",
+  "washing_review_car_pick_image_title": "浏览相册...",
 
   "order_details_title": "订单详情",
   "order_details_order_number_title": "订单号：",

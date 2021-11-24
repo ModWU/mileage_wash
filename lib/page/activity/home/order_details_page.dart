@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -95,49 +94,51 @@ class OrderDetailsPage extends StatelessWidget {
               itemCount: photos.length,
               itemBuilder: (BuildContext context, int index) {
                 final String imageUrl = photos[index];
-                return GestureDetector(
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      PageRouteBuilder<SimpleImageReviewPage>(
-                          pageBuilder: (BuildContext context,
+                return Hero(
+                  tag: '${imageUrl}_$index',
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    imageBuilder:
+                        (BuildContext context, ImageProvider imageProvider) =>
+                            GestureDetector(
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          PageRouteBuilder<SimpleImageReviewPage>(
+                              pageBuilder: (BuildContext context,
+                                      Animation<double> animation,
+                                      Animation<double> secondaryAnimation) =>
+                                  SimpleImageReviewPage(
+                                      initialIndex: index,
+                                      photos: photos,
+                                      animation: animation),
+                              transitionsBuilder: (BuildContext context,
                                   Animation<double> animation,
-                                  Animation<double> secondaryAnimation) =>
-                              SimpleImageReviewPage(
-                                  initialIndex: index, photos: photos, animation: animation),
-                          /*transitionsBuilder: (BuildContext context,
-                              Animation<double> animation,
-                              Animation<double> secondaryAnimation,
-                              Widget child) {
-                            return FadeTransition(
-                              opacity: Tween<double>(begin: 0, end: 1)
-                                  .animate(CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.fastOutSlowIn,
-                              )),
-                              child: child,
-                            );
-                          }*/),
-                    );
+                                  Animation<double> secondaryAnimation,
+                                  Widget child) {
+                                return FadeTransition(
+                                  opacity: Tween<double>(begin: 0, end: 1)
+                                      .animate(CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.fastOutSlowIn,
+                                  )),
+                                  child: child,
+                                );
+                              }),
+                        );
 
-                  /*  await Navigator.of(context).push(
+                        /*  await Navigator.of(context).push(
                         MaterialPageRoute<SimpleImageReviewPage>(
                             builder: (BuildContext context) =>
                                 SimpleImageReviewPage(
                                     initialIndex: index, photos: photos)));*/
 
-                    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-                        overlays: <SystemUiOverlay>[
-                          SystemUiOverlay.top,
-                          SystemUiOverlay.bottom
-                        ]);
-                  },
-                  child: Hero(
-                    tag: '${imageUrl}_$index',
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      imageBuilder:
-                          (BuildContext context, ImageProvider imageProvider) =>
-                              Container(
+                        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                            overlays: <SystemUiOverlay>[
+                              SystemUiOverlay.top,
+                              SystemUiOverlay.bottom
+                            ]);
+                      },
+                      child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: imageProvider,
@@ -145,21 +146,22 @@ class OrderDetailsPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      placeholder: (
-                        BuildContext context,
-                        String url,
-                      ) =>
-                          const SizedBox(),
-                      errorWidget: (
-                        BuildContext context,
-                        String url,
-                        dynamic error,
-                      ) =>
-                          UnconstrainedBox(
-                        child: Icon(
-                          Icons.error,
-                          size: 88.w,
-                        ),
+                    ),
+                    placeholder: (
+                      BuildContext context,
+                      String url,
+                    ) =>
+                        const SizedBox(),
+                    errorWidget: (
+                      BuildContext context,
+                      String url,
+                      dynamic error,
+                    ) =>
+                        Container(
+                      color: Colors.black12,
+                      child: Icon(
+                        Icons.error,
+                        size: 88.w,
                       ),
                     ),
                   ),

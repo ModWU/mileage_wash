@@ -122,8 +122,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("刮痕、碰撞请加拍个特写"),
         "washing_review_car_photo_upload_title":
             MessageLookupByLibrary.simpleMessage("*请上传车辆状况照片："),
-        "washing_review_car_pick_photo_error":
-            MessageLookupByLibrary.simpleMessage("拍照失败！"),
+        "washing_review_car_pick_image_error":
+            MessageLookupByLibrary.simpleMessage("获取照片失败！"),
+        "washing_review_car_pick_image_title":
+            MessageLookupByLibrary.simpleMessage("浏览相册..."),
         "washing_review_car_pick_picture_limit_error":
             MessageLookupByLibrary.simpleMessage("照片已经达到上限！"),
         "washing_review_car_status_collision":
@@ -142,6 +144,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("请先处理掉加载失败的照片！"),
         "washing_review_car_submit_progress_uploading_tip":
             MessageLookupByLibrary.simpleMessage("请稍后，照片正在上传中..."),
+        "washing_review_car_take_photo_error":
+            MessageLookupByLibrary.simpleMessage("拍照失败！"),
+        "washing_review_car_take_photo_title":
+            MessageLookupByLibrary.simpleMessage("拍照"),
         "washing_review_tips": MessageLookupByLibrary.simpleMessage(
             "清洗前，请检查车辆外观是否有划痕、是否有磕碰、并对车辆前45°角、后45°角进行拍摄！"),
         "washing_review_title":

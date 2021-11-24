@@ -31,7 +31,10 @@
   "washing_review_car_submit_no_data": "Please take pictures!",
   "washing_review_car_submit_progress_error": "Please remove or reload the failed loading photos first!",
   "washing_review_car_submit_progress_uploading_tip": "Please wait, photos are being uploaded...",
-  "washing_review_car_pick_photo_error": "Pick photo error!",
+  "washing_review_car_take_photo_error": "Take photo error!",
+  "washing_review_car_pick_image_error": "Pick image error!",
+  "washing_review_car_take_photo_title": "Take Photo",
+  "washing_review_car_pick_image_title": "Choose Pictures...",
 
   "order_details_title": "Order Details",
   "order_details_order_number_title": "order number: ",
