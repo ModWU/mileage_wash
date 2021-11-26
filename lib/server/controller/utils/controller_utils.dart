@@ -10,7 +10,7 @@ class ControllerUtils {
     BuildContext context, {
     required Future<T> Function() daoHandler,
     required bool allowThrowError,
-    required String errorTip,
+    required String errorTips,
   }) async {
     try {
       return await daoHandler();
@@ -18,7 +18,7 @@ class ControllerUtils {
       Logger.reportDartError(error, stack);
 
       if (error is! DioError || error.type != DioErrorType.cancel) {
-        ErrorUtils.showToastWhenHttpError(error, errorTip);
+        ErrorUtils.showToastWhenHttpError(error, errorTips);
 
         if (allowThrowError) {
           rethrow;

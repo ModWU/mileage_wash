@@ -49,7 +49,7 @@ mixin HomeController on State<HomePage> {
             pageSize: pageSize,
             cancelToken: cancelToken),
         allowThrowError: allowThrowError,
-        errorTip: S.of(context).order_query_error);
+        errorTips: S.of(context).order_query_error);
   }
 
   static Future<OrderDetails?> getOrderDetails(
@@ -62,7 +62,7 @@ mixin HomeController on State<HomePage> {
         daoHandler: () =>
             OrderDao.getOrderDetails(id: id, cancelToken: cancelToken),
         allowThrowError: allowThrowError,
-        errorTip: S.of(context).order_details_get_error);
+        errorTips: S.of(context).order_details_get_error);
   }
 
   static Future<UploadResult?> uploadPhoto(
@@ -80,7 +80,7 @@ mixin HomeController on State<HomePage> {
             cancelToken: cancelToken,
             onSendProgress: onSendProgress),
         allowThrowError: allowThrowError,
-        errorTip: S.of(context).photo_upload_error);
+        errorTips: S.of(context).photo_upload_error);
   }
 
   static Future<int?> saveOrder(
@@ -101,7 +101,7 @@ mixin HomeController on State<HomePage> {
               cancelToken: cancelToken,
             ),
         allowThrowError: allowThrowError,
-        errorTip: S.of(context).order_save_error);
+        errorTips: S.of(context).order_save_error);
   }
 
   Future<void> openNotificationPage() async {
