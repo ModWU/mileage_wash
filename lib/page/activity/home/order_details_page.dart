@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,8 +12,27 @@ import 'package:mileage_wash/model/http/order_details.dart';
 import 'package:mileage_wash/resource/strings.dart';
 import 'package:mileage_wash/state/order_state.dart';
 import 'package:mileage_wash/ui/page/simple_image_review_page.dart';
+import 'package:mileage_wash/ui/tween/hero_tween.dart';
 
-class OrderDetailsPage extends StatelessWidget {
+class OrderDetailsPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _OrderDetailsPage();
+}
+
+class _OrderDetailsPage extends State<OrderDetailsPage> {
+  Map<String, double?>? _imageSizeRadios;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _imageSizeRadios = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final OrderDetails orderDetails =
@@ -94,76 +113,94 @@ class OrderDetailsPage extends StatelessWidget {
               itemCount: photos.length,
               itemBuilder: (BuildContext context, int index) {
                 final String imageUrl = photos[index];
+                final String imageKey = '${title}_${imageUrl}_$index';
                 return Hero(
                   tag: '${imageUrl}_$index',
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    imageBuilder:
-                        (BuildContext context, ImageProvider imageProvider) =>
-                            GestureDetector(
-                      onTap: () async {
-                        await Navigator.of(context).push(
-                          PageRouteBuilder<SimpleImageReviewPage>(
-                              pageBuilder: (BuildContext context,
-                                      Animation<double> animation,
-                                      Animation<double> secondaryAnimation) =>
-                                  SimpleImageReviewPage(
-                                      initialIndex: index,
-                                      photos: photos,
-                                      animation: animation),
-                              transitionsBuilder: (BuildContext context,
-                                  Animation<double> animation,
-                                  Animation<double> secondaryAnimation,
-                                  Widget child) {
-                                return FadeTransition(
-                                  opacity: Tween<double>(begin: 0, end: 1)
-                                      .animate(CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.fastOutSlowIn,
-                                  )),
-                                  child: child,
-                                );
-                              }),
-                        );
+                  createRectTween: (Rect? begin, Rect? end) {
+                    // return MaterialRectArcTween(begin: begin, end: end);
+                    final Size size = MediaQuery.of(context).size;
+                    final double imageRadio = _imageSizeRadios == null ||
+                            !_imageSizeRadios!.containsKey(imageKey)
+                        ? 1.0
+                        : (_imageSizeRadios![imageKey] ?? 0);
 
-                        /*  await Navigator.of(context).push(
-                        MaterialPageRoute<SimpleImageReviewPage>(
-                            builder: (BuildContext context) =>
-                                SimpleImageReviewPage(
-                                    initialIndex: index, photos: photos)));*/
+                    final double screenRadio = size.width / size.height;
 
-                        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-                            overlays: <SystemUiOverlay>[
-                              SystemUiOverlay.top,
-                              SystemUiOverlay.bottom
-                            ]);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    placeholder: (
-                      BuildContext context,
-                      String url,
-                    ) =>
-                        const SizedBox(),
-                    errorWidget: (
-                      BuildContext context,
-                      String url,
-                      dynamic error,
-                    ) =>
-                        Container(
-                      color: Colors.black12,
-                      child: Icon(
-                        Icons.error,
-                        size: 88.w,
-                      ),
-                    ),
+                    final bool fitWidth = imageRadio > screenRadio;
+
+                    final double fitSize = fitWidth
+                        ? size.width / imageRadio
+                        : size.height * imageRadio;
+
+                    return SizeRectCenterArcTween(
+                        begin: begin,
+                        end: end,
+                        height: fitWidth ? fitSize : null,
+                        width: !fitWidth ? fitSize : null);
+                  },
+                  child: ExtendedImage.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    cache: true,
+                    loadStateChanged: (ExtendedImageState state) {
+                      switch (state.extendedImageLoadState) {
+                        case LoadState.completed:
+                          final ImageInfo? imageInfo = state.extendedImageInfo;
+                          if (imageInfo != null) {
+                            _imageSizeRadios ??= <String, double?>{};
+                            _imageSizeRadios![imageKey] =
+                                imageInfo.image.width / imageInfo.image.height;
+                          }
+                          return GestureDetector(
+                            onTap: () async {
+                              await Navigator.of(context).push(
+                                  PageRouteBuilder<SimpleImageReviewPage>(
+                                      pageBuilder: (BuildContext context,
+                                              Animation<double> animation,
+                                              Animation<double>
+                                                  secondaryAnimation) =>
+                                          SimpleImageReviewPage(
+                                              initialIndex: index,
+                                              photos: photos,
+                                              animation: animation),
+                                      transitionsBuilder: (BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secondaryAnimation,
+                                          Widget child) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      }));
+
+                              SystemChrome.setEnabledSystemUIMode(
+                                  SystemUiMode.manual,
+                                  overlays: <SystemUiOverlay>[
+                                    SystemUiOverlay.top,
+                                    SystemUiOverlay.bottom
+                                  ]);
+                            },
+                            child: ExtendedRawImage(
+                              image: state.extendedImageInfo?.image,
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+
+                        case LoadState.failed:
+                          return Container(
+                            color: Colors.grey,
+                            child: Icon(
+                              Icons.error,
+                              color: Colors.white,
+                              size: 88.w,
+                            ),
+                          );
+                        case LoadState.loading:
+                          return const SizedBox();
+                      }
+                    },
+                    mode: ExtendedImageMode.none,
                   ),
                 );
               }),

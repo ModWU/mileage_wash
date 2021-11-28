@@ -302,7 +302,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
           _refresh();
         }
       },
-     /* onLongPress: () {
+      /* onLongPress: () {
         _showStickDetailsLogo.value = false;
       },
       onLongPressCancel: () {
@@ -366,7 +366,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                     /* Tooltip(
+                      /* Tooltip(
                         message: '${orderInfo.adsName} ${orderInfo.adsDetail}',
                         textStyle:
                             TextStyle(fontSize: 26.sp, color: Colors.white),
@@ -396,14 +396,17 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                             fontSize: 26.sp,
                             color: Colors.grey),
                       ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        orderInfo.carNumber,
-                        style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 26.sp,
-                            color: Colors.grey),
-                      ),
+                      if (orderInfo.carNumber != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.h),
+                          child: Text(
+                            orderInfo.carNumber!,
+                            style: TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 26.sp,
+                                color: Colors.grey),
+                          ),
+                        )
                     ],
                   ),
                 ),

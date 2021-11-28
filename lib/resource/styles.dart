@@ -93,7 +93,7 @@ class ThemeAttrs {
       centerTitle: true,
       titleTextStyle: TextStyle(color: Colors.black, fontSize: 26),
       systemOverlayStyle: SystemUiOverlayStyle(
-        systemNavigationBarColor: Color(0xFF000000),
+        systemNavigationBarColor: Color(0xFFFFFFFF),
         systemNavigationBarDividerColor: null,
         statusBarColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.light,

@@ -14,8 +14,8 @@ class OrderInfo {
     required this.washDate,
     required this.latitude,
     required this.longitude,
-    required this.carNumber,
     required this.state,
+    this.carNumber,
     this.endDate,
     this.cancelDate,
     this.photo,
@@ -31,7 +31,6 @@ class OrderInfo {
     assert(data.containsKey('wash_date'));
     assert(data.containsKey('latitude'));
     assert(data.containsKey('longitude'));
-    assert(data.containsKey('car_number'));
     assert(data.containsKey('state'));
 
     final int id = data['id']! as int;
@@ -43,9 +42,9 @@ class OrderInfo {
     final String washDate = data['wash_date']! as String;
     final String latitude = data['latitude']! as String;
     final String longitude = data['longitude']! as String;
-    final String carNumber = data['car_number']! as String;
     final int state = data['state']! as int;
 
+    final String? carNumber = data['car_number'] as String?;
     final String? endDate = data['end_date'] as String?;
     final String? cancelDate = data['cancel_date'] as String?;
     final String? photo = data['photo'] as String?;
@@ -60,8 +59,8 @@ class OrderInfo {
       washDate: washDate,
       latitude: latitude,
       longitude: longitude,
-      carNumber: carNumber,
       state: state,
+      carNumber: carNumber,
       endDate: endDate,
       cancelDate: cancelDate,
       photo: photo,
@@ -77,8 +76,8 @@ class OrderInfo {
   final String washDate;
   final String latitude;
   final String longitude;
-  final String carNumber;
   final int state;
+  final String? carNumber;
   final String? endDate;
   final String? cancelDate;
   final String? photo;
@@ -95,8 +94,8 @@ class OrderInfo {
       washDate,
       latitude,
       longitude,
-      carNumber,
       state,
+      carNumber,
       endDate,
       cancelDate,
       photo,
@@ -117,8 +116,8 @@ class OrderInfo {
         other.washDate == washDate &&
         other.latitude == latitude &&
         other.longitude == longitude &&
-        other.carNumber == carNumber &&
         other.state == state &&
+        other.carNumber == carNumber &&
         other.endDate == endDate &&
         other.cancelDate == cancelDate &&
         other.photo == photo;
@@ -126,5 +125,5 @@ class OrderInfo {
 
   @override
   String toString() =>
-      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, carNumber: $carNumber, state: $state, endDate: $endDate, cancelDate: $cancelDate, photo: $photo)';
+      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, state: $state, carNumber: $carNumber, endDate: $endDate, cancelDate: $cancelDate, photo: $photo)';
 }
