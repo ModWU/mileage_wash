@@ -8,12 +8,12 @@ class ControllerUtils {
 
   static Future<T?> handleDao<T>(
     BuildContext context, {
-    required Future<T> Function() daoHandler,
+    required Future<T> daoFuture,
     required bool allowThrowError,
     required String errorTips,
   }) async {
     try {
-      return await daoHandler();
+      return daoFuture;
     } catch (error, stack) {
       Logger.reportDartError(error, stack);
 

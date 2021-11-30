@@ -20,16 +20,17 @@ class ExpandWidget extends StatefulWidget {
     this.child,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.fastOutSlowIn,
-    this.alignment = Alignment.center,
+    this.alignment,
     this.reverse = false,
     this.changeFade = true,
+    this.ignoreAlignmentOnlyTitle = true,
     this.titleAlignment,
     this.titlePadding,
     this.padding,
+    this.onTap,
     this.titleStyleType = TitleStyleType.above,
     this.direction = Axis.vertical,
   })  : assert(title != null || titleBuilder != null),
-        assert(child != null || builder != null),
         super(key: key);
 
   @override
@@ -48,7 +49,9 @@ class ExpandWidget extends StatefulWidget {
   final TitleStyleType titleStyleType;
   final bool changeFade;
   final bool reverse;
+  final bool ignoreAlignmentOnlyTitle;
   final Axis direction;
+  final GestureTapCallback? onTap;
 }
 
 class _ExpandWidgetState extends State<ExpandWidget>
@@ -57,13 +60,48 @@ class _ExpandWidgetState extends State<ExpandWidget>
   Animation<double>? _animation;
   AnimationStatus? _status;
 
+  bool _hasChildOnWidget(ExpandWidget widget) =>
+      widget.child != null || widget.builder != null;
+
+  bool get _hasChild => _hasChildOnWidget(widget);
+
   @override
   void didUpdateWidget(covariant ExpandWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.duration != oldWidget.duration ||
-        widget.curve != oldWidget.curve) {
-      _updateAnimation(widget.duration, widget.curve);
+    final bool hasOldChild = _hasChildOnWidget(oldWidget);
+    final bool hasNewChild = _hasChild;
+    if (hasNewChild != hasOldChild) {
+      if (hasNewChild) {
+        _updateAnimation(widget.duration, widget.curve);
+      } else {
+        _disposeAnimation(reset: true);
+      }
+      return;
     }
+
+    if (hasNewChild) {
+      if (widget.duration != oldWidget.duration ||
+          widget.curve != oldWidget.curve) {
+        _updateAnimation(widget.duration, widget.curve);
+      }
+    }
+  }
+
+  void _disposeAnimation({bool reset = false}) {
+    final AnimationController? animationController = _animationController;
+
+    if (animationController != null) {
+      if (reset) {
+        animationController.value = 0;
+      }
+      animationController.removeStatusListener(_onAnimationStatus);
+      animationController.stop();
+      animationController.dispose();
+    }
+
+    _animationController = null;
+    _animation = null;
+    _status = null;
   }
 
   void _updateAnimation(Duration duration, Curve curve) {
@@ -71,17 +109,12 @@ class _ExpandWidgetState extends State<ExpandWidget>
     final AnimationStatus? oldStatus = _status;
     final double? currentValue = animationController?.value;
 
-    if (animationController != null) {
-      animationController.removeStatusListener(_onAnimationStatus);
-      animationController.stop();
-      animationController.dispose();
-    }
+    _disposeAnimation();
 
-    animationController =
-        AnimationController(vsync: this, duration: widget.duration);
+    animationController = AnimationController(vsync: this, duration: duration);
     animationController.addStatusListener(_onAnimationStatus);
-    _animation = CurveTween(curve: Curves.easeIn).animate(animationController);
 
+    _animation = CurveTween(curve: curve).animate(animationController);
     _status = animationController.status;
     if (oldStatus != null) {
       switch (oldStatus) {
@@ -119,17 +152,16 @@ class _ExpandWidgetState extends State<ExpandWidget>
   @override
   void initState() {
     super.initState();
-    _updateAnimation(widget.duration, widget.curve);
+
+    if (_hasChild) {
+      _updateAnimation(widget.duration, widget.curve);
+    }
   }
 
   @override
   void dispose() {
+    _disposeAnimation();
     super.dispose();
-    _animationController?.removeStatusListener(_onAnimationStatus);
-    _status = null;
-    _animation = null;
-    _animationController?.dispose();
-    _animationController = null;
   }
 
   void _startAnimation() {
@@ -145,36 +177,50 @@ class _ExpandWidgetState extends State<ExpandWidget>
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> animation = _animation!;
+    final bool hasChild = _hasChild;
 
-    Widget title = widget.titleBuilder == null
+    Widget title = widget.titleBuilder == null || !hasChild
         ? widget.title!
         : AnimatedBuilder(
-            animation: animation,
+            animation: _animation!,
             builder: (BuildContext context, Widget? child) => widget
-                .titleBuilder!(context, widget.title, animation, _status!),
+                .titleBuilder!(context, widget.title, _animation!, _status!),
           );
 
-    if (widget.titleAlignment != null) {
-      title = Align(
-        alignment: widget.titleAlignment!,
-        child: title,
-      );
-    }
-
-    title = GestureDetector(
+    title = InkWell(
       onTap: () async {
-        _startAnimation();
+        widget.onTap?.call();
+        if (_hasChild) {
+          _startAnimation();
+        }
       },
-      child: widget.titlePadding == null
-          ? title
-          : Padding(
-              padding: widget.titlePadding!,
-              child: title,
-            ),
+      child: title,
     );
 
-    Widget child = widget.builder == null
+    if (widget.titleAlignment != null) {
+      if (hasChild || !widget.ignoreAlignmentOnlyTitle) {
+        title = Align(
+          alignment: widget.titleAlignment!,
+          child: title,
+        );
+      }
+    }
+
+    title = widget.titlePadding == null
+        ? title
+        : Padding(
+            padding: widget.titlePadding!,
+            child: title,
+          );
+
+    if (!_hasChild) {
+      return title;
+    }
+
+    assert(_animation != null);
+    final Animation<double> animation = _animation!;
+
+    Widget? child = widget.builder == null
         ? widget.child!
         : widget.builder!(context, widget.child, animation);
 
