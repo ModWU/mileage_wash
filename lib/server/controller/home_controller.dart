@@ -43,7 +43,7 @@ mixin HomeController on State<HomePage> {
     bool allowThrowError = false,
   }) async {
     return ControllerUtils.handleDao(context,
-        daoFuture: OrderDao.queryOrderList(
+        daoHandler: () => OrderDao.queryOrderList(
             httpCode: orderState.httpCode,
             curPage: curPage,
             pageSize: pageSize,
@@ -59,7 +59,8 @@ mixin HomeController on State<HomePage> {
     bool allowThrowError = false,
   }) async {
     return ControllerUtils.handleDao(context,
-        daoFuture: OrderDao.getOrderDetails(id: id, cancelToken: cancelToken),
+        daoHandler: () =>
+            OrderDao.getOrderDetails(id: id, cancelToken: cancelToken),
         allowThrowError: allowThrowError,
         errorTips: S.of(context).order_details_get_error);
   }
@@ -73,7 +74,7 @@ mixin HomeController on State<HomePage> {
     bool allowThrowError = false,
   }) async {
     return ControllerUtils.handleDao(context,
-        daoFuture: UploadDao.uploadPhoto(
+        daoHandler: () => UploadDao.uploadPhoto(
             type: type,
             file: File(file.path),
             cancelToken: cancelToken,
@@ -92,13 +93,13 @@ mixin HomeController on State<HomePage> {
     bool allowThrowError = false,
   }) async {
     return ControllerUtils.handleDao(context,
-        daoFuture: OrderDao.saveOrder(
-          orderInfo: orderInfo,
-          filePaths: filePaths.join(';'),
-          photoListType: photoListType,
-          carState: carState,
-          cancelToken: cancelToken,
-        ),
+        daoHandler: () => OrderDao.saveOrder(
+              orderInfo: orderInfo,
+              filePaths: filePaths.join(';'),
+              photoListType: photoListType,
+              carState: carState,
+              cancelToken: cancelToken,
+            ),
         allowThrowError: allowThrowError,
         errorTips: S.of(context).order_save_error);
   }
