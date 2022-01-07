@@ -40,6 +40,7 @@
   "order_details_order_number_title": "订单号：",
   "order_details_address_title": "地址：",
   "order_details_carport_number_title": "车位：",
+  "order_details_wash_type": "洗车类型：",
   "order_details_license_plate_number_title": "车牌：",
   "order_details_appointment_time_title": "预约日期：",
   "order_details_user_remark_title": "备注：",

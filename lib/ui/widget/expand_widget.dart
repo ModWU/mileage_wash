@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 typedef TitleBuilder = Widget Function(BuildContext context, Widget? child,
-    Animation<double> animation, AnimationStatus status);
+    Animation<double>? animation, AnimationStatus? status);
 
 typedef ExpandBuilder = Widget Function(
     BuildContext context, Widget? child, Animation<double> animation);
@@ -23,7 +23,7 @@ class ExpandWidget extends StatefulWidget {
     this.alignment,
     this.reverse = false,
     this.changeFade = true,
-    this.ignoreAlignmentOnlyTitle = true,
+    this.maintainState = false,
     this.titleAlignment,
     this.titlePadding,
     this.padding,
@@ -48,8 +48,8 @@ class ExpandWidget extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final TitleStyleType titleStyleType;
   final bool changeFade;
+  final bool maintainState;
   final bool reverse;
-  final bool ignoreAlignmentOnlyTitle;
   final Axis direction;
   final GestureTapCallback? onTap;
 }
@@ -141,11 +141,17 @@ class _ExpandWidgetState extends State<ExpandWidget>
 
   void _onAnimationStatus(AnimationStatus status) {
     _status = status;
-    if (widget.titleStyleType == TitleStyleType.below) {
+    /*if (widget.titleStyleType == TitleStyleType.below) {
       if (_status == AnimationStatus.forward ||
           _status == AnimationStatus.completed) {
         setState(() {});
       }
+    }*/
+    if (_status == AnimationStatus.forward ||
+        _status == AnimationStatus.completed ||
+        _status == AnimationStatus.reverse ||
+        _status == AnimationStatus.dismissed) {
+      setState(() {});
     }
   }
 
@@ -179,32 +185,16 @@ class _ExpandWidgetState extends State<ExpandWidget>
   Widget build(BuildContext context) {
     final bool hasChild = _hasChild;
 
-    Widget title = widget.titleBuilder == null || !hasChild
+    Widget title = widget.titleBuilder == null
         ? widget.title!
-        : AnimatedBuilder(
-            animation: _animation!,
-            builder: (BuildContext context, Widget? child) => widget
-                .titleBuilder!(context, widget.title, _animation!, _status!),
-          );
-
-    title = InkWell(
-      onTap: () async {
-        widget.onTap?.call();
-        if (_hasChild) {
-          _startAnimation();
-        }
-      },
-      child: title,
-    );
-
-    if (widget.titleAlignment != null) {
-      if (hasChild || !widget.ignoreAlignmentOnlyTitle) {
-        title = Align(
-          alignment: widget.titleAlignment!,
-          child: title,
-        );
-      }
-    }
+        : (hasChild
+            ? AnimatedBuilder(
+                animation: _animation!,
+                child: widget.title,
+                builder: (BuildContext context, Widget? child) =>
+                    widget.titleBuilder!(context, child, _animation, _status),
+              )
+            : widget.titleBuilder!(context, widget.title, _animation, _status));
 
     title = widget.titlePadding == null
         ? title
@@ -213,7 +203,27 @@ class _ExpandWidgetState extends State<ExpandWidget>
             child: title,
           );
 
-    if (!_hasChild) {
+    if (widget.titleAlignment != null) {
+      title = Align(
+        alignment: widget.titleAlignment!,
+        child: title,
+      );
+    }
+
+    if (widget.onTap != null || hasChild) {
+      title = GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () async {
+          widget.onTap?.call();
+          if (hasChild) {
+            _startAnimation();
+          }
+        },
+        child: title,
+      );
+    }
+
+    if (!hasChild) {
       return title;
     }
 
@@ -254,7 +264,7 @@ class _ExpandWidgetState extends State<ExpandWidget>
 
     final List<Widget> children = <Widget>[
       title,
-      child,
+      if (widget.maintainState || _status != AnimationStatus.dismissed) child,
     ];
 
     if (widget.reverse) {

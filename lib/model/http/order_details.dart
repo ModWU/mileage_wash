@@ -16,6 +16,7 @@ class OrderDetails {
     this.beginPhoto,
     this.endPhoto,
     this.state,
+    this.washType,
   });
 
   factory OrderDetails.fromJson(Map<String, dynamic> data) {
@@ -30,6 +31,7 @@ class OrderDetails {
     final String? beginPhoto = data['begin_photo'] as String?;
     final String? endPhoto = data['end_photo'] as String?;
     final int? state = data['state'] as int?;
+    final String? washType = data['wash_type'] as String?;
 
     return OrderDetails(
       num: num,
@@ -43,6 +45,7 @@ class OrderDetails {
       beginPhoto: beginPhoto,
       endPhoto: endPhoto,
       state: state,
+      washType: washType,
     );
   }
 
@@ -57,6 +60,7 @@ class OrderDetails {
   final String? beginPhoto; //清洗前的照片。多张以分号分隔
   final String? endPhoto; //清洗后的照片。多张以分号分隔
   final int? state; //订单状态。待清洗（2）黄色，清洗中（3）黄色，清洗完成（4）绿色，已取消（6）灰色
+  final String? washType; //洗车类型
 
   @override
   int get hashCode {
@@ -72,6 +76,7 @@ class OrderDetails {
       beginPhoto,
       endPhoto,
       state,
+      washType,
     );
   }
 
@@ -90,10 +95,11 @@ class OrderDetails {
         other.photo == photo &&
         other.beginPhoto == beginPhoto &&
         other.endPhoto == endPhoto &&
-        other.state == state;
+        other.state == state &&
+        other.washType == washType;
   }
 
   @override
   String toString() =>
-      'OrderDetails(num: $num, adsName: $adsName, adsDetail: $adsDetail, shortName: $shortName, carNumber: $carNumber, washDate: $washDate, userRemark: $userRemark, photo: $photo, beginPhoto: $beginPhoto, endPhoto: $endPhoto, state: $state)';
+      'OrderDetails(num: $num, adsName: $adsName, adsDetail: $adsDetail, shortName: $shortName, carNumber: $carNumber, washDate: $washDate, userRemark: $userRemark, photo: $photo, beginPhoto: $beginPhoto, endPhoto: $endPhoto, state: $state, washType: $washType)';
 }

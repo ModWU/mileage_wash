@@ -181,7 +181,7 @@ class _SimpleImageReviewPageState extends State<SimpleImageReviewPage> {
                         ),
                       );
               },
-              initialValue: _currentPage!,
+              observer: _currentPage!,
             )
           ],
         ),

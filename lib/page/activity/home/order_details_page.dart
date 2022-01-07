@@ -235,6 +235,8 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
           StringUtils.toSafeStr(address)),
       TitleStyleData(S.of(context).order_details_carport_number_title,
           StringUtils.toSafeStr(orderDetails.shortName)),
+      TitleStyleData(S.of(context).order_details_wash_type,
+          StringUtils.toSafeStr(orderDetails.washType)),
       TitleStyleData(S.of(context).order_details_license_plate_number_title,
           StringUtils.toSafeStr(orderDetails.carNumber)),
       TitleStyleData(S.of(context).order_details_appointment_time_title,

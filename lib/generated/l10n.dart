@@ -410,6 +410,16 @@ class S {
     );
   }
 
+  /// `wash type: `
+  String get order_details_wash_type {
+    return Intl.message(
+      'wash type: ',
+      name: 'order_details_wash_type',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `license plate number: `
   String get order_details_license_plate_number_title {
     return Intl.message(

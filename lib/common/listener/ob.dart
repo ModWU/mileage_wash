@@ -49,10 +49,10 @@ class Observer<T> with ChangeNotifier {
 class ObWidget<T> extends StatefulWidget {
   const ObWidget({
     required this.builder,
-    required this.initialValue,
+    required this.observer,
   });
 
-  final Observer<T> initialValue;
+  final Observer<T> observer;
   final WidgetCallback<T> builder;
 
   Widget _buildWidget(dynamic data) {
@@ -69,8 +69,18 @@ class _ObsWidgetState<T> extends State<ObWidget<T>> {
   @override
   void initState() {
     super.initState();
-    _data = widget.initialValue;
+    _data = widget.observer;
     _data!.addListener(_rebuild);
+  }
+
+  @override
+  void didUpdateWidget(covariant ObWidget<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.observer != _data) {
+      _data?.removeListener(_rebuild);
+      widget.observer.addListener(_rebuild);
+      _data = widget.observer;
+    }
   }
 
   @override

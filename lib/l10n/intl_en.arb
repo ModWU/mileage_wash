@@ -40,6 +40,7 @@
   "order_details_order_number_title": "order number: ",
   "order_details_address_title": "order address: ",
   "order_details_carport_number_title": "carport number: ",
+  "order_details_wash_type": "wash type: ",
   "order_details_license_plate_number_title": "license plate number: ",
   "order_details_appointment_time_title": "appointment time: ",
   "order_details_user_remark_title": "user remark: ",

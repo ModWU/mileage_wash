@@ -356,7 +356,7 @@ class _WashingReviewPageState extends State<WashingReviewPage> {
                       ),
                     );
             },
-            initialValue: _photos![index]),
+            observer: _photos![index]),
         Positioned(
             top: 0,
             right: 0,

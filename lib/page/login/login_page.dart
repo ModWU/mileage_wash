@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 },
-                initialValue: _enableLoginButton,
+                observer: _enableLoginButton,
               ),
             ),
           ],

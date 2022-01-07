@@ -19,6 +19,7 @@ class OrderInfo {
     this.endDate,
     this.cancelDate,
     this.photo,
+    this.washType,
   });
 
   factory OrderInfo.fromJson(Map<String, dynamic> data) {
@@ -48,6 +49,7 @@ class OrderInfo {
     final String? endDate = data['end_date'] as String?;
     final String? cancelDate = data['cancel_date'] as String?;
     final String? photo = data['photo'] as String?;
+    final String? washType = data['wash_type'] as String?;
 
     return OrderInfo(
       id: id,
@@ -64,6 +66,7 @@ class OrderInfo {
       endDate: endDate,
       cancelDate: cancelDate,
       photo: photo,
+      washType: washType,
     );
   }
 
@@ -81,6 +84,7 @@ class OrderInfo {
   final String? endDate;
   final String? cancelDate;
   final String? photo;
+  final String? washType;
 
   @override
   int get hashCode {
@@ -99,6 +103,7 @@ class OrderInfo {
       endDate,
       cancelDate,
       photo,
+      washType,
     );
   }
 
@@ -120,10 +125,11 @@ class OrderInfo {
         other.carNumber == carNumber &&
         other.endDate == endDate &&
         other.cancelDate == cancelDate &&
-        other.photo == photo;
+        other.photo == photo &&
+        other.washType == washType;
   }
 
   @override
   String toString() =>
-      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, state: $state, carNumber: $carNumber, endDate: $endDate, cancelDate: $cancelDate, photo: $photo)';
+      'OrderInfo(id: $id, shortName: $shortName, adsName: $adsName, adsDetail: $adsDetail, washId: $washId, washName: $washName, washDate: $washDate, latitude: $latitude, longitude: $longitude, state: $state, carNumber: $carNumber, endDate: $endDate, cancelDate: $cancelDate, photo: $photo, washType: $washType)';
 }

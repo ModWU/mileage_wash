@@ -110,6 +110,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("清洗后："),
         "order_details_wash_before_title":
             MessageLookupByLibrary.simpleMessage("清洗前："),
+        "order_details_wash_type":
+            MessageLookupByLibrary.simpleMessage("洗车类型："),
         "order_query_error": MessageLookupByLibrary.simpleMessage("查询订单异常！"),
         "order_save_error": MessageLookupByLibrary.simpleMessage("保存订单异常！"),
         "permission_permanently_denied_tips": m0,

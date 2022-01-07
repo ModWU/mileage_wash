@@ -51,7 +51,7 @@ class LoadingUtils {
                 child: const LoadingWidget(),
               );
             },
-            initialValue: observer),
+            observer: observer),
       ],
     );
   }

@@ -120,6 +120,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("After wash: "),
         "order_details_wash_before_title":
             MessageLookupByLibrary.simpleMessage("Before wash: "),
+        "order_details_wash_type":
+            MessageLookupByLibrary.simpleMessage("wash type: "),
         "order_query_error":
             MessageLookupByLibrary.simpleMessage("Error querying order!"),
         "order_save_error":

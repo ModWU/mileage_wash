@@ -346,7 +346,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                 ),
               );
             },
-            initialValue: _showStickDetailsLogo));
+            observer: _showStickDetailsLogo));
   }
 
   Widget _buildOrderItemContent(
@@ -383,11 +383,32 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
                         style: TextStyle(fontSize: 28.sp),
                       ),
                       SizedBox(height: 8.h),
-                      Text(
-                        orderInfo.shortName,
-                        style: TextStyle(
-                            overflow: TextOverflow.ellipsis, fontSize: 22.sp),
-                      ),
+                      () {
+                        Widget child = Text(
+                          orderInfo.shortName,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 22.sp),
+                        );
+                        if (orderInfo.washType != null) {
+                          child = Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              child,
+                              SizedBox(width: 4.w),
+                              Flexible(
+                                child: Text(
+                                  orderInfo.washType!,
+                                  style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      fontSize: 22.sp),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                        return child;
+                      }(),
                       SizedBox(height: 8.h),
                       Text(
                         orderInfo.washDate,
@@ -668,7 +689,7 @@ class OrderListState<T extends HomeNotifier> extends State<OrderListView<T>>
             ),
           ),
           ObWidget<bool>(
-              initialValue: _isLoading,
+              observer: _isLoading,
               builder: (Observer<bool>? observer) {
                 final bool isLoading = observer?.value ?? false;
                 return Offstage(
