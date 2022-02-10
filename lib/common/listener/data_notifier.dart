@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class _ListenerEntry extends LinkedListEntry<_ListenerEntry> {
   _ListenerEntry(this.listener);

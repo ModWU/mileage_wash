@@ -13,11 +13,11 @@ class CountdownBuilder extends StatefulWidget {
     this.errorBuilder,
     this.onFinish,
     this.formatter,
-    this.resetTag = const Object(),
+    this.resetTag,
   });
 
   final Duration initialValue;
-  final Object resetTag;
+  final Object? resetTag;
   final CountdownWidgetBuilder builder;
   final TimeFormatHandler? formatter;
   final CountdownErrorWidgetBuilder? errorBuilder;

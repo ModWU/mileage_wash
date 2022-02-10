@@ -1,10 +1,5 @@
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mileage_wash/common/listener/ob.dart';
 import 'package:mileage_wash/common/log/app_log.dart';

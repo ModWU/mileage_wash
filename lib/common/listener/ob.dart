@@ -33,7 +33,7 @@ class Observer<T> with ChangeNotifier {
     return _value;
   }
 
-  @override
+  /*@override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(dynamic other) {
     if (other is T) return value == other;
@@ -43,7 +43,7 @@ class Observer<T> with ChangeNotifier {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => _value.hashCode;
+  int get hashCode => _value.hashCode;*/
 }
 
 class ObWidget<T> extends StatefulWidget {
@@ -76,6 +76,11 @@ class _ObsWidgetState<T> extends State<ObWidget<T>> {
   @override
   void didUpdateWidget(covariant ObWidget<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    /*if (!identical(widget.observer, _data)) {
+      _data?.removeListener(_rebuild);
+      widget.observer.addListener(_rebuild);
+      _data = widget.observer;
+    }*/
     if (widget.observer != _data) {
       _data?.removeListener(_rebuild);
       widget.observer.addListener(_rebuild);
