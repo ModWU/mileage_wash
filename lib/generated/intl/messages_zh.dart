@@ -97,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("车辆照片："),
         "order_details_carport_number_title":
             MessageLookupByLibrary.simpleMessage("车位："),
+        "order_details_contact": MessageLookupByLibrary.simpleMessage("联系方式："),
         "order_details_get_error":
             MessageLookupByLibrary.simpleMessage("获取订单详情异常！"),
         "order_details_license_plate_number_title":

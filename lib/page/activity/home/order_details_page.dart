@@ -38,7 +38,7 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
     final OrderDetails orderDetails =
         ModalRoute.of(context)!.settings.arguments! as OrderDetails;
 
-    final String leadingURI = '${HTTPApis.carImgURL}/';
+    const String leadingURI = '${HTTPApis.carImgURL}/';
 
     final List<String>? photos =
         StringUtils.splitTrim(orderDetails.photo, ',', leading: leadingURI);
@@ -235,6 +235,8 @@ class _OrderDetailsPage extends State<OrderDetailsPage> {
           StringUtils.toSafeStr(address)),
       TitleStyleData(S.of(context).order_details_carport_number_title,
           StringUtils.toSafeStr(orderDetails.shortName)),
+      TitleStyleData(S.of(context).order_details_contact,
+          StringUtils.toSafeStr(orderDetails.mobile)),
       TitleStyleData(S.of(context).order_details_wash_type,
           StringUtils.toSafeStr(orderDetails.washType)),
       TitleStyleData(S.of(context).order_details_license_plate_number_title,

@@ -9,6 +9,7 @@ class OrderDetails {
     this.adsName,
     this.adsDetail,
     this.shortName,
+    this.mobile,
     this.carNumber,
     this.washDate,
     this.userRemark,
@@ -24,6 +25,7 @@ class OrderDetails {
     final String? adsName = data['ads_name'] as String?;
     final String? adsDetail = data['ads_detail'] as String?;
     final String? shortName = data['short_name'] as String?;
+    final String? mobile = data['mobile'] as String?;
     final String? carNumber = data['car_number'] as String?;
     final String? washDate = data['wash_date'] as String?;
     final String? userRemark = data['user_remark'] as String?;
@@ -38,6 +40,7 @@ class OrderDetails {
       adsName: adsName,
       adsDetail: adsDetail,
       shortName: shortName,
+      mobile: mobile,
       carNumber: carNumber,
       washDate: washDate,
       userRemark: userRemark,
@@ -53,6 +56,7 @@ class OrderDetails {
   final String? adsName; //地址名
   final String? adsDetail; //地址详情
   final String? shortName; //车位号
+  final String? mobile; //联系方式
   final String? carNumber; //车牌号
   final String? washDate; //预约日期
   final String? userRemark; //备注
@@ -69,6 +73,7 @@ class OrderDetails {
       adsName,
       adsDetail,
       shortName,
+      mobile,
       carNumber,
       washDate,
       userRemark,
@@ -89,6 +94,7 @@ class OrderDetails {
         other.adsName == adsName &&
         other.adsDetail == adsDetail &&
         other.shortName == shortName &&
+        other.mobile == mobile &&
         other.carNumber == carNumber &&
         other.washDate == washDate &&
         other.userRemark == userRemark &&
@@ -101,5 +107,5 @@ class OrderDetails {
 
   @override
   String toString() =>
-      'OrderDetails(num: $num, adsName: $adsName, adsDetail: $adsDetail, shortName: $shortName, carNumber: $carNumber, washDate: $washDate, userRemark: $userRemark, photo: $photo, beginPhoto: $beginPhoto, endPhoto: $endPhoto, state: $state, washType: $washType)';
+      'OrderDetails(num: $num, adsName: $adsName, adsDetail: $adsDetail, shortName: $shortName, mobile: $mobile, carNumber: $carNumber, washDate: $washDate, userRemark: $userRemark, photo: $photo, beginPhoto: $beginPhoto, endPhoto: $endPhoto, state: $state, washType: $washType)';
 }

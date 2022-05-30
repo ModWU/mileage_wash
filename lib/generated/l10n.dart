@@ -410,6 +410,16 @@ class S {
     );
   }
 
+  /// `contact: `
+  String get order_details_contact {
+    return Intl.message(
+      'contact: ',
+      name: 'order_details_contact',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `wash type: `
   String get order_details_wash_type {
     return Intl.message(

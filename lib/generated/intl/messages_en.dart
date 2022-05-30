@@ -106,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Car photos: "),
         "order_details_carport_number_title":
             MessageLookupByLibrary.simpleMessage("carport number: "),
+        "order_details_contact":
+            MessageLookupByLibrary.simpleMessage("contact: "),
         "order_details_get_error":
             MessageLookupByLibrary.simpleMessage("Error get order details!"),
         "order_details_license_plate_number_title":
